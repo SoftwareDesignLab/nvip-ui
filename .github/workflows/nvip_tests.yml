@@ -10,16 +10,27 @@ env:
   ANGULAR_CLI_VERSION: '15.1.0'
 
 jobs:
-  ui:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+    - name: Checkout
+      uses: actions/checkout@v3
 
+    - name: Setup Node
+      uses: actions/setup-node@v3
+
+    - name: Test UI
+      continue-on-error: true
+      run: |
+        npm install -g @angular/cli
+        npm install
+        ng test --watch=false --browsers=ChromeHeadless --code-coverage
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ success() && github.ref == 'refs/heads/master' }}
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -28,13 +39,17 @@ jobs:
 
       - name: Build UI
         run: |
-          cd angular-ui
           npm install -g @angular/cli
           npm install
           ng build angular-ui --configuration=production
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Deploy to S3
-        if: ${{ success() && github.ref == 'refs/heads/main' }}
         run: |
-          cd angular-ui
           aws s3 sync ./dist/angular-ui s3://${{ env.S3_BUCKET_NAME_UI }}
