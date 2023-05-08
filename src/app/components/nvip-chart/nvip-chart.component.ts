@@ -64,10 +64,9 @@ export class NvipChartComponent implements OnInit, OnDestroy {
     this.mySubscription?.unsubscribe();
   }
   ngOnInit(): void {
-
+    let labels = ["CVEs Added", "CVEs not in NVD", "Avg. Hours"];
     this.chartsService.getData().subscribe((data) => {
-      console.log(data[this.chartType]);
-      this.data = [{ name: this.chartType.toLocaleString(), series: data[this.chartType] }];
+      this.data = [{ name: labels[this.chartType], series: data[this.chartType] }];
     })
     if (this.chartType == 2) {
       this.options.yAxisLabel = "Hours"
