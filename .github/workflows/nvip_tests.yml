@@ -20,19 +20,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-
-    - name: Test UI
-      continue-on-error: true
-      run: |
-        npm install -g @angular/cli
-        npm install
-        ng test --watch=false --browsers=ChromeHeadless --code-coverage
-
-  build-and-deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
-    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -43,14 +30,7 @@ jobs:
         run: |
           npm install -g @angular/cli
           npm install
-          ng build angular-ui --configuration=staging
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          ng build angular-ui --configuration=production
 
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/dev' }}
