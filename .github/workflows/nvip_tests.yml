@@ -6,7 +6,7 @@ on: [push]
 
 env:
   AWS_REGION: 'us-east-1'
-  S3_BUCKET_NAME_UI: 'www.cve.live'
+  S3_BUCKET_NAME_UI: 'www-staging.cve.live'
   ANGULAR_CLI_VERSION: '15.1.0'
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
+    if: ${{ success() && github.ref == 'refs/heads/dev' }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
