@@ -28,7 +28,6 @@ jobs:
 
       - name: Build UI
         run: |
-          cd angular-ui
           npm install -g @angular/cli
           npm install
           ng build angular-ui --configuration=staging
@@ -36,5 +35,4 @@ jobs:
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/dev' }}
         run: |
-          cd angular-ui
           aws s3 sync ./dist/angular-ui s3://${{ env.S3_BUCKET_NAME_UI }}
