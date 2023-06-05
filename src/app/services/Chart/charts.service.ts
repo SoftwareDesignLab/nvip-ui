@@ -44,7 +44,7 @@ export class ChartsService {
   constructor(api: ApiService) {
     let temp: ReplaySubject<SingleDatum[][]> = new ReplaySubject(1);
     api.countGraphs((res: any) => {
-      const data = res.map.mainPageCounts.map
+      const data = res
       const { CvesAdded, CvesUpdated, avgTimeGapMitre, avgTimeGapNvd, not_in_mitre_count, not_in_nvd_count, run_date_times } = data;
 
       const dates = run_date_times.split(";").map((d: string) => new Date(d));
