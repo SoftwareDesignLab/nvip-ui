@@ -29,7 +29,7 @@ export const API_URL: string = environment.apiUrl;
 export const Routes = {
   login: API_URL + "loginServlet",
   vulnerability: API_URL + "vulnerabilityServlet",
-  main: API_URL + "mainServlet",
+  main: API_URL + "",
   review: API_URL + "reviewServlet",
   search: API_URL + "searchServlet"
 }
