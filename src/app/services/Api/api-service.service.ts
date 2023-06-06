@@ -168,11 +168,10 @@ export class ApiService {
 
   vulnServGetByID(id: string, username: string, token: string) {
     return this.httpClient.get(
-      Routes.vulnerability,
+      Routes.vulnerability+'/'+id,
       this.injectGetParameters({
         token: token,
-        username: username,
-        vulnId: id
+        username: username
       })
     );
   }
