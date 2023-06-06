@@ -131,7 +131,7 @@ export class ApiService {
 
   cveSearch(searchRequest: any) {
     return this.httpClient
-    .get(Routes.search, this.injectGetParameters({ ...searchRequest }))
+    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }))
   }
 
 
