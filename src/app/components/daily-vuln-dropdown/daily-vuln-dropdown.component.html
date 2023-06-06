@@ -33,7 +33,7 @@
         <div class="nvip-daily-vuln-desc-toggle">
             <button class="nvip-button" (click)="vulnDescToggle($event)" [hidden]="vuln.description.length < 997">Show {{showMoreDescription ? "Less" : "More"}}</button>
         </div>
-        <div class="daily-vuln-info"> 
+        <div class="daily-vuln-info">
             <div>
                 <p>Impact:</p>
                 <span *ngFor="let vdo of sortBy(2, 'vdoConfidence', VDO_NOUN_GROUPS.LOGICAL_IMPACT)" class="{{getLabelClass(vdo)}} daily-vuln-product product-items">
@@ -47,7 +47,7 @@
         </div>
         <!-- todo view info to vulnerability page -->
     <div class="daily-vuln-detail" ng-controller="SearchController as search">
-        <button class="nvip-button nvip-view-info-button" routerLink="/vulnerability/{{vuln.vulnId}}">
+        <button class="nvip-button nvip-view-info-button" routerLink="/vulnerability/{{vuln.cveId}}">
             View Info
         </button>
     </div>

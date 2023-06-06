@@ -2,17 +2,17 @@
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,7 +56,7 @@ export class RecentComponent implements OnInit {
 
   /**
    * constructor
-   * @param vulnService to access vulnerabilityServlet endpoints 
+   * @param vulnService to access vulnerabilityServlet endpoints
    */
   constructor(private vulnService: VulnService) {}
 
@@ -65,8 +65,8 @@ export class RecentComponent implements OnInit {
     this.vulnService.onRecentInit().subscribe((res: any) =>
       Object.keys(res).forEach((key) => {
         this.dailyVulns.push({
-          date: this.formatDate(res[key].date),
-          cve_list: res[key].list,
+          date: this.formatDate(key),
+          cve_list: res[key],
         });
         this.dailyVulnLimit.push(this.vulnLimitIncr);
       })
