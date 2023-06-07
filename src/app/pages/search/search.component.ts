@@ -2,17 +2,17 @@
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,6 +32,7 @@ import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { SearchCriteria } from 'src/app/models/search-criteria.model';
+
 /** Search Page */
 @Component({
   selector: 'app-search',
@@ -148,8 +149,8 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  /** driver function for calling searchServlet, loading, 
-   * and displaying results after call response 
+  /** driver function for calling searchServlet, loading,
+   * and displaying results after call response
    */
   searchVulns($event: any, f: NgForm) {
     // Retrieve the search form button and disable it
@@ -198,37 +199,70 @@ export class SearchComponent implements OnInit {
 
       this.searchResults = [];
       this.filteredSearchResults = [];
-      this.apiService
-        .cveSearch({ ...this.search, username: username, token: token })
-        .subscribe({
-          next: (res: any) => {
-            this.searchResService.setSearchResults(res);
-            this.handleRes(res);
+      if(this.search.cve_id != null){
+        this.vulnService
+          .getByID(this.search.cve_id, username, token)
+          .subscribe({
+            next: (res: any) => {
+              this.searchResService.setSearchResults([res]);
+              this.handleRes([res]);
 
-            // Hide the loading bar now that the results have arrived
-            this.toggleLoading();
+              // Hide the loading bar now that the results have arrived
+              this.toggleLoading();
 
-            // Once the search results have been loaded, toggle the search form so that
-            // the search results now appear. Do not trigger if call launched not launched
-            // from a form button event.
-            if ($event !== null) {
-              this.toggleSearchForm();
-            }
-            searchFormBtn.disabled = false;
-          },
-          error: (e) => {
-            // Hide the loading bar now that request has failed
-            this.toggleLoading();
-            this.searchResults = [];
-            this.filteredSearchResults = [];
+              // Once the search results have been loaded, toggle the search form so that
+              // the search results now appear. Do not trigger if call launched not launched
+              // from a form button event.
+              if ($event !== null) {
+                this.toggleSearchForm();
+              }
+              searchFormBtn.disabled = false;
+            },error: (e) => {
+              // Hide the loading bar now that request has failed
+              this.toggleLoading();
+              this.searchResults = [];
+              this.filteredSearchResults = [];
 
-            if (e.response.status == 401) {
-              alert(e.data);
-              window.location.assign(window.location.href + 'login');
-            }
-          },
-          complete: () => {},
-        });
+              if (e.response.status == 401) {
+                alert(e.data);
+                window.location.assign(window.location.href + 'login');
+              }
+            },
+            complete: () => {}
+          })
+      } else {
+        this.apiService
+          .cveSearch({ ...this.search, username: username, token: token })
+          .subscribe({
+            next: (res: any) => {
+              this.searchResService.setSearchResults(res);
+              this.handleRes(res);
+
+              // Hide the loading bar now that the results have arrived
+              this.toggleLoading();
+
+              // Once the search results have been loaded, toggle the search form so that
+              // the search results now appear. Do not trigger if call launched not launched
+              // from a form button event.
+              if ($event !== null) {
+                this.toggleSearchForm();
+              }
+              searchFormBtn.disabled = false;
+            },
+            error: (e) => {
+              // Hide the loading bar now that request has failed
+              this.toggleLoading();
+              this.searchResults = [];
+              this.filteredSearchResults = [];
+
+              if (e.response.status == 401) {
+                alert(e.data);
+                window.location.assign(window.location.href + 'login');
+              }
+            },
+            complete: () => {},
+          });
+      }
     }
   }
 
@@ -236,7 +270,7 @@ export class SearchComponent implements OnInit {
    * stored or newly received
    */
   handleRes(res: any) {
-    this.resultTotalCount = res[res.length - 1];
+    this.resultTotalCount = res.length;
     this.searchResults = res;
     this.searchSuccess = true;
     if (this.resultTotalCount < 10) {

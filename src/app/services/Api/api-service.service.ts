@@ -2,17 +2,17 @@
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -128,15 +128,15 @@ export class ApiService {
       .subscribe(callback);
   }
 
-  
+
   cveSearch(searchRequest: any) {
     return this.httpClient
-    .get(Routes.search, this.injectGetParameters({ ...searchRequest }))
+    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }))
   }
-  
-  
+
+
   // For Review page, which is currently unused
-  
+
   // cveDetails(detailRequst: CVEDetailsRequest, callback: ApiRequestObserver) {
   //   this.httpClient
   //     .get(Routes.review, this.injectGetParameters({ ...detailRequst }))
@@ -161,18 +161,17 @@ export class ApiService {
 
   vulnServlet(daily: boolean, dateRange: number) {
     return this.httpClient.get(
-      Routes.vulnerability,
-      this.injectGetParameters({ daily: daily, dateRange: dateRange })
+      Routes.vulnerability+"/daily",
+      this.injectGetParameters({ dateRange: dateRange })
     );
   }
 
   vulnServGetByID(id: string, username: string, token: string) {
     return this.httpClient.get(
-      Routes.vulnerability,
+      Routes.vulnerability+'/'+id,
       this.injectGetParameters({
         token: token,
-        username: username, 
-        vulnId: id 
+        username: username
       })
     );
   }
@@ -180,10 +179,10 @@ export class ApiService {
   searchInfo(username: string, token: string) {
     return this.httpClient.get(
       Routes.search,
-      this.injectGetParameters({ 
+      this.injectGetParameters({
         searchInfo: true,
         token: token,
-        username: username 
+        username: username
       })
     );
   }

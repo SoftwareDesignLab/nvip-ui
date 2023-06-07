@@ -27,9 +27,9 @@ import { environment } from '../../../environments/environment'
 export const API_URL: string = environment.apiUrl;
 /** proxy routes to each web backend servlet */
 export const Routes = {
-  login: API_URL + "loginServlet",
-  vulnerability: API_URL + "vulnerabilityServlet",
-  main: API_URL + "mainServlet",
+  main: API_URL,
+  login: API_URL + "login",
+  vulnerability: API_URL + "vulnerabilities",
   review: API_URL + "reviewServlet",
-  search: API_URL + "searchServlet"
+  search: API_URL + "search"
 }
