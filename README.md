@@ -5,7 +5,7 @@
 # NVIP Angular UI Steps
     - Ensure you have Node 18.13.0
     - Ensure you have Angular CLI installed: npm install -g @angular/cli
-    - cd angular-ui
+    - Ensure you are at the root of the nvip-ui directory
     - npm install
     - ng serve (or npm start)
     - Visit localhost:4200
