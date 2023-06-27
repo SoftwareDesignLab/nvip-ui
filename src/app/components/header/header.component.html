@@ -1,51 +1,63 @@
-<div class="nvip-header">
-  <div class="nvip-logo-container">
-    <a (click)="goToSafely([''])" class="nvip-logo">
+<c-navbar colorScheme="light" expand="md" class="nvip-header">
+  <c-container fluid style="justify-content: left">
+    <a cNavbarBrand (click)="goToSafely([''])" class="nvip-logo">
       <img src="assets/images/nvip-simple-logo.jpg" alt="NVIP" />
     </a>
-  </div>
-
-  <div class="nvip-header-container">
-    <div
+    <div class="collapse-button">
+      <button [cNavbarToggler]="collapseRef"></button>
+    </div>
+    <div class="nvip-header-container">
+      <div #collapseRef="cCollapse" navbar cCollapse
       id="userView"
       class="nvip-header-links"
       style="display: flex; width: 100%"
-    >
-      <a class="nvip-header-link" (click)="goToSafely(['about'])">About NVIP</a>
-
-      <a class="nvip-header-link" (click)="goTo(['recent'])"
-        >Recent Vulnerabilities</a
       >
+        <!-- <div id="userView"> -->
+        <c-navbar-nav class="me-auto mb-2 mb-lg-0" style="width: 100%">
+          <c-nav-item class="nvip-header-link">
+            <a cNavLink (click)="goToSafely(['about'])">About NVIP</a>
+          </c-nav-item>
+          <c-nav-item class="nvip-header-link">
+            <a cNavLink (click)="goTo(['recent'])">Recent Vulnerabilities</a>
+          </c-nav-item>
+          <c-nav-item class="nvip-header-link">
+            <a cNavLink (click)="goTo(['search'])">Search</a>
+          </c-nav-item>
+          <c-nav-item class="nvip-header-link" style="display: none">
+            <a
+              cNavLink
+              id="adminElement"
+              class="nvip-header-link"
+              href="#review/"
+              >Review</a
+            >
+          </c-nav-item>
+          <div id="userBlock" style="width: 20%"></div>
+          <c-nav-item class="nvip-header-link" *ngIf="!isLoggedIn()">
+            <a (click)="openLogin()">Login</a>
+          </c-nav-item>
 
-      <a class="nvip-header-link" (click)="goTo(['search'])">Search</a>
-
-      <a
-        id="adminElement"
-        class="nvip-header-link"
-        style="display: none"
-        href="#review/"
-        >Review</a
-      >
-
-      <div id="userBlock" style="width: 20%"></div>
-
-      <a class="nvip-header-link" *ngIf="!isLoggedIn()" (click)="openLogin()"
-        >Login</a
-      >
-
-      <div class="nvip-header-user-icon-container" [hidden]="isLoggedIn()">
-        <p class="nvip-user-label" [hidden]="!isLoggedIn()">
-          Welcome, {{ getFirstName() }}
-        </p>
-        <fa-icon
-          [icon]="faSignOut"
-          class="nvip-header-user-icon"
-          [hidden]="!isLoggedIn()"
-          aria-hidden="true"
-          (click)="logOut()"
-          href="#"
-        ></fa-icon>
+          <c-nav-item>
+            <div
+              class="nvip-header-user-icon-container"
+              [hidden]="isLoggedIn()"
+            >
+              <p class="nvip-user-label" [hidden]="!isLoggedIn()">
+                Welcome, {{ getFirstName() }}
+              </p>
+              <fa-icon
+                [icon]="faSignOut"
+                class="nvip-header-user-icon"
+                [hidden]="!isLoggedIn()"
+                aria-hidden="true"
+                (click)="logOut()"
+                href="#"
+              ></fa-icon>
+            </div>
+          </c-nav-item>
+        </c-navbar-nav>
+        <!-- </div> -->
       </div>
     </div>
-  </div>
-</div>
+  </c-container>
+</c-navbar>

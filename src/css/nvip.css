@@ -36,10 +36,13 @@ body {
 	display: flex;
   	flex-direction: column;
 	min-height: 100%;
-  min-width: 100vh;
+  	min-width: 100vh;
 	overflow: visible;
 	height:100%;
 	margin: 0;
+	font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
 	/*position: relative;*/
 }
 

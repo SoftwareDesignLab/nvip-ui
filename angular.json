@@ -21,6 +21,7 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
+              "node_modules/@coreui/coreui/dist/css/coreui.min.css",
               "src/styles.css",
               "src/css/directives.css",
               "src/css/main.css",
