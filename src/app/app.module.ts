@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from '@angular/forms';
@@ -49,6 +49,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchDropdownComponent } from './components/search-dropdown/search-dropdown.component';
 import { GoogleChartComponent } from './components/google-chart/google-chart.component';
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
+import { NavbarModule, CollapseModule, GridModule } from '@coreui/angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,9 +78,13 @@ import { GoogleGaugeComponent } from './components/google-chart/google-gauge.com
     FontAwesomeModule,
     FormsModule,
     NgxChartsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NavbarModule,
+    CollapseModule,
+    GridModule
   ],
   providers: [ApiService, AuthService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
