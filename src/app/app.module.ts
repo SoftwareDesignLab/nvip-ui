@@ -49,7 +49,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchDropdownComponent } from './components/search-dropdown/search-dropdown.component';
 import { GoogleChartComponent } from './components/google-chart/google-chart.component';
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
-import { NavbarModule, CollapseModule, GridModule } from '@coreui/angular';
+import { 
+  NavbarModule, 
+  CollapseModule, 
+  GridModule,
+  FooterModule } from '@coreui/angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +85,8 @@ import { NavbarModule, CollapseModule, GridModule } from '@coreui/angular';
     BrowserAnimationsModule,
     NavbarModule,
     CollapseModule,
-    GridModule
+    GridModule,
+    FooterModule
   ],
   providers: [ApiService, AuthService],
   bootstrap: [AppComponent],
