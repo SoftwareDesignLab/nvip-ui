@@ -16,8 +16,8 @@
     </h3>
     <br />
     <div class="bullet-container container" style="width: 100%">
-      <div class="row">
-        <div class="col-md-4 nvip-bullet">
+      <c-row >
+        <c-col class="col-bullet">
           <h2 class="bullet-header">
             <fa-icon
               [icon]="faDatabase"
@@ -42,9 +42,9 @@
               using automated mining techniques.
             </li>
           </ul>
-        </div>
+        </c-col>
 
-        <div class="col-xl-4 col-md-4 nvip-bullet">
+        <c-col class="col-bullet">
           <h2 class="bullet-header">
             <fa-icon
               [icon]="faCubes"
@@ -65,11 +65,11 @@
 
             <li>Automatically reconciles CVEs using Apache Open NLP.</li>
           </ul>
-        </div>
+        </c-col>
 
         <div class="graph-breakpoint1"></div>
 
-        <div class="col-xl-4 col-md-4 nvip-bullet">
+        <c-col class="col-bullet">
           <h2 class="bullet-header">
             <fa-icon
               [icon]="faStarHalf"
@@ -93,8 +93,8 @@
               Enumeration (CPE) product names from free-form CVE descriptions.
             </li>
           </ul>
-        </div>
-      </div>
+        </c-col>
+      </c-row>
     </div>
   </div>
 
@@ -113,27 +113,27 @@
     </div>
 
     <div class="container" style="width: 100%" [hidden]="!isChartsLoaded()">
-      <div class="row">
-        <div id="graph" class="col-xl-4 col-lg-4 nvip_column_chart">
-          <h5 style="color: black">Number of CVEs added to NVIP</h5>
+      <c-row class="row">
+        <c-col id="graph" class="col-bullet">
+          <h5 class="chart-header">Number of CVEs added to NVIP</h5>
           <div id="chart_values1"></div>
           <nvip-chart [chartType]="0" (loaded)="isLoaded($event, 0)"></nvip-chart>
-        </div>
+        </c-col>
         <div class="graph-breakpoint2"></div>
-        <div class="col-xl-4 col-lg-4 nvip_column_chart">
-          <h5 style="color: black">Number of Found CVEs not in NVD</h5>
+        <c-col class="col-bullet">
+          <h5 class="chart-header">Number of Found CVEs not in NVD</h5>
           <div id="chart_values2"></div>
           <nvip-chart [chartType]="1" (loaded)="isLoaded($event, 1)"></nvip-chart>
-        </div>
+        </c-col>
         <div class="graph-breakpoint1"></div>
-        <div class="col-xl-4 col-lg-4 nvip_column_chart">
-          <h5 style="color: black">
+        <c-col class="col-bullet">
+          <h5 class="chart-header">
             Average time gap compared to NVD in hours
           </h5>
           <div id="chart_values3"></div>
           <nvip-chart [chartType]="2" (loaded)="isLoaded($event, 2)"></nvip-chart>
-        </div>
-      </div>
+        </c-col>
+      </c-row>
     </div>
   </div>
 </div>
