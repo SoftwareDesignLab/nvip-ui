@@ -269,7 +269,7 @@
 	line-height: 2em;
 	margin-bottom: 1em;
 	vertical-align: center;
-	width: 55%;
+	width: 100%;
 }
 
 .vuln-characteristics-bar > p {
@@ -301,6 +301,10 @@ nvip-vuln-nav-btn-ctn > .nvip-vuln-nav-btn {
 @media screen and (min-width: 750px) {
 	.vuln-content {
 		max-width: 91.66%;
+	}
+
+	.vuln-characteristics-bar { 
+		width: 55%;
 	}
 }
 
