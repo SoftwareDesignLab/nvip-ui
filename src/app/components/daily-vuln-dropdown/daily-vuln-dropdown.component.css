@@ -45,6 +45,13 @@
   width: 2.4em;
 }
 
+@media (max-width: 500px) {
+  .daily-vuln-dropdown-icon-box > img {
+    height: 1.8em;
+    width: 1.8em;
+  }
+}
+
 .daily-vuln-dropdown-icon-box .nvd_logo {
   background-color: #000000;
   border: 2px solid #ff0000;
@@ -76,7 +83,6 @@
 }
 
 #cve_id {
-  font-size: 1.5em;
   color: #286091;
 }
 
