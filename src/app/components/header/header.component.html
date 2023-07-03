@@ -37,11 +37,7 @@
             <a (click)="openLogin()">Login</a>
           </c-nav-item>
 
-          <c-nav-item>
-            <div
-              class="nvip-header-user-icon-container"
-              [hidden]="isLoggedIn()"
-            >
+          <c-nav-item [hidden]="!isLoggedIn()" class="nvip-header-user-icon-container">
               <p class="nvip-user-label" [hidden]="!isLoggedIn()">
                 Welcome, {{ getFirstName() }}
               </p>
@@ -53,7 +49,6 @@
                 (click)="logOut()"
                 href="#"
               ></fa-icon>
-            </div>
           </c-nav-item>
         </c-navbar-nav>
         <!-- </div> -->
