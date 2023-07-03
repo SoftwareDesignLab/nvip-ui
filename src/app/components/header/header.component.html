@@ -32,23 +32,23 @@
               >Review</a
             >
           </c-nav-item>
-          <div id="userBlock" style="width: 20%"></div>
+          <c-nav-item id="userBlock" style="width: 100%;"></c-nav-item>
           <c-nav-item class="nvip-header-link" *ngIf="!isLoggedIn()">
             <a (click)="openLogin()">Login</a>
           </c-nav-item>
 
           <c-nav-item [hidden]="!isLoggedIn()" class="nvip-header-user-icon-container">
-              <p class="nvip-user-label" [hidden]="!isLoggedIn()">
-                Welcome, {{ getFirstName() }}
-              </p>
-              <fa-icon
-                [icon]="faSignOut"
-                class="nvip-header-user-icon"
-                [hidden]="!isLoggedIn()"
-                aria-hidden="true"
-                (click)="logOut()"
-                href="#"
-              ></fa-icon>
+            <p class="nvip-user-label" [hidden]="!isLoggedIn()">
+              Welcome, {{ getFirstName() }}
+            </p>
+            <fa-icon
+              [icon]="faSignOut"
+              class="nvip-header-user-icon"
+              [hidden]="!isLoggedIn()"
+              aria-hidden="true"
+              (click)="logOut()"
+              href="#"
+            ></fa-icon>
           </c-nav-item>
         </c-navbar-nav>
         <!-- </div> -->
