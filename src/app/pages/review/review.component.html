@@ -1,4 +1,16 @@
-<h1>Review</h1>
+<div id="nvipContent" class="nvip-content-container col-12">
+    <div>
+        <label for="cveid">CVE ID: </label>
+        <input id="cveid" [(ngModel)]="searchCveId" placeholder="">
+        <button id="btnDetailId" (click)="detailSearchId()">Search</button>
+    </div>
+    <div>
+        <p>CVE ID: {{cve.cveId}}</p>
+        <p>Description: {{cve.description}}</p>
+        <p>Status: {{cve.status}}</p>
+        <p>Run Date Time: {{runDateTime}}</p>
+    </div>
+</div>
 <!-- TODO: will this be used later on?? lots of dynamic entries, uncomment when filled in/referenced -->
 
 <!-- <div class="nvip-search-result-header col-12">

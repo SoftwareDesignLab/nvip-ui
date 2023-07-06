@@ -23,6 +23,14 @@
  */
 import { Component } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from 'src/app/services/Api/api-service.service';
+import { Session } from 'src/app/services/Auth/auth-service.service';
+import { CookieService } from 'src/app/services/Cookie/cookie.service';
+import { FuncsService } from 'src/app/services/Funcs/funcs.service';
+import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
+import { VulnService } from 'src/app/services/vuln/vuln.service';
+import { Vulnerability } from 'src/app/models/vulnerability.model';
+
 /** CURRENTLY UNUSED review page */
 @Component({
   selector: 'app-review',
@@ -32,4 +40,36 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 export class ReviewComponent {
   /** FontAwesome Icon */
   faSpinner = faSpinner;
+  console = console;
+  session = {} as Session;
+  cve = {} as Vulnerability;
+  searchCveId = ""
+  runDateTime = "";
+
+  constructor(
+    private vulnService: VulnService,
+    private cookieService: CookieService,
+    private apiService: ApiService,
+    private funcs: FuncsService,
+    private searchResService: SearchResultService
+  ) {}
+
+  ngOnInit(): void {
+    this.session = this.cookieService.get('nvip_user');
+  }
+
+  detailSearchId() {
+    this.apiService
+          .cveDetailsId({cveId:this.searchCveId, username:this.session.userName, token:this.session.token})
+          .subscribe({
+            next: (res: any) => {
+              console.log(res)
+              this.cve.cveId = res[0].cve_id
+              this.cve.description = res[0].description
+              this.cve.status = res[0].status_id
+              this.runDateTime = res[0].run_date_time
+            },
+            complete: () => {}
+          })
+  }
 }
