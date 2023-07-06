@@ -30,6 +30,6 @@ export const Routes = {
   main: API_URL,
   login: API_URL + "login",
   vulnerability: API_URL + "vulnerabilities",
-  review: API_URL + "reviewServlet",
+  review: API_URL + "reviews",
   search: API_URL + "search"
 }

@@ -64,29 +64,29 @@ export type ApiRequestObserver =
   | ((value: Object) => void);
 
 
-// export interface CVEDetailsRequest {
-//   cveId: string; // TODO: figure out the actual type of this
-//   username: string;
-//   token: string;
-// }
-// export interface CVESearchRequest {
-//   username: string;
-//   token: string;
-//   searchDate: string; // TODO: find real type
-//   crawled: boolean;
-//   rejected: boolean;
-//   accepted: boolean;
-//   reviewed: boolean;
-// }
-// export interface CVEUpdateRequest {
-//   atomicUpdate: boolean;
-//   username: string;
-//   token: string;
-//   statusID: string; // TODO: find real type
-//   vulnID: string; // TODO: find real type
-//   info: string; // TODO: find real type
-//   tweet: boolean;
-// }
+export interface CVEDetailsRequest {
+  cveId: string; // TODO: figure out the actual type of this
+  username: string;
+  token: string;
+}
+export interface CVESearchRequest {
+  username: string;
+  token: string;
+  searchDate: string; // TODO: find real type
+  crawled: boolean;
+  rejected: boolean;
+  accepted: boolean;
+  reviewed: boolean;
+}
+export interface CVEUpdateRequest {
+  atomicUpdate: boolean;
+  username: string;
+  token: string;
+  statusID: string; // TODO: find real type
+  vulnID: string; // TODO: find real type
+  info: string; // TODO: find real type
+  tweet: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -137,27 +137,32 @@ export class ApiService {
 
   // For Review page, which is currently unused
 
-  // cveDetails(detailRequst: CVEDetailsRequest, callback: ApiRequestObserver) {
-  //   this.httpClient
-  //     .get(Routes.review, this.injectGetParameters({ ...detailRequst }))
-  //     .subscribe(callback);
-  // }
-  // cveUpdateAtomic(
-  //   updateRequest: CVEUpdateRequest,
-  //   cveDescription: string,
-  //   callback: ApiRequestObserver
-  // ) {
-  //   this.httpClient.post(Routes.review, cveDescription, {
-  //     headers: {
-  //       'Content-Type': 'Text/plain',
-  //     },
-  //     params: {
-  //       ...updateRequest,
-  //     },
-  //   });
-  // }
+  cveDetailsId(detailRequest: CVEDetailsRequest) {
+    return this.httpClient
+      .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
+  }
 
-  // cveUpdateComplex(updateRequest: CVEUpdateRequest) {}
+  cveDetails(detailRequest: CVESearchRequest) {
+    return this.httpClient
+      .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
+  }
+
+  cveUpdateAtomic(
+    updateRequest: CVEUpdateRequest,
+    cveDescription: string,
+    callback: ApiRequestObserver
+  ) {
+    this.httpClient.post(Routes.review, cveDescription, {
+      headers: {
+        'Content-Type': 'Text/plain',
+      },
+      params: {
+        ...updateRequest,
+      },
+    });
+  }
+
+  cveUpdateComplex(updateRequest: CVEUpdateRequest) {}
 
   vulnServlet(daily: boolean, dateRange: number) {
     return this.httpClient.get(
