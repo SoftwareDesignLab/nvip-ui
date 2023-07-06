@@ -53,6 +53,7 @@ export class RecentComponent implements OnInit {
   dailyVulnIndex: number = 0;
   dailyVulns: VulnMaps = [];
   currentSelected: number = -1;
+  apiCallDone: boolean = false;
 
   /**
    * constructor
@@ -62,7 +63,8 @@ export class RecentComponent implements OnInit {
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
-    this.vulnService.onRecentInit().subscribe((res: any) =>
+    this.vulnService.onRecentInit().subscribe((res: any) => {
+    this.apiCallDone = true;
       Object.keys(res).forEach((key) => {
         this.dailyVulns.push({
           date: this.formatDate(key),
@@ -70,7 +72,7 @@ export class RecentComponent implements OnInit {
         });
         this.dailyVulnLimit.push(this.vulnLimitIncr);
       })
-    );
+    });
   }
 
   /** format title date */
