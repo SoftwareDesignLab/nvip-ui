@@ -33,6 +33,14 @@ import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 
+export interface reviewResultObject {
+  cve_id: string
+  description: string
+  run_date_time: string
+  status_id: string
+  active: boolean
+}
+
 /** CURRENTLY UNUSED review page */
 @Component({
   selector: 'app-review',
@@ -55,7 +63,7 @@ export class ReviewComponent {
   rotationAmountStatus = 0;
   statuses = ["Accepted", "Under Review", "Rejected", "Crawled"];
   showForm: boolean = true;
-  reviewResults: Array<any> = [];
+  reviewResults: Array<reviewResultObject> = [];
   filteredReviewResults: Array<any> = [];
   reviewSuccess: boolean = false;
   resultTotalCount = 0;
@@ -66,6 +74,8 @@ export class ReviewComponent {
   totalPageLimit = 0;
   pageLimit = 100;
   currentSelected: number = -1;
+
+  active: boolean = false;
 
   constructor(
     private vulnService: VulnService,
@@ -158,7 +168,13 @@ export class ReviewComponent {
    */
   handleRes(res: any) {
     this.resultTotalCount = res.length;
-    this.reviewResults = res;
+    for (let result of res) {
+      let obj = result as reviewResultObject
+      obj.active = false
+      this.reviewResults.push(obj)
+    }
+    console.log(this.reviewResults)
+    // this.reviewResults = res;
     this.reviewSuccess = true;
     if (this.resultTotalCount < this.pageLimit) {
       this.totalPageLimit = 1;
@@ -330,5 +346,24 @@ export class ReviewComponent {
 
     // Set the total number of pages
     this.totalPages = totalPages;
+  }
+
+  selectReviewCve(vuln: any) {
+    vuln.active = !vuln.active
+  }
+
+  statusIdToString(status: string) {
+    switch(status){
+      case "1":
+        return "Crawled"
+      case "2":
+        return "Rejected"
+      case "3":
+        return "Under Review"
+      case "4":
+        return "Accepted"
+      default:
+        return ""
+      }
   }
 }
