@@ -32,6 +32,7 @@ import {
 import { Observer } from 'rxjs';
 import { AuthCredentials } from '../Auth/auth-service.service';
 import { Routes } from './api_routes';
+import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 
 /* Related Interfaces */
 
@@ -137,12 +138,7 @@ export class ApiService {
 
   // For Review page, which is currently unused
 
-  cveDetailsId(detailRequest: CVEDetailsRequest) {
-    return this.httpClient
-      .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
-  }
-
-  cveDetails(detailRequest: CVESearchRequest) {
+  cveDetails(detailRequest: ReviewCriteria) {
     return this.httpClient
       .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
   }
