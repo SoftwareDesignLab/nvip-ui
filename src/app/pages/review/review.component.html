@@ -1,14 +1,88 @@
 <div id="nvipContent" class="nvip-content-container col-12">
-    <div>
-        <label for="cveid">CVE ID: </label>
-        <input id="cveid" [(ngModel)]="searchCveId" placeholder="">
-        <button id="btnDetailId" (click)="detailSearchId()">Search</button>
+    <div class="nvip-loading-bar col-12">
+        <div class="nvip-loading-bar-text-ctn">
+            <fa-icon [icon]="faSpinner" animation="spin" size="3x" [fixedWidth]="true" [ngStyle]="{ color: 'white'}"></fa-icon>
+            <span>Loading search results...</span>
+        </div>
     </div>
-    <div>
-        <p>CVE ID: {{cve.cveId}}</p>
-        <p>Description: {{cve.description}}</p>
-        <p>Status: {{cve.status}}</p>
-        <p>Run Date Time: {{runDateTime}}</p>
+    <div class="nvip-search-form-ctn" [hidden]="!showForm">
+        <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="detailSearchId($event, form)">
+            <div class="nvip-form-horizontal-block">
+                <div class="nvip-form-field col-6">
+                    <label for="cveid">CVE ID: </label>
+                    <input id="cveid" name="cveid" [(ngModel)]="review.cveId" placeholder="">
+                </div>
+                <div class="nvip-form-field col-6">
+                    <label for="searchDate">Date</label>
+                    <input [ngModel]="review.searchDate | date:'yyyy-MM-dd'" (ngModelChange)="review.searchDate = $event" type="date" name="searchDate" ng-required ="true"/>
+                    <!-- <span class="error" ng-show="myForm.input.$error.required">Required!</span> -->
+                </div>  
+            </div>
+            <div class="nvip-form-dropdown-field col-12 dropdown-opened" (click)="toggleContent($event, 'Status')">
+                <div class="nvip-form-dropdown-left col-11">
+                    <label>CVE Status:</label>
+                </div>
+                <div class="nvip-form-dropdown-right col-1">
+                    <fa-icon [icon]="faAngleDown" transform="rotate-{{rotationAmountStatus}}" class="nvip-form-dropdown-caret" aria-hidden="true"></fa-icon>
+                </div>
+            </div>
+            <div class="nvip-form-dropdown-content col-11" style="display: flex;">
+                <div *ngFor="let status of statuses" class="nvip-form-field col-4">
+                    <div class="nvip-form-field-block col-11">
+                        <label for="{{status}}">{{status}}</label>
+                        <input type="checkbox" (change)="onStatusChange($event, status)" />        
+                    </div>
+                </div>
+            </div>
+            <div class="nvip-form-btn-ctn col-12">
+                <button class="nvip-button nvip-form-btn col-3"><span>Search</span></button>
+            </div>
+        </form>
+    </div>
+    <div class="nvip-search-result-ctn" [hidden]="showForm">
+        <div class="nvip-search-top-ctn col-12">
+        </div>
+        <div class="nvip-search-page-ctn">
+            <div class="nvip-search-result-count col-12">
+                <p>{{resultTotalCount}} records found</p>
+            </div>
+            <div class="nvip-paging-index col-12">
+                <p>Showing records {{pageRecord[0]}} to {{pageRecord[1]}}</p>
+            </div>
+            <div class="nvip-paging-bar-ctn" [hidden]="reviewResults.length <= 10">
+                <div class="nvip-paging-bar" (click)="changePage(0)" [hidden]="currentPage == 0">
+                    <a>First</a>
+                </div>
+                <div class="nvip-paging-bar nvip-next-page" (click)="changePage(currentPage - 1)">
+                    <a>
+                        <fa-icon [icon]="faAngleDoubleLeft" size="lg" aria-hidden="true"></fa-icon>
+                    </a>
+                </div>
+                <div class="nvip-paging-bar" *ngFor="let pageIndex of pageBlocks" (click)="changePage(pageIndex)"
+                [ngClass]="{'current-page': pageIndex == currentPage}">
+                    <a>{{pageIndex + 1}}</a>
+                </div>
+                <div class="nvip-paging-bar nvip-next-page" (click)="changePage(currentPage + 1)">
+                    <a>
+                        <fa-icon [icon]="faAngleDoubleRight" size="lg" aria-hidden="true"></fa-icon>
+                    </a>
+                </div>
+                <div class="nvip-paging-bar" (click)="changePage(totalPages - 1)" [hidden]="currentPage >= (totalPages - 1)">
+                    <a>Last</a>
+                </div>
+            </div>
+            <div class="nvip-search-result-page col-10">
+                <p class="nvip-cve-panel-empty" [hidden]="reviewResults.length > 0">No CVEs identified</p>
+                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredReviewResults; let index = index;" [hidden]="reviewResults.length == 0">
+                    <div>
+                        <p>CVE ID: {{vuln.cve_id}}</p>
+                        <p>Description: {{vuln.description}}</p>
+                        <p>Status: {{vuln.status_id}}</p>
+                        <p>Run Date Time: {{vuln.run_date_time}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- TODO: will this be used later on?? lots of dynamic entries, uncomment when filled in/referenced -->
