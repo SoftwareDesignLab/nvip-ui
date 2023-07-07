@@ -74,12 +74,22 @@
             <div class="nvip-search-result-page col-10">
                 <p class="nvip-cve-panel-empty" [hidden]="reviewResults.length > 0">No CVEs identified</p>
                 <div class="nvip-search-result col-12" *ngFor="let vuln of filteredReviewResults; let index = index;" [hidden]="reviewResults.length == 0">
-                    <div>
-                        <p>CVE ID: {{vuln.cve_id}}</p>
+                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve(vuln)">
+                            <div class="daily-vuln-dropdown-row">
+                                <div class="daily-vuln-dropdown-row-1">
+                                    <span class="nvip-cve-number-span" id="cve_id">{{vuln.cve_id}}</span>
+                                    <span class="nvip-cve-number-span" id="status">Status: {{statusIdToString(vuln.status_id)}}</span>
+                                </div>
+                            </div>
+                        <!-- <p>CVE ID: {{vuln.cve_id}}</p>
                         <p>Description: {{vuln.description}}</p>
                         <p>Status: {{vuln.status_id}}</p>
-                        <p>Run Date Time: {{vuln.run_date_time}}</p>
-                    </div>
+                        <p>Run Date Time: {{vuln.run_date_time}}</p> -->
+                    </button>
+                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '500px' : '0')}">
+                            <p>Description: {{vuln.description}}</p>
+                            <p>Run Date Time: {{vuln.run_date_time}}</p>
+                        </div>
                 </div>
             </div>
         </div>
