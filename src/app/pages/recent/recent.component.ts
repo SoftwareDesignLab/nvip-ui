@@ -112,16 +112,13 @@ export class RecentComponent implements OnInit {
   /** trigger API call to show more recent vulns under that day to show */
   showMore(panelIndex: number, date: String) {
     const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
-    console.log("limit here", this.dailyVulnLimit)
-    console.log("amount of vulns we have here", this.dailyVulns[indexToUpdate].cve_list.length)
-    console.log("panel index", panelIndex)
-    if (this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr + 5 > this.dailyVulns[indexToUpdate].cve_list.length)
-      this.vulnService.getByDateAndPage(this.unformatDate(date), panelIndex, this.vulnLimitIncr).subscribe((res: any) => {
+    const totalVulns = this.dailyVulns[indexToUpdate].cve_list.length
+    if (this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr + 5 > totalVulns)
+      this.vulnService.getByDateAndPage(this.unformatDate(date), (totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
         // push res to VulnMap corresponding to date String
         let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
         thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
         this.dailyVulns[indexToUpdate] = thisVulnObj
-        console.log("daily vulns now", this.dailyVulns[indexToUpdate])
       })
     else
       console.log("no need to get more vulns here")
