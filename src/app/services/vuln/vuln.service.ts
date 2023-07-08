@@ -42,4 +42,10 @@ export class VulnService {
   searchInfo(username: string, token: string) {
     return this.api.searchInfo(username, token);
   }
+
+  getByDateAndPage(date: string, page: number, size: number) {
+    return this.api.vulnServGetByDateAndPage(date, page, size);
+  }
+
+
 }
