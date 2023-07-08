@@ -64,7 +64,7 @@ export class RecentComponent implements OnInit {
   /** call recent vulnerabilites on page init */
   ngOnInit() {
     this.vulnService.onRecentInit().subscribe((res: any) => {
-    this.apiCallDone = true;
+      this.apiCallDone = true;
       Object.keys(res).forEach((key) => {
         this.dailyVulns.push({
           date: this.formatDate(key),
@@ -82,6 +82,18 @@ export class RecentComponent implements OnInit {
     return date.toDateString();
   }
 
+  /** convert date back to YYYY-MM-DD to be passed into dailyPage call */
+  unformatDate(dateString: String) {
+    const inputFormat = 'ddd MMM DD YYYY';
+    // Split the date string into its components
+    const [weekday, month, day, year] = dateString.split(' ');
+    // Convert the month string to a numerical representation (0-11)
+    const monthIndex = new Date(`${month} 1, 2000`).getMonth();
+    // Create a new Date object with the components
+    const dateObject = new Date(Number(year), monthIndex, Number(day));
+    return dateObject.toISOString().split('T')[0];
+  }
+
   /** helper to determine whether a show more or show less button is disabled */
   isDisabled(isMore: boolean, panelIndex: number, vulnMap: VulnMap) {
     if (isMore)
@@ -97,8 +109,19 @@ export class RecentComponent implements OnInit {
     this.dailyVulnIndex = this.dailyVulnIndex += incr;
   }
 
-  /** trigger more recent vulns under that day to show */
-  showMore(panelIndex: number) {
+  /** trigger API call to show more recent vulns under that day to show */
+  showMore(panelIndex: number, date: String) {
+    console.log("panel index", panelIndex, this.unformatDate(date));
+    this.vulnService.getByDateAndPage(this.unformatDate(date), panelIndex, this.vulnLimitIncr).subscribe((res: any) => {
+      console.log("res for this page", res)
+      // push res to VulnMap corresponding to date String
+      const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
+      console.log("index to be updated", indexToUpdate)
+      let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
+      thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
+      console.log("updated list", thisVulnObj.cve_list)
+      this.dailyVulns[indexToUpdate] = thisVulnObj
+    })
     this.dailyVulnLimit[panelIndex] =
       this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr;
   }

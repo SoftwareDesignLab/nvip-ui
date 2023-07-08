@@ -187,6 +187,17 @@ export class ApiService {
     );
   }
 
+  vulnServGetByDateAndPage(date: string, page: number, size: number) {
+    return this.httpClient.get(
+      Routes.vulnerability + '/dailyPage',
+      this.injectGetParameters({
+        date: date,
+        pageNum: page,
+        pageSize: size
+      })
+    );
+  }
+
   private injectGetParameters(params: HttpRequestParams) {
     return { ...this.GET_OPTIONS, params: params };
   }
