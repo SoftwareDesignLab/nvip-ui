@@ -38,7 +38,17 @@ export interface reviewResultObject {
   description: string
   run_date_time: string
   status_id: string
+  cvss_scores: Array<{}>
+
   active: boolean
+}
+
+export interface updateObject {
+  desc: string
+  cvss_severity_id: number;
+  severity_confidence: number;
+  impact_score: number;
+  impact_confidence: number;
 }
 
 /** CURRENTLY UNUSED review page */
@@ -74,6 +84,9 @@ export class ReviewComponent {
   totalPageLimit = 0;
   pageLimit = 100;
   currentSelected: number = -1;
+  lastVulnSelected = {} as reviewResultObject;
+
+  update = {} as updateObject;
 
   active: boolean = false;
 
@@ -169,8 +182,10 @@ export class ReviewComponent {
   handleRes(res: any) {
     this.resultTotalCount = res.length;
     for (let result of res) {
+      console.log(result)
       let obj = result as reviewResultObject
       obj.active = false
+      // console.log(obj)
       this.reviewResults.push(obj)
     }
     console.log(this.reviewResults)
@@ -349,7 +364,20 @@ export class ReviewComponent {
   }
 
   selectReviewCve(vuln: any) {
+    this.lastVulnSelected.active = false;
+    this.lastVulnSelected = vuln;
+
     vuln.active = !vuln.active
+
+    this.update.desc = vuln.description
+    if(vuln.cvss_scores.length != 0) {
+      this.update.cvss_severity_id = vuln.cvss_scores[0].cvssSeverity.id;
+      this.update.impact_score = vuln.impact_score
+    }
+    else {
+      this.update.cvss_severity_id = -1
+      this.update.impact_score = -1
+    }
   }
 
   statusIdToString(status: string) {
@@ -365,5 +393,9 @@ export class ReviewComponent {
       default:
         return ""
       }
+  }
+
+  updateVuln($event: any, f: NgForm) {
+
   }
 }
