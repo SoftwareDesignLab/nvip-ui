@@ -32,8 +32,15 @@ export interface VulnMap {
   cve_list: Array<any>;
 }
 
+export interface VulnCountMap {
+  date: string;
+  count: number;
+}
+
 /** Array of date-list vuln pages to navigate through */
 export interface VulnMaps extends Array<VulnMap> {}
+
+export interface VulnCountMaps extends Array<VulnCountMap> {}
 
 @Component({
   selector: 'nvip-recent',
@@ -52,6 +59,7 @@ export class RecentComponent implements OnInit {
   vulnLimitIncr: number = 5;
   dailyVulnIndex: number = 0;
   dailyVulns: VulnMaps = [];
+  dailyCounts: VulnCountMaps = [];
   currentSelected: number = -1;
   apiCallDone: boolean = false;
 
@@ -73,6 +81,22 @@ export class RecentComponent implements OnInit {
         this.dailyVulnLimit.push(this.vulnLimitIncr);
       })
     });
+    this.vulnService.getRecentCounts().subscribe((res: any) => {
+      console.log(res);
+      res.forEach((element: any) => {
+        this.dailyCounts.push({
+          date: this.formatDate(element.date),
+          count: element.count,
+        });
+      }
+      );
+      console.log(this.dailyCounts)
+    });
+  }
+
+  getCount(date: string) {
+    const idx = this.dailyCounts.findIndex(vuln => vuln.date === date);
+    return this.dailyCounts[idx].count;
   }
 
   /** format title date */
@@ -120,8 +144,6 @@ export class RecentComponent implements OnInit {
         thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
         this.dailyVulns[indexToUpdate] = thisVulnObj
       })
-    else
-      console.log("no need to get more vulns here")
     this.dailyVulnLimit[panelIndex] =
       this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr;
   }

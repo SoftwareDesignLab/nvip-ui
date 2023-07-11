@@ -47,5 +47,9 @@ export class VulnService {
     return this.api.vulnServGetByDateAndPage(date, page, size);
   }
 
+  getRecentCounts() {
+    return this.api.vulnServGetRecentCounts(10);
+  }
+
 
 }
