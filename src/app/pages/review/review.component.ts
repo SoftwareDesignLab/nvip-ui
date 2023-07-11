@@ -39,16 +39,21 @@ export interface reviewResultObject {
   run_date_time: string
   status_id: string
   cvss_scores: Array<{}>
+  vdos: Array<{}>
 
   active: boolean
+}
+
+export interface updateVdo {
+  vdogroup: string
+  vdolabel: string
 }
 
 export interface updateObject {
   desc: string
   cvss_severity_id: number;
-  severity_confidence: number;
   impact_score: number;
-  impact_confidence: number;
+  vdos: Array<updateVdo>
 }
 
 /** CURRENTLY UNUSED review page */
@@ -86,7 +91,8 @@ export class ReviewComponent {
   currentSelected: number = -1;
   lastVulnSelected = {} as reviewResultObject;
 
-  update = {} as updateObject;
+  update = {} as updateObject
+  updateIndex: number = 0;
 
   active: boolean = false;
 
@@ -102,6 +108,9 @@ export class ReviewComponent {
     this.session = this.cookieService.get('nvip_user');
     this.review.username = this.session.userName;
     this.review.token = this.session.token;
+
+    console.log(this.review.username)
+    console.log(this.review.token)
   }
 
   detailSearchId($event: any, f: NgForm) {
@@ -363,7 +372,7 @@ export class ReviewComponent {
     this.totalPages = totalPages;
   }
 
-  selectReviewCve(vuln: any) {
+  selectReviewCve($evetn: any, vuln: any) {
     this.lastVulnSelected.active = false;
     this.lastVulnSelected = vuln;
 
@@ -372,7 +381,7 @@ export class ReviewComponent {
     this.update.desc = vuln.description
     if(vuln.cvss_scores.length != 0) {
       this.update.cvss_severity_id = vuln.cvss_scores[0].cvssSeverity.id;
-      this.update.impact_score = vuln.impact_score
+      this.update.impact_score = vuln.cvss_scores[0].impactScore;
     }
     else {
       this.update.cvss_severity_id = -1
