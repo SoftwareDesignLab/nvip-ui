@@ -41,7 +41,7 @@
           <p>{{ vulnMap.date }}</p>
         </div>
         <div class="daily-cve-counts col-12">
-          <p>{{ vulnMap.cve_list.length }} CVEs identified</p>
+          <p>{{ getCount(vulnMap.date) }} CVEs identified</p>
         </div>
         <button
           class="nvip-button nvip-next-day"
