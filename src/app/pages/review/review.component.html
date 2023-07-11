@@ -74,7 +74,7 @@
             <div class="nvip-search-result-page col-10">
                 <p class="nvip-cve-panel-empty" [hidden]="reviewResults.length > 0">No CVEs identified</p>
                 <div class="nvip-search-result col-12" *ngFor="let vuln of filteredReviewResults; let index = index;" [hidden]="reviewResults.length == 0">
-                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve(vuln)">
+                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve($event, vuln)">
                             <div class="daily-vuln-dropdown-row">
                                 <div class="daily-vuln-dropdown-row-1">
                                     <span class="nvip-cve-number-span" id="cve_id">{{vuln.cve_id}}</span>
@@ -88,18 +88,23 @@
                     </button>
                         <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '500px' : '0')}">
                             <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form)">
-                                <div class="nvip-form-field col-6">
-                                    <label for="desc">Description: </label>
-                                    <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder="">
+                                <div class="nvip-form-horizontal-block">
+                                    <div class="nvip-form-field col-6">
+                                        <label for="desc">Description: </label>
+                                        <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder="">
+                                    </div>
                                 </div>
-                                <div class="nvip-form-field col-6">
-                                    <label for="cvss">CVSS: </label>
-                                    <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
+                                <div class="nvip-form-horizontal-block">
+                                    <div class="nvip-form-field col-6">
+                                        <label for="cvss">CVSS: </label>
+                                        <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
+                                    </div>
+                                    <div class="nvip-form-field col-6">
+                                        <label for="impact">Impact Score: </label>
+                                        <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
+                                    </div>
                                 </div>
-                                <div class="nvip-form-field col-6">
-                                    <label for="impact">Impact Score: </label>
-                                    <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
-                                </div>
+                                
                             </form>
                         </div>
                 </div>
