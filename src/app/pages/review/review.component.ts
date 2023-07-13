@@ -61,6 +61,7 @@ export interface updateObject {
   severity_confidence: number;
   impact_score: number;
   impact_confidence: number;
+  vdos: Array<updateVdo>;
 }
 
 /** CURRENTLY UNUSED review page */
@@ -115,6 +116,11 @@ export class ReviewComponent {
     this.session = this.cookieService.get('nvip_user');
     this.review.username = this.session.userName;
     this.review.token = this.session.token;
+
+    this.update.vdos = new Array<updateVdo>()
+    for(let i = 0; i < 24; i++) {
+      this.update.vdos.push({} as updateVdo)
+    }
   }
 
   detailSearchId($event: any, f: NgForm) {
@@ -395,6 +401,11 @@ export class ReviewComponent {
       this.update.severity_confidence = -1
       this.update.impact_score = -1
       this.update.impact_confidence = -1
+    }
+
+    for(let i = 0; i < vuln.vdos.length; i++) {
+      this.update.vdos[i].vdolabel = vuln.vdos[i].vdoLabels.vdoLabelName;
+      this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName
     }
   }
 

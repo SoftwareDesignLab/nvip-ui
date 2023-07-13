@@ -86,13 +86,13 @@
                         <p>Status: {{vuln.status_id}}</p>
                         <p>Run Date Time: {{vuln.run_date_time}}</p> -->
                     </button>
-                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '700px' : '0')}">
+                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '2000px' : '0')}">
                             <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form, vuln)">
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
                                         <label for="desc">Description: </label>
                                         <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
-                                        <textarea if="desc" name="desc" style="width: 100%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
+                                        <textarea if="desc" name="desc" style="width: 90%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
                                     </div>
                                     <div class="nvip-form-field col-6">
                                         <label for="status">Status: </label>
@@ -139,6 +139,16 @@
                                     <div class="nvip-form-field col-6">
                                         <label for="impact_confidence">Impact Confidence: </label>
                                         <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
+                                    </div>
+                                </div>
+                                <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdos; let vindex = index;">
+                                    <div class="nvip-form-field col-6">
+                                        <label for="label">VDO Label: </label>
+                                        <input id="label" name="label" [(ngModel)]="update.vdos[vindex].vdolabel">
+                                    </div>
+                                    <div class="nvip-form-field col-6">
+                                        <label for="group">VDO Group: </label>
+                                        <input id="group" name="group" [(ngModel)]="update.vdos[vindex].vdogroup">
                                     </div>
                                 </div>
                                 <div class="nvip-form-horizontal-block">
