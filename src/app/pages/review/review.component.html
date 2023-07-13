@@ -74,7 +74,7 @@
             <div class="nvip-search-result-page col-10">
                 <p class="nvip-cve-panel-empty" [hidden]="reviewResults.length > 0">No CVEs identified</p>
                 <div class="nvip-search-result col-12" *ngFor="let vuln of filteredReviewResults; let index = index;" [hidden]="reviewResults.length == 0">
-                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve($event, vuln)">
+                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve($event, vuln, index)">
                             <div class="daily-vuln-dropdown-row">
                                 <div class="daily-vuln-dropdown-row-1">
                                     <span class="nvip-cve-number-span" id="cve_id">{{vuln.cve_id}}</span>
@@ -86,25 +86,61 @@
                         <p>Status: {{vuln.status_id}}</p>
                         <p>Run Date Time: {{vuln.run_date_time}}</p> -->
                     </button>
-                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '500px' : '0')}">
+                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '700px' : '0')}">
                             <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form)">
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
                                         <label for="desc">Description: </label>
-                                        <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder="">
+                                        <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
+                                        <textarea if="desc" name="desc" style="width: 100%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
+                                    </div>
+                                    <div class="nvip-form-field col-6">
+                                        <label for="status">Status: </label>
+                                        <div >
+                                            <label>Crawled: </label> 
+                                            <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
+                                            <label>Under Review:  </label> 
+                                            <input type="radio" id="statusUnderReivew" name="statusId" value="4" [(ngModel)]="update.status_id"> 
+                                            <label>Accepted:  </label>
+                                            <input type="radio" id="statusAccepted" name="statusId" value="3" [(ngModel)]="update.status_id"> 
+                                            <label>Rejected: </label>
+                                            <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
+                                             
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
                                         <label for="cvss">CVSS: </label>
                                         <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
+                                        <div >
+                                            <label>LOW </label> 
+                                            <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id"> 
+                                            <label>MEDIUM </label> 
+                                            <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
+                                            <label>HIGH </label> 
+                                            <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
+                                            <label>CRITICAL</label> 
+                                            <input type="radio" class="cvssRadios{{index}}" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss_severity_id"> 
+                                            <label>N/A</label>
+                                            <input type="radio" class="cvssRadios{{index}}" id="severityNA" name="cvssSeverityId" value="-1" [(ngModel)]="update.cvss_severity_id">
+                                        </div>
                                     </div>
                                     <div class="nvip-form-field col-6">
                                         <label for="impact">Impact Score: </label>
                                         <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
                                     </div>
                                 </div>
-                                
+                                <div class="nvip-form-horizontal-block">
+                                    <div class="nvip-form-field col-6">
+                                        <label for="info">Comment: </label>
+                                        <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
+                                        <input if="info" name="info" [(ngModel)]="update.info">
+                                    </div>
+                                </div>
+                                <div class="nvip-form-btn-ctn col-12">
+                                    <button class="nvip-button nvip-form-btn col-3"><span>Update</span></button>
+                                </div>
                             </form>
                         </div>
                 </div>
@@ -113,7 +149,7 @@
     </div>
 </div>
 
-<div class="nvip-search-result-header col-12">
+<!-- <div class="nvip-search-result-header col-12">
     <p ng-show="showForm">Review Form</p>
 </div>
 
@@ -258,4 +294,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

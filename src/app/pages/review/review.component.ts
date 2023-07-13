@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faSpinner, faAngleDoubleLeft, faAngleDoubleRight, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
@@ -50,10 +50,13 @@ export interface updateVdo {
 }
 
 export interface updateObject {
-  desc: string
+  vuln_id: number;
+  cve_id: string;
+  status_id: number;
+  info: string;
+  desc: string;
   cvss_severity_id: number;
   impact_score: number;
-  vdos: Array<updateVdo>
 }
 
 /** CURRENTLY UNUSED review page */
@@ -108,9 +111,6 @@ export class ReviewComponent {
     this.session = this.cookieService.get('nvip_user');
     this.review.username = this.session.userName;
     this.review.token = this.session.token;
-
-    console.log(this.review.username)
-    console.log(this.review.token)
   }
 
   detailSearchId($event: any, f: NgForm) {
@@ -191,13 +191,10 @@ export class ReviewComponent {
   handleRes(res: any) {
     this.resultTotalCount = res.length;
     for (let result of res) {
-      console.log(result)
       let obj = result as reviewResultObject
       obj.active = false
-      // console.log(obj)
       this.reviewResults.push(obj)
     }
-    console.log(this.reviewResults)
     // this.reviewResults = res;
     this.reviewSuccess = true;
     if (this.resultTotalCount < this.pageLimit) {
@@ -372,13 +369,18 @@ export class ReviewComponent {
     this.totalPages = totalPages;
   }
 
-  selectReviewCve($evetn: any, vuln: any) {
+  selectReviewCve($event: any, vuln: any, index: any) {
+    this.currentSelected = index;
+
     this.lastVulnSelected.active = false;
     this.lastVulnSelected = vuln;
 
     vuln.active = !vuln.active
 
+    this.update.status_id = vuln.status_id;
+
     this.update.desc = vuln.description
+
     if(vuln.cvss_scores.length != 0) {
       this.update.cvss_severity_id = vuln.cvss_scores[0].cvssSeverity.id;
       this.update.impact_score = vuln.cvss_scores[0].impactScore;
@@ -404,7 +406,15 @@ export class ReviewComponent {
       }
   }
 
-  updateVuln($event: any, f: NgForm) {
+  setCVSSseverity(id: number) {
+    this.update.cvss_severity_id = id;
+  }
 
+  setStatus(id: number) {
+    this.update.status_id = id;
+  }
+
+  updateVuln($event: any, f: NgForm) {
+    console.log("woof")
   }
 }
