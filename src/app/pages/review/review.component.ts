@@ -32,6 +32,8 @@ import { SearchResultService } from 'src/app/services/SearchResult/search-result
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
+import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
+import { ReviewDataCriteria, ReviewCVSS } from 'src/app/models/review-data-criteria.model';
 
 export interface reviewResultObject {
   cve_id: string
@@ -56,7 +58,9 @@ export interface updateObject {
   info: string;
   desc: string;
   cvss_severity_id: number;
+  severity_confidence: number;
   impact_score: number;
+  impact_confidence: number;
 }
 
 /** CURRENTLY UNUSED review page */
@@ -124,7 +128,7 @@ export class ReviewComponent {
     this.reviewResults = [];
     this.filteredReviewResults = [];
     this.apiService
-          .cveDetails(this.review)
+          .reviewDetails(this.review)
           .subscribe({
             next: (res: any) => {
               this.handleRes(res);
@@ -346,8 +350,6 @@ export class ReviewComponent {
         : (this.currentPage + 1) * this.pageLimit,
     ];
 
-    console.log(pageBlocks)
-
     this.pageBlocks = pageBlocks;
   }
 
@@ -363,13 +365,12 @@ export class ReviewComponent {
         ? this.resultTotalCount / this.pageLimit
         : Math.floor(this.resultTotalCount / this.pageLimit) + 1;
 
-    console.log(totalPages)        
-
     // Set the total number of pages
     this.totalPages = totalPages;
   }
 
   selectReviewCve($event: any, vuln: any, index: any) {
+    console.log(vuln)
     this.currentSelected = index;
 
     this.lastVulnSelected.active = false;
@@ -377,17 +378,23 @@ export class ReviewComponent {
 
     vuln.active = !vuln.active
 
+    this.update.vuln_id = vuln.vuln_id
+    this.update.cve_id = vuln.cve_id
     this.update.status_id = vuln.status_id;
 
     this.update.desc = vuln.description
 
     if(vuln.cvss_scores.length != 0) {
       this.update.cvss_severity_id = vuln.cvss_scores[0].cvssSeverity.id;
+      this.update.severity_confidence = vuln.cvss_scores[0].severityConfidence;
       this.update.impact_score = vuln.cvss_scores[0].impactScore;
+      this.update.impact_confidence = vuln.cvss_scores[0].impactConfidence;
     }
     else {
       this.update.cvss_severity_id = -1
+      this.update.severity_confidence = -1
       this.update.impact_score = -1
+      this.update.impact_confidence = -1
     }
   }
 
@@ -414,7 +421,49 @@ export class ReviewComponent {
     this.update.status_id = id;
   }
 
-  updateVuln($event: any, f: NgForm) {
+  updateVuln($event: any, f: NgForm, vuln: any) {
     console.log("woof")
+
+    let parameters = {} as ReviewUpdateCriteria
+    let data = {} as ReviewDataCriteria
+
+    parameters.username = this.review.username
+    parameters.token = this.review.token
+    parameters.vulnId = this.update.vuln_id
+    parameters.cveId = this.update.cve_id
+    parameters.statusId = this.update.status_id
+
+    if(this.update.status_id !== vuln.status_id){
+      parameters.atomicUpdate = true
+    }
+
+    if(this.update.desc !== vuln.description){
+      parameters.atomicUpdate = false
+      parameters.complexUpdate = true;
+      parameters.updateDescription = true;
+      data.description = this.update.desc
+    }
+
+    if(this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id){
+      parameters.atomicUpdate = false
+      parameters.complexUpdate = true;
+      parameters.updateCVSS = true;
+      let cvss = {} as ReviewCVSS
+      cvss.cvss_severity_id = this.update.cvss_severity_id
+      cvss.severity_confidence = this.update.severity_confidence
+      cvss.impact_score = this.update.impact_score
+      cvss.impact_confidence = this.update.impact_confidence
+      data.cvss = cvss;
+    }
+
+    data.updateInfo = ""
+    if(this.update.info !== undefined){
+      data.updateInfo = this.update.info
+    }
+
+    console.log(parameters)
+    console.log(data)
+
+    this.apiService.reviewUpdate(parameters, data, (res)=>{alert("Yippee!")})
   }
 }
