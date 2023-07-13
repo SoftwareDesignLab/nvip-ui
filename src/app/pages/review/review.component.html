@@ -87,7 +87,7 @@
                         <p>Run Date Time: {{vuln.run_date_time}}</p> -->
                     </button>
                         <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '700px' : '0')}">
-                            <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form)">
+                            <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form, vuln)">
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
                                         <label for="desc">Description: </label>
@@ -100,9 +100,9 @@
                                             <label>Crawled: </label> 
                                             <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
                                             <label>Under Review:  </label> 
-                                            <input type="radio" id="statusUnderReivew" name="statusId" value="4" [(ngModel)]="update.status_id"> 
+                                            <input type="radio" id="statusUnderReivew" name="statusId" value="3" [(ngModel)]="update.status_id"> 
                                             <label>Accepted:  </label>
-                                            <input type="radio" id="statusAccepted" name="statusId" value="3" [(ngModel)]="update.status_id"> 
+                                            <input type="radio" id="statusAccepted" name="statusId" value="4" [(ngModel)]="update.status_id"> 
                                             <label>Rejected: </label>
                                             <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
                                              
@@ -133,9 +133,19 @@
                                 </div>
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
+                                        <label for="cvss_confidence">CVSS Confidence: </label>
+                                        <input id="cvss_confidence" name="cvss_confidence" [(ngModel)]="update.severity_confidence">
+                                    </div>
+                                    <div class="nvip-form-field col-6">
+                                        <label for="impact_confidence">Impact Confidence: </label>
+                                        <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
+                                    </div>
+                                </div>
+                                <div class="nvip-form-horizontal-block">
+                                    <div class="nvip-form-field col-6">
                                         <label for="info">Comment: </label>
                                         <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
-                                        <input if="info" name="info" [(ngModel)]="update.info">
+                                        <input if="info" name="info" [(ngModel)]="update.info" placeholder="">
                                     </div>
                                 </div>
                                 <div class="nvip-form-btn-ctn col-12">

@@ -28,11 +28,14 @@ import {
   HttpHeaders,
   HttpParams,
   HttpResponse,
+  HttpParamsOptions
 } from '@angular/common/http';
 import { Observer } from 'rxjs';
 import { AuthCredentials } from '../Auth/auth-service.service';
 import { Routes } from './api_routes';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
+import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
+import { ReviewDataCriteria } from 'src/app/models/review-data-criteria.model';
 
 /* Related Interfaces */
 
@@ -96,6 +99,9 @@ export class ApiService {
   private GET_OPTIONS: HttpRequestOptions = {
     method: 'GET',
   };
+  private POST_OPTIONS: HttpRequestOptions = {
+    method: 'POST',
+  };
 
   constructor(private httpClient: HttpClient) {}
 
@@ -138,27 +144,54 @@ export class ApiService {
 
   // For Review page, which is currently unused
 
-  cveDetails(detailRequest: ReviewCriteria) {
+  reviewDetails(detailRequest: ReviewCriteria) {
     return this.httpClient
       .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
   }
 
-  cveUpdateAtomic(
-    updateRequest: CVEUpdateRequest,
-    cveDescription: string,
-    callback: ApiRequestObserver
-  ) {
-    this.httpClient.post(Routes.review, cveDescription, {
-      headers: {
-        'Content-Type': 'Text/plain',
-      },
-      params: {
-        ...updateRequest,
-      },
-    });
+  reviewUpdate(updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
+    const body = JSON.stringify(updateRequestData)
+
+    let params = new HttpParams()
+
+    for (const [key, value] of Object.entries(updateRequest)) {
+      // console.log("updateRequest - " + `${key}: ${value}`);
+      params = params.append(`${key}`, `${value}`)
+    }
+
+    // for (const key of params.keys()) {
+    //   console.log(key + ": " + params.get(key))
+    // }
+
+    this.httpClient
+      .post(Routes.review,
+        body,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          params: params
+        }
+      )
+      .subscribe(callback);
   }
 
-  cveUpdateComplex(updateRequest: CVEUpdateRequest) {}
+  // cveUpdateAtomic(
+  //   updateRequest: CVEUpdateRequest,
+  //   cveDescription: string,
+  //   callback: ApiRequestObserver
+  // ) {
+  //   this.httpClient.post(Routes.review, cveDescription, {
+  //     headers: {
+  //       'Content-Type': 'Text/plain',
+  //     },
+  //     params: {
+  //       ...updateRequest,
+  //     },
+  //   });
+  // }
+
+  // cveUpdateComplex(updateRequest: CVEUpdateRequest) {}
 
   vulnServlet(daily: boolean, dateRange: number) {
     return this.httpClient.get(
@@ -190,5 +223,8 @@ export class ApiService {
 
   private injectGetParameters(params: HttpRequestParams) {
     return { ...this.GET_OPTIONS, params: params };
+  }
+  private injectPostParameters(params: HttpRequestParams) {
+    return { ...this.POST_OPTIONS, params: params };
   }
 }

@@ -23,16 +23,16 @@
  */
 
 export interface ReviewCVSS {
-  cvss_severity_id:int
-  severity_confidence:double
-  impact_score:int
-  impact_confidence:double
+  cvss_severity_id:number
+  severity_confidence:number
+  impact_score:number
+  impact_confidence:number
 }
 
 export interface ReviewVDO {
-  labelID:int
-  groupID:int
-  confidence:double
+  labelID:number
+  groupID:number
+  confidence:number
 }
 
 export interface ReviewDataCriteria {
