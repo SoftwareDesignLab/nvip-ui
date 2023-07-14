@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faSpinner, faAngleDoubleLeft, faAngleDoubleRight, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
@@ -469,7 +469,7 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    if(this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id){
+    if(vuln.cvss_scores.length > 0 && this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id){
       parameters.atomicUpdate = false
       parameters.complexUpdate = true;
       parameters.updateCVSS = true;
