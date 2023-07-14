@@ -87,7 +87,7 @@
                         <p>Run Date Time: {{vuln.run_date_time}}</p> -->
                     </button>
                         <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '2000px' : '0')}">
-                            <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form, vuln)">
+                            <form ngNoForm novalidate class="nvip-search-form col-12" (ngSubmit)="updateVuln($event, form, vuln)">
                                 <div class="nvip-form-horizontal-block">
                                     <div class="nvip-form-field col-6">
                                         <label for="desc">Description: </label>
@@ -109,46 +109,56 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="nvip-form-horizontal-block">
-                                    <div class="nvip-form-field col-6">
-                                        <label for="cvss">CVSS: </label>
-                                        <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
-                                        <div >
-                                            <label>LOW </label> 
-                                            <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id"> 
-                                            <label>MEDIUM </label> 
-                                            <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
-                                            <label>HIGH </label> 
-                                            <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
-                                            <label>CRITICAL</label> 
-                                            <input type="radio" class="cvssRadios{{index}}" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss_severity_id"> 
-                                            <label>N/A</label>
-                                            <input type="radio" class="cvssRadios{{index}}" id="severityNA" name="cvssSeverityId" value="-1" [(ngModel)]="update.cvss_severity_id">
+                                <div [hidden]="vuln.cvss_scores.length == 0">
+                                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCVSS($event, vuln)">CVSSs</button>
+                                    <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.cvssactive ? '2000px' : '0')}">
+                                        <div class="nvip-form-horizontal-block">
+                                            <div class="nvip-form-field col-6">
+                                                <label for="cvss">CVSS: </label>
+                                                <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
+                                                <div >
+                                                    <label>LOW </label> 
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id"> 
+                                                    <label>MEDIUM </label> 
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
+                                                    <label>HIGH </label> 
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
+                                                    <label>CRITICAL</label> 
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss_severity_id"> 
+                                                    <label>N/A</label>
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss_severity_id">
+                                                </div>
+                                            </div>
+                                            <div class="nvip-form-field col-6">
+                                                <label for="impact">Impact Score: </label>
+                                                <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="nvip-form-horizontal-block">
+                                            <div class="nvip-form-field col-6">
+                                                <label for="cvss_confidence">CVSS Confidence: </label>
+                                                <input id="cvss_confidence" name="cvss_confidence" [(ngModel)]="update.severity_confidence">
+                                            </div>
+                                            <div class="nvip-form-field col-6">
+                                                <label for="impact_confidence">Impact Confidence: </label>
+                                                <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="nvip-form-field col-6">
-                                        <label for="impact">Impact Score: </label>
-                                        <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
-                                    </div>
                                 </div>
-                                <div class="nvip-form-horizontal-block">
-                                    <div class="nvip-form-field col-6">
-                                        <label for="cvss_confidence">CVSS Confidence: </label>
-                                        <input id="cvss_confidence" name="cvss_confidence" [(ngModel)]="update.severity_confidence">
-                                    </div>
-                                    <div class="nvip-form-field col-6">
-                                        <label for="impact_confidence">Impact Confidence: </label>
-                                        <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
-                                    </div>
-                                </div>
-                                <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdos; let vindex = index;">
-                                    <div class="nvip-form-field col-6">
-                                        <label for="label">VDO Label: </label>
-                                        <input id="label" name="label" [(ngModel)]="update.vdos[vindex].vdolabel">
-                                    </div>
-                                    <div class="nvip-form-field col-6">
-                                        <label for="group">VDO Group: </label>
-                                        <input id="group" name="group" [(ngModel)]="update.vdos[vindex].vdogroup">
+                                <div [hidden]="vuln.vdos.length == 0">
+                                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewVDO($event, vuln)">VDOs</button>
+                                    <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.vdoactive ? '2000px' : '0')}">
+                                        <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdos; let vindex = index;">
+                                            <div class="nvip-form-field col-6">
+                                                <label for="label">VDO Label: </label>
+                                                <input id="label" name="label" [(ngModel)]="update.vdos[vindex].vdolabel">
+                                            </div>
+                                            <div class="nvip-form-field col-6">
+                                                <label for="group">VDO Group: </label>
+                                                <input id="group" name="group" [(ngModel)]="update.vdos[vindex].vdogroup">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="nvip-form-horizontal-block">

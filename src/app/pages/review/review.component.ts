@@ -43,6 +43,8 @@ export interface reviewResultObject {
   cvss_scores: Array<{}>
   vdos: Array<{}>
 
+  cvssactive: boolean
+  vdoactive: boolean
   active: boolean
 }
 
@@ -203,6 +205,8 @@ export class ReviewComponent {
     for (let result of res) {
       let obj = result as reviewResultObject
       obj.active = false
+      obj.vdoactive = false
+      obj.cvssactive = false
       this.reviewResults.push(obj)
     }
     // this.reviewResults = res;
@@ -380,6 +384,8 @@ export class ReviewComponent {
     this.currentSelected = index;
 
     this.lastVulnSelected.active = false;
+    this.lastVulnSelected.vdoactive = false;
+    this.lastVulnSelected.cvssactive = false;
     this.lastVulnSelected = vuln;
 
     vuln.active = !vuln.active
@@ -397,16 +403,24 @@ export class ReviewComponent {
       this.update.impact_confidence = vuln.cvss_scores[0].impactConfidence;
     }
     else {
-      this.update.cvss_severity_id = -1
-      this.update.severity_confidence = -1
-      this.update.impact_score = -1
-      this.update.impact_confidence = -1
+      this.update.cvss_severity_id = 3
+      this.update.severity_confidence = 0
+      this.update.impact_score = 0
+      this.update.impact_confidence = 0
     }
 
     for(let i = 0; i < vuln.vdos.length; i++) {
       this.update.vdos[i].vdolabel = vuln.vdos[i].vdoLabels.vdoLabelName;
       this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName
     }
+  }
+
+  selectReviewCVSS($event: any, vuln: any) {
+    vuln.cvssactive = !vuln.cvssactive;
+  }
+
+  selectReviewVDO($event: any, vuln: any) {
+    vuln.vdoactive = !vuln.vdoactive;
   }
 
   statusIdToString(status: string) {
