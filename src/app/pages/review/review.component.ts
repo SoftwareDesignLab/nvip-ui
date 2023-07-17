@@ -56,7 +56,7 @@ export interface updateVdo {
 }
 
 export interface updateAffRel {
-  product_id: number
+  productId: number
   cpe: string
   domain: string
 }
@@ -72,6 +72,8 @@ export interface updateObject {
   impact_score: number;
   impact_confidence: number;
   vdos: Array<updateVdo>;
+  affrels: Array<updateAffRel>
+  affrels_to_remove: Array<updateAffRel>
 }
 
 /** CURRENTLY UNUSED review page */
@@ -459,6 +461,12 @@ export class ReviewComponent {
       this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName;
       this.update.vdos[i].confidence = vuln.vdos[i].vdoConfidence;
     }
+
+    this.update.affrels = new Array<updateAffRel>()
+    this.update.affrels_to_remove = new Array<updateAffRel>()
+    for(let affrel of vuln.affected_releases) {
+      this.update.affrels.push(<updateAffRel>affrel.product)
+    }
   }
 
   selectReviewCVSS($event: any, vuln: any) {
@@ -504,9 +512,12 @@ export class ReviewComponent {
     this.update.status_id = id;
   }
 
-  updateVuln($event: any, f: NgForm, vuln: any) {
-    console.log("woof")
+  removeCPE(index: number, vuln: any) {
+    this.update.affrels_to_remove.push(this.update.affrels[index])
+    this.update.affrels.splice(index, 1)
+  }
 
+  updateVuln($event: any, f: NgForm, vuln: any) {
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -568,6 +579,17 @@ export class ReviewComponent {
         vdo.groupID = this.vdoGroupToId(this.update.vdos[i].vdogroup);
         vdo.confidence = this.update.vdos[i].confidence;
         data.vdoUpdates.vdoLabels.push(vdo);
+      }
+    }
+
+    if(this.update.affrels.length !== vuln.affected_releases.length){
+      parameters.atomicUpdate = false;
+      parameters.complexUpdate = true;
+      parameters.updateAffRel = true;
+
+      data.prodToRemove = new Array<number>()
+      for (let ar of this.update.affrels_to_remove) {
+        data.prodToRemove.push(ar.productId)
       }
     }
 

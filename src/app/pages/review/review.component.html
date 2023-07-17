@@ -205,8 +205,13 @@
                                 <div [hidden]="vuln.affected_releases.length == 0">
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewAR($event, vuln)">Affected Releases</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.aractive ? '2000px' : '0')}">
-                                        <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.affected_releases; let aindex = index;">
-                                            :)
+                                        <div class="nvip-form-horizontal-block" *ngFor="let affrel of update.affrels; let aindex = index;">
+                                            <div class="nvip-form-field col-6">
+                                                {{affrel.domain}} - {{affrel.cpe}}
+                                            </div>
+                                            <div class="nvip-form-field col-6">
+                                                <button type="button" (click)="removeCPE(aindex, vuln)">Delete</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
