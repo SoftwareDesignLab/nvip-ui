@@ -94,17 +94,25 @@
                                         <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
                                         <textarea if="desc" name="desc" style="width: 90%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
                                     </div>
-                                    <div class="nvip-form-field col-6">
-                                        <label for="status">Status: </label>
+                                    <div class="nvip-form-field col-6 nvip-radio">
+                                        <label for="status">Status</label>
                                         <div >
-                                            <label>Crawled: </label> 
-                                            <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
-                                            <label>Under Review:  </label> 
-                                            <input type="radio" id="statusUnderReivew" name="statusId" value="3" [(ngModel)]="update.status_id"> 
-                                            <label>Accepted:  </label>
-                                            <input type="radio" id="statusAccepted" name="statusId" value="4" [(ngModel)]="update.status_id"> 
-                                            <label>Rejected: </label>
-                                            <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
+                                            <div>
+                                                <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
+                                                <label>Crawled</label> 
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="statusUnderReivew" name="statusId" value="3" [(ngModel)]="update.status_id"> 
+                                                <label>Under Review</label> 
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="statusAccepted" name="statusId" value="4" [(ngModel)]="update.status_id">
+                                                <label>Accepted</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
+                                                <label>Rejected</label>
+                                            </div>
                                              
                                         </div>
                                     </div>
@@ -113,13 +121,13 @@
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCVSS($event, vuln)">CVSSs</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.cvssactive ? '2000px' : '0')}">
                                         <div class="nvip-form-horizontal-block">
-                                            <div class="nvip-form-field col-6">
+                                            <div class="nvip-form-field col-6 nvip-radio">
                                                 <label for="cvss">CVSS: </label>
                                                 <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
                                                 <div >
                                                     <label>LOW </label> 
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id"> 
-                                                    <label>MEDIUM </label> 
+                                                    <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id" checked> 
+                                                    <label>MEDIUM </label>
                                                     <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
                                                     <label>HIGH </label> 
                                                     <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
