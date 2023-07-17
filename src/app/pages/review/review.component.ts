@@ -429,11 +429,13 @@ export class ReviewComponent {
     console.log(vuln)
     this.currentSelected = index;
 
-    this.lastVulnSelected.active = false;
-    this.lastVulnSelected.vdoactive = false;
-    this.lastVulnSelected.cvssactive = false;
-    this.lastVulnSelected.aractive = false
-    this.lastVulnSelected = vuln;
+    if (this.lastVulnSelected !== vuln) {
+      this.lastVulnSelected.active = false;
+      this.lastVulnSelected.vdoactive = false;
+      this.lastVulnSelected.cvssactive = false;
+      this.lastVulnSelected.aractive = false
+      this.lastVulnSelected = vuln;
+    }
 
     vuln.active = !vuln.active
 
