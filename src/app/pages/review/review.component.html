@@ -150,14 +150,63 @@
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewVDO($event, vuln)">VDOs</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.vdoactive ? '2000px' : '0')}">
                                         <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdos; let vindex = index;">
-                                            <div class="nvip-form-field col-6">
+                                            <div class="nvip-form-field col-3">
                                                 <label for="label">VDO Label: </label>
-                                                <input id="label" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
+                                                <!-- <input id="label" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
+                                                <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
+                                                <datalist id="labeltypes">
+                                                    <option value="Man-in-the-Middle">
+                                                    <option value="Channel">
+                                                    <option value="Authentication Bypass">
+                                                    <option value="Physical Hardware">
+                                                    <option value="Application">
+                                                    <option value="Host OS">
+                                                    <option value="Firmware">
+                                                    <option value="Code Execution">
+                                                    <option value="Context Escape">
+                                                    <option value="Guest OS">
+                                                    <option value="Hypervisor">
+                                                    <option value="Sandboxed">
+                                                    <option value="Physical Security">
+                                                    <option value="ASLR">
+                                                    <option value="Limited Rmt">
+                                                    <option value="Local">
+                                                    <option value="Read">
+                                                    <option value="Resource Removal">
+                                                    <option value="HPKP/HSTS">
+                                                    <option value="MultiFactor Authentication">
+                                                    <option value="Remote">
+                                                    <option value="Write">
+                                                    <option value="Indirect Disclosure">
+                                                    <option value="Service Interrupt">
+                                                    <option value="Privilege Escalation">
+                                                    <option value="Physical">
+                                                </datalist>
                                             </div>
-                                            <div class="nvip-form-field col-6">
+                                            <div class="nvip-form-field col-3">
                                                 <label for="group">VDO Group: </label>
-                                                <input id="group" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
+                                                <!-- <input id="group" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}"> -->
+                                                <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
+                                                <datalist id="grouptypes">
+                                                    <option value="ImpactMethod">
+                                                    <option value="Context">
+                                                    <option value="Mitigation">
+                                                    <option value="AttackTheater">
+                                                    <option value="LogicalImpact">
+                                                </datalist>
                                             </div>
+                                            <div class="nvip-form-field col-3">
+                                                <label for="conf">VDO Confidence: </label>
+                                                <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div [hidden]="vuln.affected_releases.length == 0">
+                                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewAR($event, vuln)">Affected Releases</button>
+                                    <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.aractive ? '2000px' : '0')}">
+                                        <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.affected_releases; let aindex = index;">
+                                            :)
                                         </div>
                                     </div>
                                 </div>

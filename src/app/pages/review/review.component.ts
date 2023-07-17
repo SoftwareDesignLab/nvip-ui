@@ -33,7 +33,7 @@ import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
-import { ReviewDataCriteria, ReviewCVSS } from 'src/app/models/review-data-criteria.model';
+import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
 
 export interface reviewResultObject {
   cve_id: string
@@ -45,12 +45,20 @@ export interface reviewResultObject {
 
   cvssactive: boolean
   vdoactive: boolean
+  aractive: boolean
   active: boolean
 }
 
 export interface updateVdo {
   vdogroup: string
   vdolabel: string
+  confidence: number
+}
+
+export interface updateAffRel {
+  product_id: number
+  cpe: string
+  domain: string
 }
 
 export interface updateObject {
@@ -87,6 +95,41 @@ export class ReviewComponent {
   runDateTime = "";
   rotationAmountStatus = 0;
   statuses = ["Accepted", "Under Review", "Rejected", "Crawled"];
+  vdolabels = [
+      "Man-in-the-Middle",
+      "Channel",
+      "Authentication Bypass",
+      "Physical Hardware",
+      "Application",
+      "Host OS",
+      "Firmware",
+      "Code Execution",
+      "Context Escape",
+      "Guest OS",
+      "Hypervisor",
+      "Sandboxed",
+      "Physical Security",
+      "ASLR",
+      "Limited Rmt",
+      "Local",
+      "Read",
+      "Resource Removal",
+      "HPKP/HSTS",
+      "MultiFactor Authentication",
+      "Remote",
+      "Write",
+      "Indirect Disclosure",
+      "Service Interrupt",
+      "Privilege Escalation",
+      "Physical"
+    ];
+  vdogroups = [
+      "ImpactMethod",
+      "Context",
+      "Mitigation",
+      "AttackTheater",
+      "LogicalImpact"
+    ];
   showForm: boolean = true;
   reviewResults: Array<reviewResultObject> = [];
   filteredReviewResults: Array<any> = [];
@@ -207,6 +250,7 @@ export class ReviewComponent {
       obj.active = false
       obj.vdoactive = false
       obj.cvssactive = false
+      obj.aractive = false
       this.reviewResults.push(obj)
     }
     // this.reviewResults = res;
@@ -386,6 +430,7 @@ export class ReviewComponent {
     this.lastVulnSelected.active = false;
     this.lastVulnSelected.vdoactive = false;
     this.lastVulnSelected.cvssactive = false;
+    this.lastVulnSelected.aractive = false
     this.lastVulnSelected = vuln;
 
     vuln.active = !vuln.active
@@ -411,7 +456,8 @@ export class ReviewComponent {
 
     for(let i = 0; i < vuln.vdos.length; i++) {
       this.update.vdos[i].vdolabel = vuln.vdos[i].vdoLabels.vdoLabelName;
-      this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName
+      this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName;
+      this.update.vdos[i].confidence = vuln.vdos[i].vdoConfidence;
     }
   }
 
@@ -421,6 +467,10 @@ export class ReviewComponent {
 
   selectReviewVDO($event: any, vuln: any) {
     vuln.vdoactive = !vuln.vdoactive;
+  }
+
+  selectReviewAR($event: any, vuln: any) {
+    vuln.aractive = !vuln.aractive;
   }
 
   statusIdToString(status: string) {
@@ -436,6 +486,14 @@ export class ReviewComponent {
       default:
         return ""
       }
+  }
+
+  vdoLabelToId(label: string) {
+    return this.vdolabels.indexOf(label) + 1 
+  }
+
+  vdoGroupToId(group: string) {
+    return this.vdogroups.indexOf(group) + 1 
   }
 
   setCVSSseverity(id: number) {
@@ -466,19 +524,51 @@ export class ReviewComponent {
       parameters.atomicUpdate = false
       parameters.complexUpdate = true;
       parameters.updateDescription = true;
+
       data.description = this.update.desc
     }
 
-    if(vuln.cvss_scores.length > 0 && this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id){
+    if(vuln.cvss_scores.length > 0 && 
+      (this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id) ||
+      (this.update.impact_score !== vuln.cvss_scores[0].impactScore) ||
+      (this.update.severity_confidence !== vuln.cvss_scores[0].severityConfidence) ||
+      (this.update.impact_confidence !== vuln.cvss_scores[0].impactConfidence)
+    ){
       parameters.atomicUpdate = false
       parameters.complexUpdate = true;
       parameters.updateCVSS = true;
+
       let cvss = {} as ReviewCVSS
       cvss.cvss_severity_id = this.update.cvss_severity_id
       cvss.severity_confidence = this.update.severity_confidence
       cvss.impact_score = this.update.impact_score
       cvss.impact_confidence = this.update.impact_confidence
       data.cvss = cvss;
+    }
+
+    let updateVdoFlag: boolean = false;
+    for(let i= 0; i < vuln.vdos.length; i++) {
+      if(this.update.vdos[i].vdolabel !== vuln.vdos[i].vdoLabels.vdoLabelName ||
+         this.update.vdos[i].vdogroup !== vuln.vdos[i].vdoGroup.vdoGroupName){
+        updateVdoFlag = true;
+        break;
+      }
+    }
+
+    if(updateVdoFlag) {
+      parameters.atomicUpdate = false;
+      parameters.complexUpdate = true;
+      parameters.updateVDO = true;
+
+      data.vdoUpdates = {} as ReviewVDO
+      data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
+      for(let i = 0; i < vuln.vdos.length; i++){
+        let vdo = {} as ReviewVDOLabel;
+        vdo.labelID = this.vdoLabelToId(this.update.vdos[i].vdolabel);
+        vdo.groupID = this.vdoGroupToId(this.update.vdos[i].vdogroup);
+        vdo.confidence = this.update.vdos[i].confidence;
+        data.vdoUpdates.vdoLabels.push(vdo);
+      }
     }
 
     data.updateInfo = ""

@@ -29,16 +29,20 @@ export interface ReviewCVSS {
   impact_confidence:number
 }
 
-export interface ReviewVDO {
+export interface ReviewVDOLabel {
   labelID:number
   groupID:number
   confidence:number
+}
+
+export interface ReviewVDO {
+  vdoLabels: Array<ReviewVDOLabel>
 }
 
 export interface ReviewDataCriteria {
   updateInfo: string
   description: string
   cvss: ReviewCVSS
-  vdoUpdates: Array<ReviewVDO>
+  vdoUpdates: ReviewVDO
   prodToRemove: Array<number>
 }
