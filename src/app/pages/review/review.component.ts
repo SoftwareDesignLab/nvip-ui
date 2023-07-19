@@ -562,7 +562,8 @@ export class ReviewComponent {
     let updateVdoFlag: boolean = false;
     for(let i= 0; i < vuln.vdos.length; i++) {
       if(this.update.vdos[i].vdolabel !== vuln.vdos[i].vdoLabels.vdoLabelName ||
-         this.update.vdos[i].vdogroup !== vuln.vdos[i].vdoGroup.vdoGroupName){
+         this.update.vdos[i].vdogroup !== vuln.vdos[i].vdoGroup.vdoGroupName ||
+         this.update.vdos[i].confidence !== vuln.vdos[i].vdoConfidence){
         updateVdoFlag = true;
         break;
       }
