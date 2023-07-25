@@ -8,15 +8,23 @@
     <div class="nvip-search-form-ctn" [hidden]="!showForm">
         <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="detailSearchId($event, form)">
             <div class="nvip-form-horizontal-block">
-                <div class="nvip-form-field col-6">
-                    <label for="cveid">CVE ID: </label>
-                    <input id="cveid" name="cveid" [(ngModel)]="review.cveId" placeholder="">
-                </div>
-                <div class="nvip-form-field col-6">
-                    <label for="searchDate">Date</label>
-                    <input [ngModel]="review.searchDate | date:'yyyy-MM-dd'" (ngModelChange)="review.searchDate = $event" type="date" name="searchDate" ng-required ="true"/>
-                    <!-- <span class="error" ng-show="myForm.input.$error.required">Required!</span> -->
-                </div>  
+                <c-container>
+                    <c-row>
+                        <c-col>
+                            <div class="nvip-form-field col-6">
+                                <label for="cveid">CVE ID: </label>
+                                <input id="cveid" name="cveid" [(ngModel)]="review.cveId" placeholder="">
+                            </div>
+                        </c-col>
+                        <c-col>
+                            <div class="nvip-form-field col-6">
+                                <label for="searchDate">Date</label>
+                                <input [ngModel]="review.searchDate | date:'yyyy-MM-dd'" (ngModelChange)="review.searchDate = $event" type="date" name="searchDate" ng-required ="true"/>
+                                <!-- <span class="error" ng-show="myForm.input.$error.required">Required!</span> -->
+                            </div>  
+                        </c-col>
+                    </c-row>
+                </c-container>
             </div>
             <div class="nvip-form-dropdown-field col-12 dropdown-opened" (click)="toggleContent($event, 'Status')">
                 <div class="nvip-form-dropdown-left col-11">
@@ -89,68 +97,92 @@
                         <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '2000px' : '0')}">
                             <form novalidate class="nvip-search-form col-12" (ngSubmit)="updateVuln($event, form, vuln)">
                                 <div class="nvip-form-horizontal-block">
-                                    <div class="nvip-form-field col-6">
-                                        <label for="desc">Description: </label>
-                                        <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
-                                        <textarea if="desc" name="desc" style="width: 90%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
-                                    </div>
-                                    <div class="nvip-form-field col-6 nvip-radio">
-                                        <label for="status">Status</label>
-                                        <div >
-                                            <div>
-                                                <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
-                                                <label>Crawled</label> 
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="statusUnderReivew" name="statusId" value="3" [(ngModel)]="update.status_id"> 
-                                                <label>Under Review</label> 
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="statusAccepted" name="statusId" value="4" [(ngModel)]="update.status_id">
-                                                <label>Accepted</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
-                                                <label>Rejected</label>
-                                            </div>
-                                             
-                                        </div>
-                                    </div>
+                                    <c-container>
+                                        <c-row>
+                                            <c-col>
+                                                <div class="nvip-form-field" style="min-width: 300px;">
+                                                    <label for="desc">Description: </label>
+                                                    <!-- <input id="desc" name="desc" [(ngModel)]="update.desc" placeholder=""> -->
+                                                    <textarea if="desc" name="desc" style="width: 90%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
+                                                </div>
+                                            </c-col>
+                                            <c-col>
+                                                <div class="nvip-form-field nvip-radio">
+                                                    <label for="status">Status</label>
+                                                    <div >
+                                                        <div>
+                                                            <input type="radio" id="statusCrawled" name="statusId" value="1" [(ngModel)]="update.status_id"> 
+                                                            <label>Crawled</label> 
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" id="statusUnderReivew" name="statusId" value="3" [(ngModel)]="update.status_id"> 
+                                                            <label>Under Review</label> 
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" id="statusAccepted" name="statusId" value="4" [(ngModel)]="update.status_id">
+                                                            <label>Accepted</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" id="statusRejected" name="statusId" value="2" [(ngModel)]="update.status_id"> 
+                                                            <label>Rejected</label>
+                                                        </div>
+                                                         
+                                                    </div>
+                                                </div>
+                                            </c-col>
+                                        </c-row>
+                                    </c-container>
                                 </div>
                                 <div [hidden]="vuln.cvss_scores.length == 0">
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCVSS($event, vuln)">CVSSs</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.cvssactive ? '2000px' : '0')}">
                                         <div class="nvip-form-horizontal-block">
-                                            <div class="nvip-form-field col-6 nvip-radio">
-                                                <label for="cvss">CVSS: </label>
-                                                <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
-                                                <div >
-                                                    <label>LOW </label> 
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id" checked> 
-                                                    <label>MEDIUM </label>
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
-                                                    <label>HIGH </label> 
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
-                                                    <label>CRITICAL</label> 
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss_severity_id"> 
-                                                    <label>N/A</label>
-                                                    <input type="radio" class="cvssRadios{{index}}" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss_severity_id">
-                                                </div>
-                                            </div>
-                                            <div class="nvip-form-field col-6">
-                                                <label for="impact">Impact Score: </label>
-                                                <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
-                                            </div>
+                                            <c-container>
+                                                <c-row>
+                                                    <c-col>
+                                                        <div class="nvip-form-field nvip-radio">
+                                                            <label for="cvss">CVSS: </label>
+                                                            <input id="cvss" name="cvss" [(ngModel)]="update.cvss_severity_id" placeholder="">
+                                                            <div >
+                                                                <label>LOW </label> 
+                                                                <input type="radio" class="cvssRadios{{index}}" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss_severity_id" checked> 
+                                                                <label>MEDIUM </label>
+                                                                <input type="radio" class="cvssRadios{{index}}" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss_severity_id"> 
+                                                                <label>HIGH </label> 
+                                                                <input type="radio" class="cvssRadios{{index}}" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss_severity_id"> 
+                                                                <label>CRITICAL</label> 
+                                                                <input type="radio" class="cvssRadios{{index}}" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss_severity_id"> 
+                                                                <label>N/A</label>
+                                                                <input type="radio" class="cvssRadios{{index}}" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss_severity_id">
+                                                            </div>
+                                                        </div>
+                                                    </c-col>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="impact">Impact Score: </label>
+                                                            <input id="impact" name="impact" [(ngModel)]="update.impact_score" placeholder="">
+                                                        </div>
+                                                    </c-col>
+                                                </c-row>
+                                            </c-container>
                                         </div>
                                         <div class="nvip-form-horizontal-block">
-                                            <div class="nvip-form-field col-6">
-                                                <label for="cvss_confidence">CVSS Confidence: </label>
-                                                <input id="cvss_confidence" name="cvss_confidence" [(ngModel)]="update.severity_confidence">
-                                            </div>
-                                            <div class="nvip-form-field col-6">
-                                                <label for="impact_confidence">Impact Confidence: </label>
-                                                <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
-                                            </div>
+                                            <c-container>
+                                                <c-row>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="cvss_confidence">CVSS Confidence: </label>
+                                                            <input id="cvss_confidence" name="cvss_confidence" [(ngModel)]="update.severity_confidence">
+                                                        </div>
+                                                    </c-col>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="impact_confidence">Impact Confidence: </label>
+                                                            <input id="impact_confidence" name="impact_confidence" [(ngModel)]="update.impact_confidence">
+                                                        </div>
+                                                    </c-col>
+                                                </c-row>
+                                            </c-container>
                                         </div>
                                     </div>
                                 </div>
@@ -158,55 +190,65 @@
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewVDO($event, vuln)">VDOs</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.vdoactive ? '2000px' : '0')}">
                                         <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdos; let vindex = index;">
-                                            <div class="nvip-form-field col-3">
-                                                <label for="label">VDO Label: </label>
-                                                <!-- <input id="label" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
-                                                <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
-                                                <datalist id="labeltypes">
-                                                    <option value="Man-in-the-Middle">
-                                                    <option value="Channel">
-                                                    <option value="Authentication Bypass">
-                                                    <option value="Physical Hardware">
-                                                    <option value="Application">
-                                                    <option value="Host OS">
-                                                    <option value="Firmware">
-                                                    <option value="Code Execution">
-                                                    <option value="Context Escape">
-                                                    <option value="Guest OS">
-                                                    <option value="Hypervisor">
-                                                    <option value="Sandboxed">
-                                                    <option value="Physical Security">
-                                                    <option value="ASLR">
-                                                    <option value="Limited Rmt">
-                                                    <option value="Local">
-                                                    <option value="Read">
-                                                    <option value="Resource Removal">
-                                                    <option value="HPKP/HSTS">
-                                                    <option value="MultiFactor Authentication">
-                                                    <option value="Remote">
-                                                    <option value="Write">
-                                                    <option value="Indirect Disclosure">
-                                                    <option value="Service Interrupt">
-                                                    <option value="Privilege Escalation">
-                                                    <option value="Physical">
-                                                </datalist>
-                                            </div>
-                                            <div class="nvip-form-field col-3">
-                                                <label for="group">VDO Group: </label>
-                                                <!-- <input id="group" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}"> -->
-                                                <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
-                                                <datalist id="grouptypes">
-                                                    <option value="ImpactMethod">
-                                                    <option value="Context">
-                                                    <option value="Mitigation">
-                                                    <option value="AttackTheater">
-                                                    <option value="LogicalImpact">
-                                                </datalist>
-                                            </div>
-                                            <div class="nvip-form-field col-3">
-                                                <label for="conf">VDO Confidence: </label>
-                                                <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
-                                            </div>
+                                            <c-container>
+                                                <c-row>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="label">VDO Label: </label>
+                                                            <!-- <input id="label" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
+                                                            <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
+                                                            <datalist id="labeltypes">
+                                                                <option value="Man-in-the-Middle">
+                                                                <option value="Channel">
+                                                                <option value="Authentication Bypass">
+                                                                <option value="Physical Hardware">
+                                                                <option value="Application">
+                                                                <option value="Host OS">
+                                                                <option value="Firmware">
+                                                                <option value="Code Execution">
+                                                                <option value="Context Escape">
+                                                                <option value="Guest OS">
+                                                                <option value="Hypervisor">
+                                                                <option value="Sandboxed">
+                                                                <option value="Physical Security">
+                                                                <option value="ASLR">
+                                                                <option value="Limited Rmt">
+                                                                <option value="Local">
+                                                                <option value="Read">
+                                                                <option value="Resource Removal">
+                                                                <option value="HPKP/HSTS">
+                                                                <option value="MultiFactor Authentication">
+                                                                <option value="Remote">
+                                                                <option value="Write">
+                                                                <option value="Indirect Disclosure">
+                                                                <option value="Service Interrupt">
+                                                                <option value="Privilege Escalation">
+                                                                <option value="Physical">
+                                                            </datalist>
+                                                        </div>
+                                                    </c-col>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="group">VDO Group: </label>
+                                                            <!-- <input id="group" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}"> -->
+                                                            <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
+                                                            <datalist id="grouptypes">
+                                                                <option value="ImpactMethod">
+                                                                <option value="Context">
+                                                                <option value="Mitigation">
+                                                                <option value="AttackTheater">
+                                                                <option value="LogicalImpact">
+                                                            </datalist>
+                                                        </div>
+                                                    </c-col>
+                                                    <c-col>
+                                                        <div class="nvip-form-field">
+                                                            <label for="conf">VDO Confidence: </label>
+                                                            <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
+                                                        </div>
+                                                    </c-col>
+                                                </c-row>
+                                            </c-container>
                                         </div>
                                     </div>
                                 </div>
@@ -214,7 +256,7 @@
                                     <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewAR($event, vuln)">Affected Releases</button>
                                     <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.aractive ? '2000px' : '0')}">
                                         <div class="nvip-form-horizontal-block" *ngFor="let affrel of update.affrels; let aindex = index;">
-                                            <div class="nvip-form-field col-6">
+                                            <div class="nvip-form-field col-6" style="overflow: auto;">
                                                 {{affrel.domain}} - {{affrel.cpe}}
                                             </div>
                                             <div class="nvip-form-field col-6">

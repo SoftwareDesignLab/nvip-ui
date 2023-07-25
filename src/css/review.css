@@ -115,10 +115,6 @@ div {
 	display: block;
 }
 
-.nvip-form-field > label {
-	font-size: var(--font-size);
-}
-
 .nvip-form-horizontal-block {
     display: flex;
     flex-direction: row;
