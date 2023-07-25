@@ -32,8 +32,15 @@ export interface VulnMap {
   cve_list: Array<any>;
 }
 
+export interface VulnCountMap {
+  date: string;
+  count: number;
+}
+
 /** Array of date-list vuln pages to navigate through */
 export interface VulnMaps extends Array<VulnMap> {}
+
+export interface VulnCountMaps extends Array<VulnCountMap> {}
 
 @Component({
   selector: 'nvip-recent',
@@ -52,7 +59,9 @@ export class RecentComponent implements OnInit {
   vulnLimitIncr: number = 5;
   dailyVulnIndex: number = 0;
   dailyVulns: VulnMaps = [];
+  dailyCounts: VulnCountMaps = [];
   currentSelected: number = -1;
+  apiCallDone: boolean = false;
 
   /**
    * constructor
@@ -62,7 +71,8 @@ export class RecentComponent implements OnInit {
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
-    this.vulnService.onRecentInit().subscribe((res: any) =>
+    this.vulnService.onRecentInit().subscribe((res: any) => {
+      this.apiCallDone = true;
       Object.keys(res).forEach((key) => {
         this.dailyVulns.push({
           date: this.formatDate(key),
@@ -70,7 +80,23 @@ export class RecentComponent implements OnInit {
         });
         this.dailyVulnLimit.push(this.vulnLimitIncr);
       })
-    );
+    });
+    this.vulnService.getRecentCounts().subscribe((res: any) => {
+      console.log(res);
+      res.forEach((element: any) => {
+        this.dailyCounts.push({
+          date: this.formatDate(element.date),
+          count: element.count,
+        });
+      }
+      );
+      console.log(this.dailyCounts)
+    });
+  }
+
+  getCount(date: string) {
+    const idx = this.dailyCounts.findIndex(vuln => vuln.date === date);
+    return this.dailyCounts[idx].count;
   }
 
   /** format title date */
@@ -78,6 +104,18 @@ export class RecentComponent implements OnInit {
     const timeZone = 'T00:00:00.000-08:00';
     const date = new Date(dateString + timeZone);
     return date.toDateString();
+  }
+
+  /** convert date back to YYYY-MM-DD to be passed into dailyPage call */
+  unformatDate(dateString: String) {
+    const inputFormat = 'ddd MMM DD YYYY';
+    // Split the date string into its components
+    const [weekday, month, day, year] = dateString.split(' ');
+    // Convert the month string to a numerical representation (0-11)
+    const monthIndex = new Date(`${month} 1, 2000`).getMonth();
+    // Create a new Date object with the components
+    const dateObject = new Date(Number(year), monthIndex, Number(day));
+    return dateObject.toISOString().split('T')[0];
   }
 
   /** helper to determine whether a show more or show less button is disabled */
@@ -95,8 +133,17 @@ export class RecentComponent implements OnInit {
     this.dailyVulnIndex = this.dailyVulnIndex += incr;
   }
 
-  /** trigger more recent vulns under that day to show */
-  showMore(panelIndex: number) {
+  /** trigger API call to show more recent vulns under that day to show */
+  showMore(panelIndex: number, date: String) {
+    const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
+    const totalVulns = this.dailyVulns[indexToUpdate].cve_list.length
+    if (this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr + 5 > totalVulns)
+      this.vulnService.getByDateAndPage(this.unformatDate(date), (totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
+        // push res to VulnMap corresponding to date String
+        let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
+        thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
+        this.dailyVulns[indexToUpdate] = thisVulnObj
+      })
     this.dailyVulnLimit[panelIndex] =
       this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr;
   }
