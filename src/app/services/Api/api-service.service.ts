@@ -28,10 +28,14 @@ import {
   HttpHeaders,
   HttpParams,
   HttpResponse,
+  HttpParamsOptions
 } from '@angular/common/http';
 import { Observer } from 'rxjs';
 import { AuthCredentials } from '../Auth/auth-service.service';
 import { Routes } from './api_routes';
+import { ReviewCriteria } from 'src/app/models/review-criteria.model';
+import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
+import { ReviewDataCriteria } from 'src/app/models/review-data-criteria.model';
 
 /* Related Interfaces */
 
@@ -64,29 +68,29 @@ export type ApiRequestObserver =
   | ((value: Object) => void);
 
 
-// export interface CVEDetailsRequest {
-//   cveId: string; // TODO: figure out the actual type of this
-//   username: string;
-//   token: string;
-// }
-// export interface CVESearchRequest {
-//   username: string;
-//   token: string;
-//   searchDate: string; // TODO: find real type
-//   crawled: boolean;
-//   rejected: boolean;
-//   accepted: boolean;
-//   reviewed: boolean;
-// }
-// export interface CVEUpdateRequest {
-//   atomicUpdate: boolean;
-//   username: string;
-//   token: string;
-//   statusID: string; // TODO: find real type
-//   vulnID: string; // TODO: find real type
-//   info: string; // TODO: find real type
-//   tweet: boolean;
-// }
+export interface CVEDetailsRequest {
+  cveId: string; // TODO: figure out the actual type of this
+  username: string;
+  token: string;
+}
+export interface CVESearchRequest {
+  username: string;
+  token: string;
+  searchDate: string; // TODO: find real type
+  crawled: boolean;
+  rejected: boolean;
+  accepted: boolean;
+  reviewed: boolean;
+}
+export interface CVEUpdateRequest {
+  atomicUpdate: boolean;
+  username: string;
+  token: string;
+  statusID: string; // TODO: find real type
+  vulnID: string; // TODO: find real type
+  info: string; // TODO: find real type
+  tweet: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -94,6 +98,9 @@ export type ApiRequestObserver =
 export class ApiService {
   private GET_OPTIONS: HttpRequestOptions = {
     method: 'GET',
+  };
+  private POST_OPTIONS: HttpRequestOptions = {
+    method: 'POST',
   };
 
   constructor(private httpClient: HttpClient) {}
@@ -137,11 +144,38 @@ export class ApiService {
 
   // For Review page, which is currently unused
 
-  // cveDetails(detailRequst: CVEDetailsRequest, callback: ApiRequestObserver) {
-  //   this.httpClient
-  //     .get(Routes.review, this.injectGetParameters({ ...detailRequst }))
-  //     .subscribe(callback);
-  // }
+  reviewDetails(detailRequest: ReviewCriteria) {
+    return this.httpClient
+      .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
+  }
+
+  reviewUpdate(updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
+    const body = JSON.stringify(updateRequestData)
+
+    let params = new HttpParams()
+
+    for (const [key, value] of Object.entries(updateRequest)) {
+      // console.log("updateRequest - " + `${key}: ${value}`);
+      params = params.append(`${key}`, `${value}`)
+    }
+
+    // for (const key of params.keys()) {
+    //   console.log(key + ": " + params.get(key))
+    // }
+
+    this.httpClient
+      .post(Routes.review,
+        body,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          params: params
+        }
+      )
+      .subscribe(callback);
+  }
+
   // cveUpdateAtomic(
   //   updateRequest: CVEUpdateRequest,
   //   cveDescription: string,
@@ -189,5 +223,8 @@ export class ApiService {
 
   private injectGetParameters(params: HttpRequestParams) {
     return { ...this.GET_OPTIONS, params: params };
+  }
+  private injectPostParameters(params: HttpRequestParams) {
+    return { ...this.POST_OPTIONS, params: params };
   }
 }
