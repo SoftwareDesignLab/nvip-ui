@@ -14,26 +14,25 @@
       >
         <!-- <div id="userView"> -->
         <c-navbar-nav class="me-auto mb-2 mb-lg-0" style="width: 100%">
-          <c-nav-item class="nvip-header-link">
-            <a cNavLink (click)="goToSafely(['about'])">About NVIP</a>
+          <c-nav-item class="nvip-header-link" (click)="goToSafely(['about'])">
+            <a cNavLink>About NVIP</a>
           </c-nav-item>
-          <c-nav-item class="nvip-header-link">
-            <a cNavLink (click)="goTo(['recent'])">Recent Vulnerabilities</a>
+          <c-nav-item class="nvip-header-link" (click)="goTo(['recent'])">
+            <a cNavLink>Recent Vulnerabilities</a>
           </c-nav-item>
-          <c-nav-item class="nvip-header-link">
-            <a cNavLink (click)="goTo(['search'])">Search</a>
+          <c-nav-item class="nvip-header-link" (click)="goTo(['search'])">
+            <a cNavLink>Search</a>
           </c-nav-item>
-          <c-nav-item class="nvip-header-link">
+          <c-nav-item class="nvip-header-link" (click)="goTo(['review'])">
             <a
               cNavLink
               id="adminElement"
-              (click)="goTo(['review'])"
               >Review</a
             >
           </c-nav-item>
           <c-nav-item id="userBlock" style="width: 100%;"></c-nav-item>
-          <c-nav-item class="nvip-header-link" *ngIf="!isLoggedIn()">
-            <a (click)="openLogin()">Login</a>
+          <c-nav-item class="nvip-header-link" *ngIf="!isLoggedIn()" (click)="openLogin()">
+            <a>Login</a>
           </c-nav-item>
 
           <c-nav-item [hidden]="!isLoggedIn()" class="nvip-header-user-icon-container">
