@@ -115,10 +115,6 @@ div {
 	display: block;
 }
 
-.nvip-form-field > label {
-	font-size: var(--font-size);
-}
-
 .nvip-form-horizontal-block {
     display: flex;
     flex-direction: row;
@@ -320,10 +316,6 @@ div {
 	.nvip-paging-index > p {
 		font-size: calc(var(--font-size)*0.8);
 	}	
-	
-	.nvip-search-result .daily-vuln-dropdown-row-1 > .nvip-cve-number-span {
-		font-size: calc(0.9 * var(--font-size));
-	}
 	
 	.nvip-search-result .daily-vuln-dropdown-row-2, .daily-vuln-dropdown-row-3 {
 		font-size: calc(0.8 * var(--font-size));

@@ -28,13 +28,12 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  height: 10em;
+  min-height: 10em;
   margin-top: 1em;
   padding: 10px;
   position: relative;
   bottom: -10em;
   text-align: center;
-  width: 100%;
 }
 
 .nvip-footer > div {
