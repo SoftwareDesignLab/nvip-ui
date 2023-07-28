@@ -263,10 +263,6 @@ p {
 
 @media screen and (min-width: 1300px) {
 	/** Login Styles **/
-	.login-panel {
-		margin-left: 21em;
-	}
-
 	.nvip-bullet {
         width: 32%;
     }
