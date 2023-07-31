@@ -41,6 +41,8 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   private chart: any;
   @Input('cvssScore') cvssScore: any
 
+  
+
   /** child drawgraph class that inits graph data, options, and then draws on page */
   override drawGraph() {
     this.data = this.createDataTable([
@@ -66,7 +68,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
       }
 
     this.options = {
-        width: 800, height: 225,
+        // width: 800, height: 225,
         redFrom: 6.9, redTo: 10,
         yellowFrom: 5.5, yellowTo: 7.4,
         greenFrom:0, greenTo: 6.5,
@@ -77,5 +79,10 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
       document.getElementById('cvssGauge')
     );
     this.chart.draw(this.data, this.options);
+    
+    let resizeHandler = () => this.chart.draw(this.data, this.options);
+    if (window.addEventListener) {
+        window.addEventListener('resize', resizeHandler, false);
+    }
   }
 }
