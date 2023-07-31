@@ -51,7 +51,18 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
         ['Base', 0]
       ]);
 
-      
+      if (this.cvssScore.baseScore == 4) {
+        this.data.setValue(0, 1, 9.0);
+      }
+      else if (this.cvssScore.baseScore == 1) { 
+        this.data.setValue(0, 1, 7.0);
+      }
+      else if (this.cvssScore.baseScore == 2) { 
+        this.data.setValue(0, 1, 5.0);
+      }
+      else if (this.cvssScore.baseScore == 5) { 
+        this.data.setValue(0, 1, 3.0);
+      }
       if (this.cvssScore != undefined && this.cvssScore != null) {
         this.data.setValue(0, 1, parseFloat(this.cvssScore.baseScore));
       }
