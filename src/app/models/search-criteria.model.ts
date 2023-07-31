@@ -29,5 +29,5 @@ export interface SearchCriteria {
   endDate: string;
   product: string;
   vdoLabels: Array<string>;
-  cvssScores: Array<string>;
+  cvssScores: Array<number>;
 }

@@ -194,6 +194,8 @@ export class SearchComponent implements OnInit {
 
       searchFormBtn.disabled = true;
 
+      console.log(this.search)
+
       // Display the loading bar
       this.toggleLoading();
 
@@ -272,6 +274,7 @@ export class SearchComponent implements OnInit {
   handleRes(res: any) {
     this.resultTotalCount = res.length;
     this.searchResults = res;
+    console.log(this.searchResults)
     this.searchSuccess = true;
     if (this.resultTotalCount < 10) {
       this.totalPageLimit = 1;
@@ -389,14 +392,29 @@ export class SearchComponent implements OnInit {
   }
 
   onCVSSChange(event: any, cvssScore: string) {
+    let cvssBase = 3
+    switch(cvssScore) {
+    case "CRITICAL":
+      cvssBase = 4
+      break;
+    case "HIGH":
+      cvssBase = 1
+      break;
+    case "MEDIUM":
+      cvssBase = 2
+      break;
+    case "LOW":
+      cvssBase = 5
+      break;
+    }
     // checkbox checked
     if (event.target.checked) {
       if (this.search.cvssScores == undefined) this.search.cvssScores = [];
-      this.search.cvssScores.push(cvssScore);
+      this.search.cvssScores.push(cvssBase);
     }
     // checkbox unchecked
     else {
-      const i = this.search.cvssScores.indexOf(cvssScore, 0);
+      const i = this.search.cvssScores.indexOf(cvssBase, 0);
       this.search.cvssScores.splice(i, 1);
     }
   }
