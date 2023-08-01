@@ -24,6 +24,8 @@
 import { Component, EventEmitter, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
+import { VdoHash } from 'src/app/models/search-criteria.model';
+
 /** Search dropdown component for VDO categories */
 @Component({
   selector: 'search-dropdown',
@@ -39,11 +41,11 @@ export class SearchDropdownComponent {
   rotationAmount = 0;
 
   /** hold state for which checkboxes are marked on the form */
-  checkedLabels: Array<string> = [];
+  checkedLabels: Map<string, boolean> = new Map<string, boolean>();
 
   @Input('label') label: string;
   @Input('entityLabels') entityLabels: Array<string>;
-  @Output() selected = new EventEmitter<{selected: Array<string>}>
+  @Output() selected = new EventEmitter<{selected: Map<string, boolean>}>
 
   /**
    * search dropdown constructor
@@ -58,6 +60,9 @@ export class SearchDropdownComponent {
   ngOnChanges(changes: SimpleChanges) {
     this.label = changes['label'].currentValue;
     this.entityLabels = changes['entityLabels'].currentValue;
+    for(let label of this.entityLabels) {
+      this.checkedLabels.set(label, false)
+    }
   }
 
   //TODO: can probably make this more intuitive - current copy from old UI
@@ -90,12 +95,11 @@ export class SearchDropdownComponent {
   onChange(event: any, label: any) {
     // checkbox checked
     if (event.target.checked) {
-      this.checkedLabels.push(label);
+      this.checkedLabels.set(label, true)
     }
     // checkbox unchecked
     else {
-      const i = this.checkedLabels.indexOf(label, 0);
-      this.checkedLabels.splice(i, 1);
+      this.checkedLabels.set(label, false)
     }
     this.selected.emit({selected: this.checkedLabels});
   }
