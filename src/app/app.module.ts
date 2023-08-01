@@ -53,7 +53,9 @@ import {
   NavbarModule, 
   CollapseModule, 
   GridModule,
-  FooterModule } from '@coreui/angular';
+  FooterModule,
+  BadgeModule
+} from '@coreui/angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,7 +88,8 @@ import {
     NavbarModule,
     CollapseModule,
     GridModule,
-    FooterModule
+    FooterModule,
+    BadgeModule
   ],
   providers: [ApiService, AuthService],
   bootstrap: [AppComponent],
