@@ -31,7 +31,7 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { SearchCriteria } from 'src/app/models/search-criteria.model';
+import { SearchCriteria, VdoHash } from 'src/app/models/search-criteria.model';
 
 /** Search Page */
 @Component({
@@ -388,7 +388,17 @@ export class SearchComponent implements OnInit {
 
   updateSelectedLabels(event: any) {
     if (this.search.vdoLabels == undefined) this.search.vdoLabels = [];
-    this.search.vdoLabels = [...this.search.vdoLabels, ...event['selected']];
+    let hash = event["selected"] as Map<string, boolean>
+    for (const key of hash) {
+      if(this.search.vdoLabels.indexOf(key[0]) < 0 && key[1]){
+        this.search.vdoLabels.push(key[0])
+      }
+
+      if(this.search.vdoLabels.indexOf(key[0]) > 0 && !key[1]){
+        let i = this.search.vdoLabels.indexOf(key[0])
+        this.search.vdoLabels.splice(i, 1)
+      }
+    }
   }
 
   onCVSSChange(event: any, cvssScore: string) {

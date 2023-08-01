@@ -31,3 +31,7 @@ export interface SearchCriteria {
   vdoLabels: Array<string>;
   cvssScores: Array<number>;
 }
+
+export interface VdoHash {
+  [details: string] : boolean;
+}
