@@ -54,10 +54,7 @@ import {
   CollapseModule, 
   GridModule,
   FooterModule,
-  AccordionModule,
-  SharedModule,
-  TableModule,
-  UtilitiesModule
+  BadgeModule
 } from '@coreui/angular';
 @NgModule({
   declarations: [
@@ -92,10 +89,7 @@ import {
     CollapseModule,
     GridModule,
     FooterModule,
-    AccordionModule,
-    SharedModule,
-    TableModule,
-    UtilitiesModule
+    BadgeModule
   ],
   providers: [ApiService, AuthService],
   bootstrap: [AppComponent],
