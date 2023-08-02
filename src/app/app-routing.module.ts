@@ -36,7 +36,7 @@ import { VulnerabilityComponent } from './pages/vulnerability/vulnerability.comp
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'review', component: ReviewComponent },
+  { path: 'review/:id', component: ReviewComponent },
   { path: 'recent', component: RecentComponent },
   { path: 'daily', component: DailyComponent },
   { path: 'privacy', component: PrivacyComponent },
