@@ -23,15 +23,13 @@
  */
 
 export interface ReviewCVSS {
-  cvss_severity_id:number
-  severity_confidence:number
+  base_score:number
   impact_score:number
-  impact_confidence:number
 }
 
 export interface ReviewVDOLabel {
-  labelID:number
-  groupID:number
+  label:string
+  group:string
   confidence:number
 }
 
@@ -42,7 +40,7 @@ export interface ReviewVDO {
 export interface ReviewDataCriteria {
   updateInfo: string
   description: string
-  cvss: ReviewCVSS
+  cvss: Array<ReviewCVSS>
   vdoUpdates: ReviewVDO
   prodToRemove: Array<number>
 }
