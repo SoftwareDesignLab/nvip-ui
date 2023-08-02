@@ -151,7 +151,7 @@ export class ApiService {
       .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
   }
 
-  reviewUpdate(updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
+  reviewUpdate(id: string, updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
     const body = JSON.stringify(updateRequestData)
 
     let params = new HttpParams()
@@ -166,7 +166,7 @@ export class ApiService {
     // }
 
     this.httpClient
-      .post(Routes.review,
+      .post(Routes.review + "/"+id,
         body,
         {
           headers: {

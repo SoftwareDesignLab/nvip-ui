@@ -34,19 +34,11 @@ import { Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
+import { ActivatedRoute } from '@angular/router';
 
-export interface reviewResultObject {
-  cve_id: string
-  description: string
-  run_date_time: string
-  status_id: string
-  cvss_scores: Array<{}>
-  vdos: Array<{}>
-
-  cvssactive: boolean
-  vdoactive: boolean
-  aractive: boolean
-  active: boolean
+export interface updateCvss {
+  base_score: number
+  impact_score: number
 }
 
 export interface updateVdo {
@@ -55,7 +47,7 @@ export interface updateVdo {
   confidence: number
 }
 
-export interface updateAffRel {
+export interface updateAffProd {
   productId: number
   cpe: string
   domain: string
@@ -64,16 +56,11 @@ export interface updateAffRel {
 export interface updateObject {
   vuln_id: number;
   cve_id: string;
-  status_id: number;
-  info: string;
   desc: string;
-  cvss_severity_id: number;
-  severity_confidence: number;
-  impact_score: number;
-  impact_confidence: number;
+  cvss: Array<updateCvss>;
   vdos: Array<updateVdo>;
-  affrels: Array<updateAffRel>
-  affrels_to_remove: Array<updateAffRel>
+  affprods: Array<updateAffProd>
+  affprods_to_remove: Array<updateAffProd>
 }
 
 /** CURRENTLY UNUSED review page */
@@ -85,131 +72,57 @@ export interface updateObject {
 export class ReviewComponent {
   /** FontAwesome Icon */
   faSpinner = faSpinner;
-  faAngleDoubleLeft = faAngleDoubleLeft;
-  faAngleDoubleRight = faAngleDoubleRight;
-  faAngleRight = faAngleRight;
-  faAngleDown = faAngleDown;
-  console = console;
   session = {} as Session;
-  cve = {} as Vulnerability;
-  review = {} as ReviewCriteria;
-  searchCveId = ""
-  runDateTime = "";
-  rotationAmountStatus = 0;
-  statuses = ["Accepted", "Under Review", "Rejected", "Crawled"];
-  vdolabels = [
-      "Man-in-the-Middle",
-      "Channel",
-      "Authentication Bypass",
-      "Physical Hardware",
-      "Application",
-      "Host OS",
-      "Firmware",
-      "Code Execution",
-      "Context Escape",
-      "Guest OS",
-      "Hypervisor",
-      "Sandboxed",
-      "Physical Security",
-      "ASLR",
-      "Limited Rmt",
-      "Local",
-      "Read",
-      "Resource Removal",
-      "HPKP/HSTS",
-      "MultiFactor Authentication",
-      "Remote",
-      "Write",
-      "Indirect Disclosure",
-      "Service Interrupt",
-      "Privilege Escalation",
-      "Physical"
-    ];
-  vdogroups = [
-      "ImpactMethod",
-      "Context",
-      "Mitigation",
-      "AttackTheater",
-      "LogicalImpact"
-    ];
-  showForm: boolean = true;
-  reviewResults: Array<reviewResultObject> = [];
-  filteredReviewResults: Array<any> = [];
-  reviewSuccess: boolean = false;
-  resultTotalCount = 0;
-  pageRecord: Array<number> = [];
-  currentPage = 0;
-  pageBlocks: Array<number> = [];
-  totalPages = 0;
-  totalPageLimit = 0;
-  pageLimit = 100;
-  currentSelected: number = -1;
-  lastVulnSelected = {} as reviewResultObject;
+  vuln = {} as Vulnerability;
+
+  username: string = ""
+  token: string = ""
+
+  cvssactive: boolean = false
+  vdoactive: boolean = false
+  aractive: boolean = false
 
   update = {} as updateObject
-  updateIndex: number = 0;
-
-  active: boolean = false;
 
   constructor(
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
     private funcs: FuncsService,
+    private route: ActivatedRoute,
     private searchResService: SearchResultService
-  ) {}
-
-  ngOnInit(): void {
-    this.session = this.cookieService.get('nvip_user');
-    this.review.username = this.session.userName;
-    this.review.token = this.session.token;
-
+  ) {
+    this.route.params.subscribe((params) => this.init(params['id']))
     this.update.vdos = new Array<updateVdo>()
     for(let i = 0; i < 24; i++) {
       this.update.vdos.push({} as updateVdo)
     }
+
+    this.update.cvss = new Array<updateCvss>()
+    for(let i = 0; i < 24; i++) {
+      this.update.cvss.push({} as updateCvss)
+    }
+
+    this.update.affprods = new Array<updateAffProd>();
+    this.update.affprods_to_remove = new Array<updateAffProd>();
   }
 
-  detailSearchId($event: any, f: NgForm) {
-    // Retrieve the search form button and disable it
-    var searchFormBtn = document.getElementsByClassName(
-      'nvip-form-btn'
-    )[0] as HTMLInputElement;
+  ngOnInit(): void {
+    this.session = this.cookieService.get('nvip_user');
+    this.username = this.session.userName;
+    this.token = this.session.token;
 
-    this.toggleLoading();
+    
+  }
 
-    this.reviewResults = [];
-    this.filteredReviewResults = [];
-    this.apiService
-          .reviewDetails(this.review)
-          .subscribe({
-            next: (res: any) => {
-              this.handleRes(res);
-
-              // Hide the loading bar now that the results have arrived
-              this.toggleLoading();
-
-              // Once the search results have been loaded, toggle the search form so that
-              // the search results now appear. Do not trigger if call launched not launched
-              // from a form button event.
-              if ($event !== null) {
-                this.toggleSearchForm();
-              }
-              searchFormBtn.disabled = false;
-            },
-            error: (e) => {
-              // Hide the loading bar now that request has failed
-              this.toggleLoading();
-              this.reviewResults = [];
-              this.filteredReviewResults = [];
-
-              if (e.status == 401) {
-                alert(e.data);
-                window.location.assign(window.location.href + 'login');
-              }
-            },
-            complete: () => {},
-          })
+  /** ensure the user is signed on when navigating to this page */
+  init(id: string) {
+    var session: Session = this.cookieService.get('nvip_user');
+    this.vulnService
+      .getByID(id, session.userName, session.token)
+      .subscribe((res: any) => {
+        this.handleRes(res)
+      });
   }
 
    /** legacy loading function to show and hide loading bar while search results are being called */
@@ -246,364 +159,113 @@ export class ReviewComponent {
    * stored or newly received
    */
   handleRes(res: any) {
-    this.resultTotalCount = res.length;
-    for (let result of res) {
-      let obj = result as reviewResultObject
-      obj.active = false
-      obj.vdoactive = false
-      obj.cvssactive = false
-      obj.aractive = false
-      this.reviewResults.push(obj)
+    this.vuln = res
+    console.log(this.vuln)
+    this.update.desc = this.vuln.description
+    for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
+      this.update.cvss[i].base_score = this.vuln.cvssScoreList[i].baseScore
+      this.update.cvss[i].impact_score = this.vuln.cvssScoreList[i].impactScore
     }
-    // this.reviewResults = res;
-    this.reviewSuccess = true;
-    if (this.resultTotalCount < this.pageLimit) {
-      this.totalPageLimit = 1;
-    } else {
-      this.totalPageLimit = Math.ceil(this.resultTotalCount / 10) - 1;
+    for(let i = 0; i < this.vuln.vdoList.length; i++) {
+      this.update.vdos[i].vdolabel = this.vuln.vdoList[i].vdoLabel
+      this.update.vdos[i].vdogroup = this.vuln.vdoList[i].vdoNounGroup
+      this.update.vdos[i].confidence = this.vuln.vdoList[i].vdoConfidence
     }
-    this.filteredReviewResults = this.reviewResults.slice(0, this.pageLimit);
-    this.getTotalPages();
-    this.updatePages(this.reviewResults.length);
-  }
-
-  toggleSearchForm() {
-    var searchFormBtn = document.getElementsByClassName(
-      'nvip-form-btn'
-    )[0] as HTMLInputElement;
-    if (this.showForm) {
-      this.showForm = false;
-      searchFormBtn.disabled = true;
-    } else {
-      // Re-enable the Search Form submmit button if it has been disabled
-      this.showForm = true;
-      searchFormBtn.disabled = false;
+    for(let prod of this.vuln.products){
+      this.update.affprods.push(prod)
     }
+    console.log(this.update)
   }
 
-  onStatusChange(event: any, status: string) {
-    // checkbox checked
-    if (event.target.checked) {
-      switch(status){
-      case "Accepted":
-        this.review.accepted = true;
-        break;
-      case "Under Review":
-        this.review.reviewed = true;
-        break;
-      case "Rejected":
-        this.review.rejected = true;
-        break;
-      case "Crawled":
-        this.review.crawled = true;
-        break;
-      }
-    }
-    // checkbox unchecked
-    else {
-      switch(status){
-      case "Accepted":
-        this.review.accepted = false;
-        break;
-      case "Under Review":
-        this.review.reviewed = false;
-        break;
-      case "Rejected":
-        this.review.rejected = false;
-        break;
-      case "Crawled":
-        this.review.crawled = false;
-        break;
-      }
-    }
+  toggleCVSS($event: any) {
+    this.cvssactive = !this.cvssactive
   }
 
-  toggleContent($event: any, drop: string) {
-    // If the triggering element is a form checkbox, do not toggle.
-    if ($event.srcElement.classList.contains('nvip-form-dropdown-checkbox')) {
-      return;
-    }
-
-    let formDropdown = this.funcs.getAncestor(
-      $event.srcElement as HTMLElement,
-      'nvip-form-dropdown-field'
-    );
-    let formContent = this.funcs.getSiblingByClassName(
-      formDropdown as HTMLElement,
-      'nvip-form-dropdown-content'
-    );
-    let caretIcon = formDropdown!.getElementsByClassName(
-      'nvip-form-dropdown-caret'
-    )[0];
-
-    if (formContent!.style.display == 'flex') {
-      this.rotationAmountStatus = 90;
-      formDropdown!.classList.remove('dropdown-opened');
-      formContent!.style.display = 'none';
-      caretIcon.classList.add('fa-angle-left');
-      caretIcon.classList.remove('fa-angle-down');
-    } else {
-      this.rotationAmountStatus = 0;
-      formDropdown!.classList.add('dropdown-opened');
-      formContent!.style.display = 'flex';
-      caretIcon.classList.remove('fa-angle-left');
-      caretIcon.classList.add('fa-angle-down');
-    }
+  toggleVDO($event: any) {
+    this.vdoactive = !this.vdoactive
   }
 
-  /** a change button is pressed, handle displaying different page of vuln dropdowns */
-  changePage(pageNum: number) {
-    // If the page number is not the current page, switch pages
-    if (
-      this.currentPage !== pageNum &&
-      pageNum < this.totalPages &&
-      pageNum >= 0
-    ) {
-      const pageOffset = this.pageLimit * pageNum;
-      this.currentPage = pageNum;
-      if (pageOffset < this.reviewResults.length)
-        this.filteredReviewResults = this.reviewResults.slice(
-          pageOffset,
-          pageOffset + this.pageLimit
-        );
-      this.updatePages(this.reviewResults.length);
-    }
-  }
-
-  updatePages(totalEntries: number) {
-    // If there are no entries, skip this method
-    if (totalEntries == 0) {
-      this.pageBlocks = [];
-      this.pageRecord = [0, 0];
-      return;
-    }
-
-    var numPages =
-      this.totalPageLimit <= 1 ? 0 : Math.floor(this.totalPageLimit / 2) - 1;
-    var start =
-      this.currentPage - numPages < 0 ? 0 : this.currentPage - numPages;
-    var end =
-      this.currentPage + numPages > this.totalPages
-        ? this.totalPages
-        : this.currentPage + numPages + 1;
-
-    // If the ending page is before the total allowed number of pages, set it to the
-    // total number of pages allowed
-    if (end < this.totalPageLimit) end = this.totalPageLimit;
-    var totalPages =
-      this.totalPageLimit == 1 ? this.totalPageLimit : this.totalPageLimit + 1;
-    var pageBlocks = [];
-    for (let i = 0; i < totalPages && i < 10; i++) {
-      pageBlocks.push(i);
-    }
-
-    // Calculate the record range based on the current page and the total
-    // number of entries
-    this.pageRecord = [
-      this.currentPage * this.pageLimit + 1,
-      (this.currentPage + 1) * this.pageLimit > totalEntries
-        ? totalEntries
-        : (this.currentPage + 1) * this.pageLimit,
-    ];
-
-    this.pageBlocks = pageBlocks;
-  }
-
-  /** trigger emit of new active dropdown to collapse all other dropdowns on the page */
-  setCurrentSelected(event: any) {
-    this.currentSelected = event['index'];
-  }
-
-  /** calculate and hold state for total number of pages to be displayed */
-  getTotalPages() {
-    var totalPages =
-      this.resultTotalCount % this.pageLimit == 0
-        ? this.resultTotalCount / this.pageLimit
-        : Math.floor(this.resultTotalCount / this.pageLimit) + 1;
-
-    // Set the total number of pages
-    this.totalPages = totalPages;
-  }
-
-  selectReviewCve($event: any, vuln: any, index: any) {
-    console.log(vuln)
-    this.currentSelected = index;
-
-    if (this.lastVulnSelected !== vuln) {
-      this.lastVulnSelected.active = false;
-      this.lastVulnSelected.vdoactive = false;
-      this.lastVulnSelected.cvssactive = false;
-      this.lastVulnSelected.aractive = false
-      this.lastVulnSelected = vuln;
-    }
-
-    vuln.active = !vuln.active
-
-    this.update.vuln_id = vuln.vuln_id
-    this.update.cve_id = vuln.cve_id
-    this.update.status_id = vuln.status_id;
-
-    this.update.desc = vuln.description
-
-    if(vuln.cvss_scores.length != 0) {
-      this.update.cvss_severity_id = vuln.cvss_scores[0].cvssSeverity.id;
-      this.update.severity_confidence = vuln.cvss_scores[0].severityConfidence;
-      this.update.impact_score = vuln.cvss_scores[0].impactScore;
-      this.update.impact_confidence = vuln.cvss_scores[0].impactConfidence;
-    }
-    else {
-      this.update.cvss_severity_id = 3
-      this.update.severity_confidence = 0
-      this.update.impact_score = 0
-      this.update.impact_confidence = 0
-    }
-
-    for(let i = 0; i < vuln.vdos.length; i++) {
-      this.update.vdos[i].vdolabel = vuln.vdos[i].vdoLabels.vdoLabelName;
-      this.update.vdos[i].vdogroup = vuln.vdos[i].vdoGroup.vdoGroupName;
-      this.update.vdos[i].confidence = vuln.vdos[i].vdoConfidence;
-    }
-
-    this.update.affrels = new Array<updateAffRel>()
-    this.update.affrels_to_remove = new Array<updateAffRel>()
-    for(let affrel of vuln.affected_releases) {
-      this.update.affrels.push(<updateAffRel>affrel.product)
-    }
-  }
-
-  selectReviewCVSS($event: any, vuln: any) {
-    vuln.cvssactive = !vuln.cvssactive;
-  }
-
-  selectReviewVDO($event: any, vuln: any) {
-    vuln.vdoactive = !vuln.vdoactive;
-  }
-
-  selectReviewAR($event: any, vuln: any) {
-    vuln.aractive = !vuln.aractive;
-  }
-
-  statusIdToString(status: string) {
-    switch(status){
-      case "1":
-        return "Crawled"
-      case "2":
-        return "Rejected"
-      case "3":
-        return "Under Review"
-      case "4":
-        return "Accepted"
-      default:
-        return ""
-      }
-  }
-
-  vdoLabelToId(label: string) {
-    return this.vdolabels.indexOf(label) + 1 
-  }
-
-  vdoGroupToId(group: string) {
-    return this.vdogroups.indexOf(group) + 1 
-  }
-
-  setCVSSseverity(id: number) {
-    this.update.cvss_severity_id = id;
-  }
-
-  setStatus(id: number) {
-    this.update.status_id = id;
+  toggleAffProd($event: any) {
+    this.aractive = !this.aractive
   }
 
   removeCPE(index: number, vuln: any) {
-    this.update.affrels_to_remove.push(this.update.affrels[index])
-    this.update.affrels.splice(index, 1)
+    this.update.affprods_to_remove.push(this.update.affprods[index])
+    this.update.affprods.splice(index, 1)
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
+    console.log("woof")
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
-    parameters.username = this.review.username
-    parameters.token = this.review.token
+    parameters.username = this.username
+    parameters.token = this.token
     parameters.vulnId = this.update.vuln_id
     parameters.cveId = this.update.cve_id
-    parameters.statusId = this.update.status_id
-
-    if(this.update.status_id !== vuln.status_id){
-      parameters.atomicUpdate = true
-    }
 
     if(this.update.desc !== vuln.description){
-      parameters.atomicUpdate = false
-      parameters.complexUpdate = true;
       parameters.updateDescription = true;
 
       data.description = this.update.desc
     }
 
-    if(vuln.cvss_scores.length > 0 && 
-      (this.update.cvss_severity_id !== vuln.cvss_scores[0].cvssSeverity.id) ||
-      (this.update.impact_score !== vuln.cvss_scores[0].impactScore) ||
-      (this.update.severity_confidence !== vuln.cvss_scores[0].severityConfidence) ||
-      (this.update.impact_confidence !== vuln.cvss_scores[0].impactConfidence)
-    ){
-      parameters.atomicUpdate = false
-      parameters.complexUpdate = true;
+    let updateCvssFlag: boolean = false
+    for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
+      if(vuln.cvssScoreList.length > 0 && 
+      ((this.update.cvss[i].base_score !== vuln.cvssScoreList[0].baseScore) ||
+      (this.update.cvss[i].impact_score !== vuln.cvssScoreList[0].impactScore))) {
+        updateCvssFlag = true
+        break;
+      }
+    }
+    if(updateCvssFlag) {
       parameters.updateCVSS = true;
 
-      let cvss = {} as ReviewCVSS
-      cvss.cvss_severity_id = this.update.cvss_severity_id
-      cvss.severity_confidence = this.update.severity_confidence
-      cvss.impact_score = this.update.impact_score
-      cvss.impact_confidence = this.update.impact_confidence
-      data.cvss = cvss;
+      data.cvss = new Array<ReviewCVSS>();
+      for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
+        let cvss = {} as ReviewCVSS
+        cvss.base_score = this.update.cvss[i].base_score
+        cvss.impact_score = this.update.cvss[i].impact_score
+        data.cvss.push(cvss)
+      }
     }
 
     let updateVdoFlag: boolean = false;
-    for(let i= 0; i < vuln.vdos.length; i++) {
-      if(this.update.vdos[i].vdolabel !== vuln.vdos[i].vdoLabels.vdoLabelName ||
-         this.update.vdos[i].vdogroup !== vuln.vdos[i].vdoGroup.vdoGroupName ||
-         this.update.vdos[i].confidence !== vuln.vdos[i].vdoConfidence){
+    for(let i= 0; i < vuln.vdoList.length; i++) {
+      if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
+         this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
+         this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
         updateVdoFlag = true;
         break;
       }
     }
-
     if(updateVdoFlag) {
-      parameters.atomicUpdate = false;
-      parameters.complexUpdate = true;
       parameters.updateVDO = true;
 
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
       for(let i = 0; i < vuln.vdos.length; i++){
         let vdo = {} as ReviewVDOLabel;
-        vdo.labelID = this.vdoLabelToId(this.update.vdos[i].vdolabel);
-        vdo.groupID = this.vdoGroupToId(this.update.vdos[i].vdogroup);
+        vdo.label = this.update.vdos[i].vdolabel;
+        vdo.group = this.update.vdos[i].vdogroup;
         vdo.confidence = this.update.vdos[i].confidence;
         data.vdoUpdates.vdoLabels.push(vdo);
       }
     }
 
-    if(this.update.affrels.length !== vuln.affected_releases.length){
-      parameters.atomicUpdate = false;
-      parameters.complexUpdate = true;
+    if(this.update.affprods.length !== vuln.affected_releases.length){
       parameters.updateAffRel = true;
 
       data.prodToRemove = new Array<number>()
-      for (let ar of this.update.affrels_to_remove) {
+      for (let ar of this.update.affprods_to_remove) {
         data.prodToRemove.push(ar.productId)
       }
-    }
-
-    data.updateInfo = ""
-    if(this.update.info !== undefined){
-      data.updateInfo = this.update.info
     }
 
     console.log(parameters)
     console.log(data)
 
-    this.apiService.reviewUpdate(parameters, data, (res)=>{alert("Yippee!")})
+    // this.apiService.reviewUpdate(this.update.cve_id, parameters, data, (res)=>{console.log(res)})
   }
 }

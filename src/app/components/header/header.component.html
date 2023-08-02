@@ -23,13 +23,6 @@
           <c-nav-item class="nvip-header-link" (click)="goTo(['search'])">
             <a cNavLink>Search</a>
           </c-nav-item>
-          <c-nav-item class="nvip-header-link" (click)="goTo(['review'])">
-            <a
-              cNavLink
-              id="adminElement"
-              >Review</a
-            >
-          </c-nav-item>
           <c-nav-item id="userBlock" style="width: 100%;"></c-nav-item>
           <c-nav-item class="nvip-header-link" *ngIf="!isLoggedIn()" (click)="openLogin()">
             <a>Login</a>
