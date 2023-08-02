@@ -5,9 +5,6 @@
             <span>Loading search results...</span>
         </div>
     </div>
-    <div class="nvip-search-result-header col-12">
-        <p>{{update.cve_id}} Review</p>
-    </div>
     <div class="nvip-search-form-ctn">
         <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form, vuln)">
             <div class="nvip-form-horizontal-block">
@@ -22,51 +19,106 @@
                     </c-row>
                 </c-container>
             </div>
-            <div *ngIf="vuln.vdoList !== undefined">
-                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
-                <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
-                    <div>
-                        <table cTable responsive>
-                            <thead>
-                                <tr class="nvip-review-select-header">
-                                    <th scope="col">
-                                        <strong>Show/Hide</strong>
-                                    </th>
-                                    <th scope="col">
-                                        <strong>VDO Label</strong>
-                                    </th>
-                                    <th scope="col">
-                                        <strong>Noun Group:</strong>
-                                    </th>
-                                    <th scope="col">
-                                        <strong>Confidence:</strong>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let vdo of vdoMap | keyvalue" class="nvip-review-select">
-                                    <td>
-                                            <!-- TODO: connect checkbox -->
-                                            <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)">
-                                    </td>
-                                    <td>
-                                            <!-- <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
-                                            <span>{{ vdo.value.label }}</span>
-                                    </td>
-                                    <td >
-                                        {{ vdo.value.group }}
-                                    </td>
-                                    <td>
-                                        <!-- <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}"> -->
-                                        {{ getVdoConfidence(vdo.value) }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div [hidden]="vuln.cvssScoreList.length == 0" *ngIf="vuln.cvssScoreList !== undefined">
+                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleCVSS($event)">CVSSs</button>
+                <div class="daily-vuln-content" [ngStyle]="{'max-height': (cvssactive ? '2000px' : '0')}">
+                    <div class="nvip-form-horizontal-block" *ngFor="let cvss of vuln.cvssScoreList; let cindex = index">
+                        <c-container>
+                            <c-row>
+                                <c-col>
+                                    <div class="nvip-form-field nvip-radio">
+                                        <label for="cvss">CVSS: </label>
+                                        <input id="cvss" name="cvss" [(ngModel)]="update.cvss[cindex].base_score" placeholder="">
+                                        <div >
+                                            <label>LOW </label> 
+                                            <input type="radio" class="cvssRadios" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <label>MEDIUM </label>
+                                            <input type="radio" class="cvssRadios" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <label>HIGH </label> 
+                                            <input type="radio" class="cvssRadios" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <label>CRITICAL</label> 
+                                            <input type="radio" class="cvssRadios" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <label>N/A</label>
+                                            <input type="radio" class="cvssRadios" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss[cindex].base_score">
+                                        </div>
+                                    </div>
+                                </c-col>
+                                <c-col>
+                                    <div class="nvip-form-field">
+                                        <label for="impact">Impact Score: </label>
+                                        <input id="impact" name="impact" [(ngModel)]="update.cvss[cindex].impact_score" placeholder="">
+                                    </div>
+                                </c-col>
+                            </c-row>
+                        </c-container>
                     </div>
                 </div>
             </div>
-            <div *ngIf="vuln.cpes !== undefined">
+            <div [hidden]="vuln.vdoList.length == 0" *ngIf="vuln.vdoList !== undefined">
+                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
+                <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
+                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdoList; let vindex = index;">
+                        <c-container>
+                            <c-row>
+                                <c-col>
+                                    <div class="nvip-form-field">
+                                        <label for="label">VDO Label: </label>
+                                        <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
+                                        <datalist id="labeltypes">
+                                            <option value="MAN_IN_THE_MIDDLE">
+                                            <option value="CHANNEL">
+                                            <option value="AUTHENTICATION_BYPASS">
+                                            <option value="PHYSICAL_HARDWARE">
+                                            <option value="APPLICATION">
+                                            <option value="HOST_OS">
+                                            <option value="FIRMWARE">
+                                            <option value="CODE_EXECUTION">
+                                            <option value="CONTEXT_ESCAPE">
+                                            <option value="GUEST_OS">
+                                            <option value="HYPERVISOR">
+                                            <option value="SANDBOXED">
+                                            <option value="PHYSICAL_SECURITY">
+                                            <option value="ASLR">
+                                            <option value="LIMITED_RMT">
+                                            <option value="LOCAL">
+                                            <option value="READ">
+                                            <option value="RESOURCE_REMOVAL">
+                                            <option value="HPKP/HSTS">
+                                            <option value="MULTIFACTOR_AUTHENTICATION">
+                                            <option value="REMOTE">
+                                            <option value="WRITE">
+                                            <option value="INDIRECT_DISCLOSURE">
+                                            <option value="SERVICE_INTERRUPT">
+                                            <option value="PRIVILEGE_ESCALATION">
+                                            <option value="PHYSICAL">
+                                        </datalist>
+                                    </div>
+                                </c-col>
+                                <c-col>
+                                    <div class="nvip-form-field">
+                                        <label for="group">VDO Group: </label>
+                                        <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
+                                        <datalist id="grouptypes">
+                                            <option value="IMPACT_METHOD">
+                                            <option value="CONTEXT">
+                                            <option value="MITIGATION">
+                                            <option value="ATTACK_THEATER">
+                                            <option value="LOGICAL_IMPACT">
+                                        </datalist>
+                                    </div>
+                                </c-col>
+                                <c-col>
+                                    <div class="nvip-form-field">
+                                        <label for="conf">VDO Confidence: </label>
+                                        <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
+                                    </div>
+                                </c-col>
+                            </c-row>
+                        </c-container>
+                    </div>
+                </div>
+            </div>
+            <div [hidden]="vuln.cpes.length == 0" *ngIf="vuln.cpes !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleAffProd($event)">Affected Releases</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (aractive ? '2000px' : '0')}">
                     <div class="nvip-form-horizontal-block" *ngFor="let affrel of update.affprods; let aindex = index;">

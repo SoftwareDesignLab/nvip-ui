@@ -166,7 +166,7 @@ export class ApiService {
     // }
 
     this.httpClient
-      .post(Routes.review,
+      .post(Routes.review + "/"+id,
         body,
         {
           headers: {
