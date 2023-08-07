@@ -93,36 +93,32 @@ export class ReviewComponent {
     private searchResService: SearchResultService
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
-    this.update.vdos = new Array<updateVdo>()
-    for(let i = 0; i < 24; i++) {
-      this.update.vdos.push({} as updateVdo)
-    }
-
-    this.update.cvss = new Array<updateCvss>()
-    for(let i = 0; i < 24; i++) {
-      this.update.cvss.push({} as updateCvss)
-    }
-
-    this.update.affprods = new Array<updateAffProd>();
-    this.update.affprods_to_remove = new Array<updateAffProd>();
   }
 
   ngOnInit(): void {
     this.session = this.cookieService.get('nvip_user');
     this.username = this.session.userName;
     this.token = this.session.token;
-
-    
   }
 
   /** ensure the user is signed on when navigating to this page */
   init(id: string) {
     var session: Session = this.cookieService.get('nvip_user');
+
+    this.update.vdos = new Array<updateVdo>()
+    this.update.cvss = new Array<updateCvss>()
+    this.update.affprods = new Array<updateAffProd>();
+    this.update.affprods_to_remove = new Array<updateAffProd>();
+
     this.vulnService
       .getByID(id, session.userName, session.token)
       .subscribe((res: any) => {
         this.handleRes(res)
       });
+  }
+
+  trackByIndex(index: number, obj: any): any {
+    return index;
   }
 
    /** legacy loading function to show and hide loading bar while search results are being called */
@@ -166,13 +162,17 @@ export class ReviewComponent {
 
     this.update.desc = this.vuln.description
     for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
-      this.update.cvss[i].base_score = this.vuln.cvssScoreList[i].baseScore
-      this.update.cvss[i].impact_score = this.vuln.cvssScoreList[i].impactScore
+      let cvss = {} as updateCvss
+      cvss.base_score = this.vuln.cvssScoreList[i].baseScore
+      cvss.impact_score = this.vuln.cvssScoreList[i].impactScore
+      this.update.cvss.push(cvss)
     }
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
-      this.update.vdos[i].vdolabel = this.vuln.vdoList[i].vdoLabel
-      this.update.vdos[i].vdogroup = this.vuln.vdoList[i].vdoNounGroup
-      this.update.vdos[i].confidence = this.vuln.vdoList[i].vdoConfidence
+      let vdo = {} as updateVdo
+      vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
+      vdo.vdogroup = this.vuln.vdoList[i].vdoNounGroup
+      vdo.confidence = this.vuln.vdoList[i].vdoConfidence
+      this.update.vdos.push(vdo)
     }
     for(let prod of this.vuln.products){
       this.update.affprods.push(prod)
@@ -219,9 +219,6 @@ export class ReviewComponent {
         updateCvssFlag.push(i)
       }
     }
-    console.log(updateCvssFlag)
-    console.log(this.update.cvss)
-    console.log(this.vuln.cvssScoreList)
     if(updateCvssFlag.length > 0) {
       parameters.updateCVSS = true;
 

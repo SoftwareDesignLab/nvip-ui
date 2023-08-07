@@ -129,7 +129,7 @@ export class DailyVulnDropdownComponent implements OnChanges {
    * @returns sorted list of VDO to be displayed in dropdown
    */
   sortBy(limitTo: number, orderBy: string, nounGroup: string): Array<VDO> {
-    return this.getVdoList(nounGroup)
+    let test = this.getVdoList(nounGroup)
       .sort((a, b) =>
         a[orderBy as keyof VDO] > b[orderBy as keyof VDO]
           ? 1
@@ -137,7 +137,15 @@ export class DailyVulnDropdownComponent implements OnChanges {
             ? 0
             : -1
       )
-      .slice(0, limitTo);
+      .slice(0, limitTo)
+
+      test.forEach( function(vdo, index, vdoArray){
+        vdoArray[index].vdoLabel = vdoArray[index].vdoLabel.replace(/\w\S*/g, function(txt){
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }).replace("_", " ");
+      })
+
+      return test
   }
 
   /** get label class based on vdo confidence metric */
