@@ -42,7 +42,9 @@
             </div>
             <div>
                 <p>Method:</p>
-                <p style="margin-left: .5em; font-size: 15px">{{vuln.type}}</p>
+                <span *ngFor="let vdo of sortBy(2, 'vdoConfidence', VDO_NOUN_GROUPS.IMPACT_METHOD)" class="{{getLabelClass(vdo)}} daily-vuln-product product-items">
+                    {{vdo.vdoLabel}}
+                </span>
             </div>
         </div>
         <!-- todo view info to vulnerability page -->

@@ -25,35 +25,30 @@
             <div [hidden]="vuln.cvssScoreList.length == 0" *ngIf="vuln.cvssScoreList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleCVSS($event)">CVSSs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (cvssactive ? '2000px' : '0')}">
-                    <div class="nvip-form-horizontal-block" *ngFor="let cvss of vuln.cvssScoreList; let cindex = index">
+                    <div class="nvip-form-horizontal-block" *ngFor="let cvss of update.cvss; let cindex = index; trackBy:trackByIndex;">
                         <c-container>
                             <c-row>
                                 <c-col>
                                     <div class="nvip-form-field nvip-radio">
                                         <label for="cvss">CVSS: </label>
-                                        <input id="cvss" name="cvss" [(ngModel)]="update.cvss[cindex].base_score" placeholder="">
-                                        <!-- <div >
+                                        <div >
                                             <label>LOW </label> 
-                                            <input type="radio" class="cvssRadios" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId1-{{cindex}}" [value]=5 [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>MEDIUM </label>
-                                            <input type="radio" class="cvssRadios" id="severityMedium" name="cvssSeverityId" value="2" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId2-{{cindex}}" [value]=2 [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>HIGH </label> 
-                                            <input type="radio" class="cvssRadios" id="severityHigh" name="cvssSeverityId" value="1" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId3-{{cindex}}" [value]=1 [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>CRITICAL</label> 
-                                            <input type="radio" class="cvssRadios" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId4-{{cindex}}" [value]=4 [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>N/A</label>
-                                            <input type="radio" class="cvssRadios" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss[cindex].base_score">
-                                        </div> -->
-                                        <div>
-                                            {{cvss.baseScore}}
-                                            {{update.cvss[cindex].base_score}}
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId5-{{cindex}}" [value]=3 [(ngModel)]="update.cvss[cindex].base_score">
                                         </div>
                                     </div>
                                 </c-col>
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="impact">Impact Score: </label>
-                                        <input id="impact" name="impact" [(ngModel)]="update.cvss[cindex].impact_score" placeholder="">
+                                        <input id="impact" name="impact{{cindex}}" [(ngModel)]="update.cvss[cindex].impact_score" placeholder="">
                                     </div>
                                 </c-col>
                             </c-row>
@@ -64,7 +59,7 @@
             <div [hidden]="vuln.vdoList.length == 0" *ngIf="vuln.vdoList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
-                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of vuln.vdoList; let vindex = index;">
+                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of update.vdos; let vindex = index; trackBy:trackByIndex">
                         <c-container>
                             <c-row>
                                 <c-col>
