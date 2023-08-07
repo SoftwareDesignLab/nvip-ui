@@ -5,6 +5,9 @@
             <span>Loading search results...</span>
         </div>
     </div>
+    <div class="nvip-search-result-header col-12">
+        <p>{{update.cve_id}} Review</p>
+    </div>
     <div class="nvip-search-form-ctn">
         <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="updateVuln($event, form, vuln)">
             <div class="nvip-form-horizontal-block">
@@ -29,7 +32,7 @@
                                     <div class="nvip-form-field nvip-radio">
                                         <label for="cvss">CVSS: </label>
                                         <input id="cvss" name="cvss" [(ngModel)]="update.cvss[cindex].base_score" placeholder="">
-                                        <div >
+                                        <!-- <div >
                                             <label>LOW </label> 
                                             <input type="radio" class="cvssRadios" id="severityLow" name="cvssSeverityId" value="5" [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>MEDIUM </label>
@@ -40,6 +43,10 @@
                                             <input type="radio" class="cvssRadios" id="severityCritical" name="cvssSeverityId" value="4" [(ngModel)]="update.cvss[cindex].base_score"> 
                                             <label>N/A</label>
                                             <input type="radio" class="cvssRadios" id="severityNA" name="cvssSeverityId" value="3" [(ngModel)]="update.cvss[cindex].base_score">
+                                        </div> -->
+                                        <div>
+                                            {{cvss.baseScore}}
+                                            {{update.cvss[cindex].base_score}}
                                         </div>
                                     </div>
                                 </c-col>

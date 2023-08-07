@@ -162,7 +162,10 @@ export class ReviewComponent {
    */
   handleRes(res: any) {
     this.vuln = res
-    console.log(this.vuln)
+
+    this.update.cve_id = this.vuln.cveId
+    this.update.vuln_id = this.vuln.vulnId
+
     this.update.desc = this.vuln.description
     for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
       this.update.cvss[i].base_score = this.vuln.cvssScoreList[i].baseScore
@@ -176,7 +179,6 @@ export class ReviewComponent {
     for(let prod of this.vuln.products){
       this.update.affprods.push(prod)
     }
-    console.log(this.update)
   }
 
   toggleCVSS($event: any) {
@@ -197,7 +199,6 @@ export class ReviewComponent {
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
-    console.log("woof")
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -212,20 +213,22 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    let updateCvssFlag: boolean = false
+    let updateCvssFlag: Array<number> = new Array<number>();
     for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
       if(vuln.cvssScoreList.length > 0 && 
-      ((this.update.cvss[i].base_score !== vuln.cvssScoreList[0].baseScore) ||
-      (this.update.cvss[i].impact_score !== vuln.cvssScoreList[0].impactScore))) {
-        updateCvssFlag = true
-        break;
+      ((this.update.cvss[i].base_score !== vuln.cvssScoreList[i].baseScore) ||
+      (this.update.cvss[i].impact_score !== vuln.cvssScoreList[i].impactScore))) {
+        updateCvssFlag.push(i)
       }
     }
-    if(updateCvssFlag) {
+    console.log(updateCvssFlag)
+    console.log(this.update.cvss)
+    console.log(this.vuln.cvssScoreList)
+    if(updateCvssFlag.length > 0) {
       parameters.updateCVSS = true;
 
       data.cvss = new Array<ReviewCVSS>();
-      for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
+      for(let i of updateCvssFlag) {
         let cvss = {} as ReviewCVSS
         cvss.base_score = this.update.cvss[i].base_score
         cvss.impact_score = this.update.cvss[i].impact_score
@@ -233,21 +236,20 @@ export class ReviewComponent {
       }
     }
 
-    let updateVdoFlag: boolean = false;
+    let updateVdoFlag: Array<number> = new Array<number>();
     for(let i= 0; i < vuln.vdoList.length; i++) {
       if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
          this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
          this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
-        updateVdoFlag = true;
-        break;
+        updateVdoFlag.push(i)
       }
     }
-    if(updateVdoFlag) {
+    if(updateVdoFlag.length > 0) {
       parameters.updateVDO = true;
 
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
-      for(let i = 0; i < this.update.vdos.length; i++){
+      for(let i of updateVdoFlag){
         let vdo = {} as ReviewVDOLabel;
         vdo.label = this.update.vdos[i].vdolabel;
         vdo.group = this.update.vdos[i].vdogroup;
@@ -256,7 +258,7 @@ export class ReviewComponent {
       }
     }
 
-    if(this.update.affprods.length !== vuln.affected_releases.length){
+    if(this.update.affprods.length !== vuln.cpes.length){
       parameters.updateAffRel = true;
 
       data.prodToRemove = new Array<number>()
@@ -265,9 +267,8 @@ export class ReviewComponent {
       }
     }
 
-    console.log(parameters)
-    console.log(data)
-
-    // this.apiService.reviewUpdate(this.update.cve_id, parameters, data, (res)=>{console.log(res)})
+    this.apiService.reviewUpdate(this.update.cve_id, parameters, data, (res)=>{
+      this.init(this.update.cve_id)
+    })
   }
 }
