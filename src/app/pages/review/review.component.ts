@@ -196,6 +196,29 @@ export class ReviewComponent {
     this.update.affprods.splice(index, 1)
   }
 
+  addCvss($event: any) {
+    let cvss = {} as updateCvss;
+    cvss.base_score = 3
+    cvss.impact_score = 0
+    this.update.cvss.push(cvss)
+  }
+
+  removeCvss($event: any, index: number) {
+    this.update.cvss.splice(index, 1)
+  }
+
+  addVdo($event: any) {
+    let vdo = {} as updateVdo;
+    vdo.vdolabel = ""
+    vdo.vdogroup = ""
+    vdo.confidence = 0
+    this.update.vdos.push(vdo)
+  }
+
+  removeVdo($event: any, index: number) {
+    this.update.vdos.splice(index, 1)
+  }
+
   updateVuln($event: any, f: NgForm, vuln: any) {
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
