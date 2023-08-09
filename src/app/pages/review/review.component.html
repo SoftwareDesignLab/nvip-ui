@@ -25,6 +25,15 @@
             <div [hidden]="vuln.cvssScoreList.length == 0" *ngIf="vuln.cvssScoreList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleCVSS($event)">CVSSs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (cvssactive ? '2000px' : '0')}">
+                    <div class="nvip-form-horizontal-block">
+                        <c-container>
+                            <c-row>
+                                <c-col>
+                                    <button type="button" (click)="addCvss($event)">Add CVSS</button>
+                                </c-col>
+                            </c-row>
+                        </c-container>
+                    </div>
                     <div class="nvip-form-horizontal-block" *ngFor="let cvss of update.cvss; let cindex = index; trackBy:trackByIndex;">
                         <c-container>
                             <c-row>
@@ -51,6 +60,9 @@
                                         <input id="impact" name="impact{{cindex}}" [(ngModel)]="update.cvss[cindex].impact_score" placeholder="">
                                     </div>
                                 </c-col>
+                                <c-col>
+                                    <button type="button" (click)="removeCvss($event, cindex)">Delete</button>
+                                </c-col>
                             </c-row>
                         </c-container>
                     </div>
@@ -59,6 +71,15 @@
             <div [hidden]="vuln.vdoList.length == 0" *ngIf="vuln.vdoList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
+                    <div class="nvip-form-horizontal-block">
+                        <c-container>
+                            <c-row>
+                                <c-col>
+                                    <button type="button" (click)="addVdo($event)">Add CVSS</button>
+                                </c-col>
+                            </c-row>
+                        </c-container>
+                    </div>
                     <div class="nvip-form-horizontal-block" *ngFor="let vdo of update.vdos; let vindex = index; trackBy:trackByIndex">
                         <c-container>
                             <c-row>
@@ -114,6 +135,9 @@
                                         <label for="conf">VDO Confidence: </label>
                                         <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
                                     </div>
+                                </c-col>
+                                <c-col>
+                                    <button type="button" (click)="removeVdo($event, vindex)">Delete</button>
                                 </c-col>
                             </c-row>
                         </c-container>
