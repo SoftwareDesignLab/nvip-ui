@@ -220,6 +220,8 @@ export class ReviewComponent {
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
+    console.log("update vuln", this.update)
+
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -235,8 +237,10 @@ export class ReviewComponent {
     }
 
     let updateCvssFlag: Array<number> = new Array<number>();
-    for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
-      if(vuln.cvssScoreList.length > 0 && 
+    for(let i = 0; i < this.update.cvss.length; i++) {
+      if (vuln.cvssScoreList.length <= i) {
+        updateCvssFlag.push(i)
+      } else if(vuln.cvssScoreList.length > 0 && 
       ((this.update.cvss[i].base_score !== vuln.cvssScoreList[i].baseScore) ||
       (this.update.cvss[i].impact_score !== vuln.cvssScoreList[i].impactScore))) {
         updateCvssFlag.push(i)
@@ -255,8 +259,10 @@ export class ReviewComponent {
     }
 
     let updateVdoFlag: Array<number> = new Array<number>();
-    for(let i= 0; i < vuln.vdoList.length; i++) {
-      if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
+    for(let i= 0; i < this.update.vdos.length; i++) {
+      if (vuln.vdoList.length <= i) {
+        updateVdoFlag.push(i)
+      } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
          this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
          this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
         updateVdoFlag.push(i)
