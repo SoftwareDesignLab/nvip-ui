@@ -30,7 +30,7 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { Vulnerability } from 'src/app/models/vulnerability.model';
+import { CVSSScore, VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
@@ -63,7 +63,7 @@ export interface updateObject {
   affprods_to_remove: Array<updateAffProd>
 }
 
-/** CURRENTLY UNUSED review page */
+/** review page */
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
@@ -222,6 +222,8 @@ export class ReviewComponent {
   updateVuln($event: any, f: NgForm, vuln: any) {
     console.log("update vuln", this.update)
 
+    console.log("our vuln", vuln)
+
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -236,21 +238,39 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    let updateCvssFlag: Array<number> = new Array<number>();
-    for(let i = 0; i < this.update.cvss.length; i++) {
-      if (vuln.cvssScoreList.length <= i) {
-        updateCvssFlag.push(i)
-      } else if(vuln.cvssScoreList.length > 0 && 
-      ((this.update.cvss[i].base_score !== vuln.cvssScoreList[i].baseScore) ||
-      (this.update.cvss[i].impact_score !== vuln.cvssScoreList[i].impactScore))) {
-        updateCvssFlag.push(i)
+    // if vuln cvss differs from update cvss, update cvss
+
+    // map cvssScoreList to something that looks like update.cvss
+    //TODO: it should match to begin with - shouldn't need cveId in there
+
+    const vulnCvss = vuln.cvssScoreList.map((cvss: CVSSScore) => {
+      return {
+        base_score: cvss.baseScore,
+        impact_score: cvss.impactScore,
       }
-    }
-    if(updateCvssFlag.length > 0) {
+    })
+
+    const cvssDiff = JSON.stringify(vulnCvss) !== JSON.stringify(this.update.cvss)
+
+    console.log("cvss diff", cvssDiff)
+
+
+    // let updateCvssFlag: Array<number> = new Array<number>();
+    // for(let i = 0; i < this.update.cvss.length; i++) {
+    //   if (vuln.cvssScoreList.length <= i) {
+    //     updateCvssFlag.push(i)
+    //   } else if(vuln.cvssScoreList.length > 0 && 
+    //   ((this.update.cvss[i].base_score !== vuln.cvssScoreList[i].baseScore) ||
+    //   (this.update.cvss[i].impact_score !== vuln.cvssScoreList[i].impactScore))) {
+    //     updateCvssFlag.push(i)
+    //   }
+    // }
+    // if(updateCvssFlag.length > 0) {
+    if (cvssDiff) {
       parameters.updateCVSS = true;
 
       data.cvss = new Array<ReviewCVSS>();
-      for(let i of updateCvssFlag) {
+      for(let i = 0; i < this.update.cvss.length; i++) {
         let cvss = {} as ReviewCVSS
         cvss.base_score = this.update.cvss[i].base_score
         cvss.impact_score = this.update.cvss[i].impact_score
@@ -258,22 +278,38 @@ export class ReviewComponent {
       }
     }
 
-    let updateVdoFlag: Array<number> = new Array<number>();
-    for(let i= 0; i < this.update.vdos.length; i++) {
-      if (vuln.vdoList.length <= i) {
-        updateVdoFlag.push(i)
-      } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
-         this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
-         this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
-        updateVdoFlag.push(i)
+    // map vdoList to something that looks like update.vdos
+    //TODO: it should match to begin with - shouldn't need cveId in there
+
+    const vulnVDOs = vuln.vdoList.map((vdo: VDO) => {
+      return {
+        vdolabel: vdo.vdoLabel,
+        vdogroup: vdo.vdoNounGroup,
+        confidence: vdo.vdoConfidence,
       }
-    }
-    if(updateVdoFlag.length > 0) {
+    })
+
+    const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
+
+    console.log("cvss diff", cvssDiff)
+
+    // let updateVdoFlag: Array<number> = new Array<number>();
+    // for(let i= 0; i < this.update.vdos.length; i++) {
+    //   if (vuln.vdoList.length <= i) {
+    //     updateVdoFlag.push(i)
+    //   } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
+    //      this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
+    //      this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
+    //     updateVdoFlag.push(i)
+    //   }
+    // }
+    // if(updateVdoFlag.length > 0) {
+    if (vdoDiff) {
       parameters.updateVDO = true;
 
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
-      for(let i of updateVdoFlag){
+      for(let i = 0; i < this.update.vdos.length; i++){
         let vdo = {} as ReviewVDOLabel;
         vdo.label = this.update.vdos[i].vdolabel;
         vdo.group = this.update.vdos[i].vdogroup;
