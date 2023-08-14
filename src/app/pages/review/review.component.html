@@ -22,7 +22,7 @@
                     </c-row>
                 </c-container>
             </div>
-            <div [hidden]="vuln.cvssScoreList.length == 0" *ngIf="vuln.cvssScoreList !== undefined">
+            <div *ngIf="vuln.cvssScoreList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleCVSS($event)">CVSSs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (cvssactive ? '2000px' : '0')}">
                     <div class="nvip-form-horizontal-block">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div [hidden]="vuln.vdoList.length == 0" *ngIf="vuln.vdoList !== undefined">
+            <div *ngIf="vuln.vdoList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
                     <div class="nvip-form-horizontal-block">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div [hidden]="vuln.cpes.length == 0" *ngIf="vuln.cpes !== undefined">
+            <div *ngIf="vuln.cpes !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleAffProd($event)">Affected Releases</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (aractive ? '2000px' : '0')}">
                     <div class="nvip-form-horizontal-block" *ngFor="let affrel of update.affprods; let aindex = index;">
