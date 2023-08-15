@@ -29,7 +29,7 @@ import { GoogleChartComponent } from './google-chart.component';
   template: `
     <div
       class="vuln-characteristics-graph-container"
-      id="cvssGauge"
+      id="{{cvssId}}"
       style="height: 130px; width: 100%"
     ></div>
   `,
@@ -40,6 +40,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   private data: any;
   private chart: any;
   @Input('cvssScore') cvssScore: any
+  @Input('cvssId') cvssId: any
 
   
 
@@ -76,7 +77,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
       };
 
     this.chart = this.createGauge(
-      document.getElementById('cvssGauge')
+      document.getElementById(this.cvssId)
     );
     this.chart.draw(this.data, this.options);
     

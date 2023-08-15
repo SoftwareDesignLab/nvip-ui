@@ -252,20 +252,6 @@ export class ReviewComponent {
 
     const cvssDiff = JSON.stringify(vulnCvss) !== JSON.stringify(this.update.cvss)
 
-    console.log("cvss diff", cvssDiff)
-
-
-    // let updateCvssFlag: Array<number> = new Array<number>();
-    // for(let i = 0; i < this.update.cvss.length; i++) {
-    //   if (vuln.cvssScoreList.length <= i) {
-    //     updateCvssFlag.push(i)
-    //   } else if(vuln.cvssScoreList.length > 0 && 
-    //   ((this.update.cvss[i].base_score !== vuln.cvssScoreList[i].baseScore) ||
-    //   (this.update.cvss[i].impact_score !== vuln.cvssScoreList[i].impactScore))) {
-    //     updateCvssFlag.push(i)
-    //   }
-    // }
-    // if(updateCvssFlag.length > 0) {
     if (cvssDiff) {
       parameters.updateCVSS = true;
 
@@ -291,19 +277,6 @@ export class ReviewComponent {
 
     const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
 
-    console.log("cvss diff", cvssDiff)
-
-    // let updateVdoFlag: Array<number> = new Array<number>();
-    // for(let i= 0; i < this.update.vdos.length; i++) {
-    //   if (vuln.vdoList.length <= i) {
-    //     updateVdoFlag.push(i)
-    //   } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
-    //      this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
-    //      this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
-    //     updateVdoFlag.push(i)
-    //   }
-    // }
-    // if(updateVdoFlag.length > 0) {
     if (vdoDiff) {
       parameters.updateVDO = true;
 
