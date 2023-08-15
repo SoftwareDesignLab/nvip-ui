@@ -254,26 +254,6 @@ export class ReviewComponent {
       }
     }
 
-    // let updateCvssFlag: Array<number> = new Array<number>();
-    // for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
-    //   if(vuln.cvssScoreList.length > 0 && 
-    //   ((this.update.cvss[i].baseScore !== vuln.cvssScoreList[i].baseScore) ||
-    //   (this.update.cvss[i].impactScore !== vuln.cvssScoreList[i].impactScore))) {
-    //     updateCvssFlag.push(i)
-    //   }
-    // }
-    // if(updateCvssFlag.length > 0) {
-    //   parameters.updateCVSS = true;
-
-    //   data.cvss = new Array<ReviewCVSS>();
-    //   for(let i of updateCvssFlag) {
-    //     let cvss = {} as ReviewCVSS
-    //     cvss.base_score = this.update.cvss[i].baseScore
-    //     cvss.impact_score = this.update.cvss[i].impactScore
-    //     data.cvss.push(cvss)
-    //   }
-    // }
-
     let vdosToRemove = this.vuln.vdoList.filter(item => this.update.vdos.findIndex(x => 
       (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
     let vdosToAdd = this.update.vdos.filter(item => this.vuln.vdoList.findIndex(x => 
@@ -292,30 +272,6 @@ export class ReviewComponent {
         data.vdoUpdates.vdoLabels.push(newVdo)
       }
     }
-
-    // let updateVdoFlag: Array<number> = new Array<number>();
-    // for(let i= 0; i < this.update.vdos.length; i++) {
-    //   if (vuln.vdoList.length <= i) {
-    //     updateVdoFlag.push(i)
-    //   } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
-    //      this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
-    //      this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
-    //     updateVdoFlag.push(i)
-    //   }
-    // }
-    // if(updateVdoFlag.length > 0) {
-    //   parameters.updateVDO = true;
-
-    //   data.vdoUpdates = {} as ReviewVDO
-    //   data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
-    //   for(let i of updateVdoFlag){
-    //     let vdo = {} as ReviewVDOLabel;
-    //     vdo.label = this.update.vdos[i].vdolabel;
-    //     vdo.group = this.update.vdos[i].vdogroup;
-    //     vdo.confidence = this.update.vdos[i].confidence;
-    //     data.vdoUpdates.vdoLabels.push(vdo);
-    //   }
-    // }
 
     if(this.update.affprods.length !== vuln.cpes.length){
       parameters.updateAffRel = true;
