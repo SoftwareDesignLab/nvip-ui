@@ -42,22 +42,22 @@
                                         <label for="cvss">CVSS: </label>
                                         <div >
                                             <label>LOW </label> 
-                                            <input type="radio" class="cvssRadios" name="cvssSeverityId1-{{cindex}}" [value]=5 [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId1-{{cindex}}" [value]=5 [(ngModel)]="update.cvss[cindex].baseScore"> 
                                             <label>MEDIUM </label>
-                                            <input type="radio" class="cvssRadios" name="cvssSeverityId2-{{cindex}}" [value]=2 [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId2-{{cindex}}" [value]=2 [(ngModel)]="update.cvss[cindex].baseScore"> 
                                             <label>HIGH </label> 
-                                            <input type="radio" class="cvssRadios" name="cvssSeverityId3-{{cindex}}" [value]=1 [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId3-{{cindex}}" [value]=1 [(ngModel)]="update.cvss[cindex].baseScore"> 
                                             <label>CRITICAL</label> 
-                                            <input type="radio" class="cvssRadios" name="cvssSeverityId4-{{cindex}}" [value]=4 [(ngModel)]="update.cvss[cindex].base_score"> 
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId4-{{cindex}}" [value]=4 [(ngModel)]="update.cvss[cindex].baseScore"> 
                                             <label>N/A</label>
-                                            <input type="radio" class="cvssRadios" name="cvssSeverityId5-{{cindex}}" [value]=3 [(ngModel)]="update.cvss[cindex].base_score">
+                                            <input type="radio" class="cvssRadios" name="cvssSeverityId5-{{cindex}}" [value]=3 [(ngModel)]="update.cvss[cindex].baseScore">
                                         </div>
                                     </div>
                                 </c-col>
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="impact">Impact Score: </label>
-                                        <input id="impact" name="impact{{cindex}}" [(ngModel)]="update.cvss[cindex].impact_score" placeholder="">
+                                        <input id="impact" name="impact{{cindex}}" [(ngModel)]="update.cvss[cindex].impactScore" placeholder="">
                                     </div>
                                 </c-col>
                                 <c-col>
