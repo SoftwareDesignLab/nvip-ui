@@ -30,7 +30,7 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { Vulnerability, CVSSScore } from 'src/app/models/vulnerability.model';
+import { Vulnerability, CVSSScore, VDO } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
@@ -58,7 +58,7 @@ export interface updateObject {
   cve_id: string;
   desc: string;
   cvss: Array<CVSSScore>;
-  vdos: Array<updateVdo>;
+  vdos: Array<VDO>;
   affprods: Array<updateAffProd>
   affprods_to_remove: Array<updateAffProd>
 }
@@ -105,7 +105,7 @@ export class ReviewComponent {
   init(id: string) {
     var session: Session = this.cookieService.get('nvip_user');
 
-    this.update.vdos = new Array<updateVdo>()
+    this.update.vdos = new Array<VDO>()
     this.update.cvss = new Array<CVSSScore>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();
@@ -169,10 +169,11 @@ export class ReviewComponent {
       this.update.cvss.push(cvss)
     }
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
-      let vdo = {} as updateVdo
-      vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
-      vdo.vdogroup = this.vuln.vdoList[i].vdoNounGroup
-      vdo.confidence = this.vuln.vdoList[i].vdoConfidence
+      let vdo = {} as VDO
+      vdo.cveId = this.vuln.vdoList[i].cveId
+      vdo.vdoConfidence = this.vuln.vdoList[i].vdoConfidence
+      vdo.vdoLabel = this.vuln.vdoList[i].vdoLabel
+      vdo.vdoNounGroup = this.vuln.vdoList[i].vdoNounGroup
       this.update.vdos.push(vdo)
     }
     for(let prod of this.vuln.products){
@@ -209,10 +210,10 @@ export class ReviewComponent {
   }
 
   addVdo($event: any) {
-    let vdo = {} as updateVdo;
-    vdo.vdolabel = ""
-    vdo.vdogroup = ""
-    vdo.confidence = 0
+    let vdo = {} as VDO;
+    vdo.vdoLabel = ""
+    vdo.vdoNounGroup = ""
+    vdo.vdoConfidence = 0
     this.update.vdos.push(vdo)
   }
 
@@ -221,8 +222,6 @@ export class ReviewComponent {
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
-    console.log("update vuln", this.update)
-
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -237,16 +236,21 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    console.log(this.vuln.cvssScoreList)
-    console.log(this.update.cvss)
+    let cvssToRemove = this.vuln.cvssScoreList.filter(item => this.update.cvss.findIndex(x => 
+      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
+    let cvssToAdd = this.update.cvss.filter(item => this.vuln.cvssScoreList.findIndex(x => 
+      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
 
-    let cvssToRemove = this.vuln.cvssScoreList.filter(item => this.update.cvss.findIndex(x => (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
-    let cvssToAdd = this.update.cvss.filter(item => this.vuln.cvssScoreList.findIndex(x => (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
-    console.log("cvssToRemove:")
-    console.log(cvssToRemove)
-    console.log("cvssToAdd")
-    console.log(cvssToAdd)
-
+    if(cvssToAdd.length > 0 || cvssToRemove.length > 0) {
+      parameters.updateCVSS = true
+      data.cvss = new Array<ReviewCVSS>();
+      for(let cvssObj of cvssToAdd) {
+        let newCvss = {} as ReviewCVSS
+        newCvss.base_score = cvssObj.baseScore
+        newCvss.impact_score = cvssObj.impactScore
+        data.cvss.push(newCvss)
+      }
+    }
 
     // let updateCvssFlag: Array<number> = new Array<number>();
     // for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
@@ -268,29 +272,48 @@ export class ReviewComponent {
     //   }
     // }
 
-    let updateVdoFlag: Array<number> = new Array<number>();
-    for(let i= 0; i < this.update.vdos.length; i++) {
-      if (vuln.vdoList.length <= i) {
-        updateVdoFlag.push(i)
-      } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
-         this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
-         this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
-        updateVdoFlag.push(i)
-      }
-    }
-    if(updateVdoFlag.length > 0) {
-      parameters.updateVDO = true;
+    let vdosToRemove = this.vuln.vdoList.filter(item => this.update.vdos.findIndex(x => 
+      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
+    let vdosToAdd = this.update.vdos.filter(item => this.vuln.vdoList.findIndex(x => 
+      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
 
+    if(vdosToAdd.length > 0 || vdosToRemove.length > 0) {
+      parameters.updateVDO = true
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
-      for(let i of updateVdoFlag){
-        let vdo = {} as ReviewVDOLabel;
-        vdo.label = this.update.vdos[i].vdolabel;
-        vdo.group = this.update.vdos[i].vdogroup;
-        vdo.confidence = this.update.vdos[i].confidence;
-        data.vdoUpdates.vdoLabels.push(vdo);
+
+      for(let vdoObj of vdosToAdd) {
+        let newVdo = {} as ReviewVDOLabel
+        newVdo.label = vdoObj.vdoLabel
+        newVdo.group = vdoObj.vdoNounGroup
+        newVdo.confidence = vdoObj.vdoConfidence
+        data.vdoUpdates.vdoLabels.push(newVdo)
       }
     }
+
+    // let updateVdoFlag: Array<number> = new Array<number>();
+    // for(let i= 0; i < this.update.vdos.length; i++) {
+    //   if (vuln.vdoList.length <= i) {
+    //     updateVdoFlag.push(i)
+    //   } else if(this.update.vdos[i].vdolabel !== vuln.vdoList[i].vdoLabel ||
+    //      this.update.vdos[i].vdogroup !== vuln.vdoList[i].vdoNounGroup ||
+    //      this.update.vdos[i].confidence !== vuln.vdoList[i].vdoConfidence){
+    //     updateVdoFlag.push(i)
+    //   }
+    // }
+    // if(updateVdoFlag.length > 0) {
+    //   parameters.updateVDO = true;
+
+    //   data.vdoUpdates = {} as ReviewVDO
+    //   data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
+    //   for(let i of updateVdoFlag){
+    //     let vdo = {} as ReviewVDOLabel;
+    //     vdo.label = this.update.vdos[i].vdolabel;
+    //     vdo.group = this.update.vdos[i].vdogroup;
+    //     vdo.confidence = this.update.vdos[i].confidence;
+    //     data.vdoUpdates.vdoLabels.push(vdo);
+    //   }
+    // }
 
     if(this.update.affprods.length !== vuln.cpes.length){
       parameters.updateAffRel = true;

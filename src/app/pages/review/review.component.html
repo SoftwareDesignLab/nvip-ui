@@ -29,7 +29,7 @@
                         <c-container>
                             <c-row>
                                 <c-col>
-                                    <!-- <button type="button" (click)="addCvss($event)">Add CVSS</button> TODO:-->
+                                     <button type="button" (click)="addCvss($event)">Add CVSS</button>
                                 </c-col>
                             </c-row>
                         </c-container>
@@ -60,9 +60,9 @@
                                         <input id="impact" name="impact{{cindex}}" [(ngModel)]="update.cvss[cindex].impactScore" placeholder="">
                                     </div>
                                 </c-col>
-                                <c-col>
-                                    <!-- <button type="button" (click)="removeCvss($event, cindex)">Delete</button> TODO:-->
-                                </c-col>
+                                <!-- <c-col>
+                                     <button type="button" (click)="removeCvss($event, cindex)">Delete</button> TODO:
+                                </c-col> -->
                             </c-row>
                         </c-container>
                     </div>
@@ -75,7 +75,7 @@
                         <c-container>
                             <c-row>
                                 <c-col>
-                                    <!-- <button type="button" (click)="addVdo($event)">Add VDO</button> TODO:-->
+                                     <button type="button" (click)="addVdo($event)">Add VDO</button>
                                 </c-col>
                             </c-row>
                         </c-container>
@@ -86,7 +86,7 @@
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="label">VDO Label: </label>
-                                        <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
+                                        <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdoLabel" [ngModelOptions]="{standalone: true}">
                                         <datalist id="labeltypes">
                                             <option value="MAN_IN_THE_MIDDLE">
                                             <option value="CHANNEL">
@@ -120,7 +120,7 @@
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="group">VDO Group: </label>
-                                        <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
+                                        <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdoNounGroup" [ngModelOptions]="{standalone: true}">
                                         <datalist id="grouptypes">
                                             <option value="IMPACT_METHOD">
                                             <option value="CONTEXT">
@@ -133,12 +133,12 @@
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="conf">VDO Confidence: </label>
-                                        <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
+                                        <input id="conf" [(ngModel)]="update.vdos[vindex].vdoConfidence" [ngModelOptions]="{standalone: true}">
                                     </div>
                                 </c-col>
-                                <c-col>
-                                    <!-- <button type="button" (click)="removeVdo($event, vindex)">Delete</button> TODO:-->
-                                </c-col>
+                                <!-- <c-col>
+                                     <button type="button" (click)="removeVdo($event, vindex)">Delete</button> TODO:
+                                </c-col> -->
                             </c-row>
                         </c-container>
                     </div>
