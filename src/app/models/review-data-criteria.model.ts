@@ -22,11 +22,6 @@
  * SOFTWARE.
  */
 
-export interface ReviewCVSS {
-  base_score:number
-  impact_score:number
-}
-
 export interface ReviewVDOLabel {
   label:string
   group:string
@@ -40,7 +35,6 @@ export interface ReviewVDO {
 export interface ReviewDataCriteria {
   updateInfo: string
   description: string
-  cvss: Array<ReviewCVSS>
   vdoUpdates: ReviewVDO
   prodToRemove: Array<number>
 }
