@@ -30,16 +30,11 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { CVSSScore, VDO, Vulnerability } from 'src/app/models/vulnerability.model';
+import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
-import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
+import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
-
-export interface updateCvss {
-  base_score: number
-  impact_score: number
-}
 
 export interface updateVdo {
   vdogroup: string
@@ -57,7 +52,6 @@ export interface updateObject {
   vuln_id: number;
   cve_id: string;
   desc: string;
-  cvss: Array<updateCvss>;
   vdos: Array<updateVdo>;
   affprods: Array<updateAffProd>
   affprods_to_remove: Array<updateAffProd>
@@ -106,7 +100,6 @@ export class ReviewComponent {
     var session: Session = this.cookieService.get('nvip_user');
 
     this.update.vdos = new Array<updateVdo>()
-    this.update.cvss = new Array<updateCvss>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();
 
@@ -161,12 +154,6 @@ export class ReviewComponent {
     this.update.vuln_id = this.vuln.vulnId
 
     this.update.desc = this.vuln.description
-    for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
-      let cvss = {} as updateCvss
-      cvss.base_score = this.vuln.cvssScoreList[i].baseScore
-      cvss.impact_score = this.vuln.cvssScoreList[i].impactScore
-      this.update.cvss.push(cvss)
-    }
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
       let vdo = {} as updateVdo
       vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
@@ -177,10 +164,6 @@ export class ReviewComponent {
     for(let prod of this.vuln.products){
       this.update.affprods.push(prod)
     }
-  }
-
-  toggleCVSS($event: any) {
-    this.cvssactive = !this.cvssactive
   }
 
   toggleVDO($event: any) {
@@ -196,17 +179,6 @@ export class ReviewComponent {
     this.update.affprods.splice(index, 1)
   }
 
-  addCvss($event: any) {
-    let cvss = {} as updateCvss;
-    cvss.base_score = 3
-    cvss.impact_score = 0
-    this.update.cvss.push(cvss)
-  }
-
-  removeCvss($event: any, index: number) {
-    this.update.cvss.splice(index, 1)
-  }
-
   addVdo($event: any) {
     let vdo = {} as updateVdo;
     vdo.vdolabel = ""
@@ -220,9 +192,6 @@ export class ReviewComponent {
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
-    console.log("update vuln", this.update)
-
-    console.log("our vuln", vuln)
 
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
@@ -238,31 +207,7 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    // if vuln cvss differs from update cvss, update cvss
-
-    // map cvssScoreList to something that looks like update.cvss
-    //TODO: it should match to begin with - shouldn't need cveId in there
-
-    const vulnCvss = vuln.cvssScoreList.map((cvss: CVSSScore) => {
-      return {
-        base_score: cvss.baseScore,
-        impact_score: cvss.impactScore,
-      }
-    })
-
-    const cvssDiff = JSON.stringify(vulnCvss) !== JSON.stringify(this.update.cvss)
-
-    if (cvssDiff) {
-      parameters.updateCVSS = true;
-
-      data.cvss = new Array<ReviewCVSS>();
-      for(let i = 0; i < this.update.cvss.length; i++) {
-        let cvss = {} as ReviewCVSS
-        cvss.base_score = this.update.cvss[i].base_score
-        cvss.impact_score = this.update.cvss[i].impact_score
-        data.cvss.push(cvss)
-      }
-    }
+    // TODO: CVSS calculation based on VDO label updates
 
     // map vdoList to something that looks like update.vdos
     //TODO: it should match to begin with - shouldn't need cveId in there
