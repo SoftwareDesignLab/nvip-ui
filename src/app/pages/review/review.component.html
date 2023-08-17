@@ -25,73 +25,32 @@
             <div *ngIf="vuln.vdoList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
-                    <div class="nvip-form-horizontal-block">
+                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of vdoMap | keyvalue">
                         <c-container>
                             <c-row>
                                 <c-col>
-                                    <button type="button" (click)="addVdo($event)">Add VDO</button>
+                                    <!-- TODO: connect checkbox -->
+                                    <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)">
                                 </c-col>
-                            </c-row>
-                        </c-container>
-                    </div>
-                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of update.vdos; let vindex = index; trackBy:trackByIndex">
-                        <c-container>
-                            <c-row>
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="label">VDO Label: </label>
-                                        <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}">
-                                        <datalist id="labeltypes">
-                                            <option value="MAN_IN_THE_MIDDLE">
-                                            <option value="CHANNEL">
-                                            <option value="AUTHENTICATION_BYPASS">
-                                            <option value="PHYSICAL_HARDWARE">
-                                            <option value="APPLICATION">
-                                            <option value="HOST_OS">
-                                            <option value="FIRMWARE">
-                                            <option value="CODE_EXECUTION">
-                                            <option value="CONTEXT_ESCAPE">
-                                            <option value="GUEST_OS">
-                                            <option value="HYPERVISOR">
-                                            <option value="SANDBOXED">
-                                            <option value="PHYSICAL_SECURITY">
-                                            <option value="ASLR">
-                                            <option value="LIMITED_RMT">
-                                            <option value="LOCAL">
-                                            <option value="READ">
-                                            <option value="RESOURCE_REMOVAL">
-                                            <option value="HPKP/HSTS">
-                                            <option value="MULTIFACTOR_AUTHENTICATION">
-                                            <option value="REMOTE">
-                                            <option value="WRITE">
-                                            <option value="INDIRECT_DISCLOSURE">
-                                            <option value="SERVICE_INTERRUPT">
-                                            <option value="PRIVILEGE_ESCALATION">
-                                            <option value="PHYSICAL">
-                                        </datalist>
+                                        <!-- <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
+                                        <span>{{ vdo.value.label }}</span>
                                     </div>
                                 </c-col>
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="group">VDO Group: </label>
-                                        <input id="group" list="grouptypes" [(ngModel)]="update.vdos[vindex].vdogroup" [ngModelOptions]="{standalone: true}">
-                                        <datalist id="grouptypes">
-                                            <option value="IMPACT_METHOD">
-                                            <option value="CONTEXT">
-                                            <option value="MITIGATION">
-                                            <option value="ATTACK_THEATER">
-                                            <option value="LOGICAL_IMPACT">
-                                        </datalist>
+                                        <span>associated group</span>
                                     </div>
                                 </c-col>
                                 <c-col>
                                     <div class="nvip-form-field">
                                         <label for="conf">VDO Confidence: </label>
-                                        <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}">
+                                        <!-- <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}"> -->
+                                        <span></span>
                                     </div>
-                                </c-col>
-                                <c-col>
-                                    <button type="button" (click)="removeVdo($event, vindex)">Delete</button>
                                 </c-col>
                             </c-row>
                         </c-container>
