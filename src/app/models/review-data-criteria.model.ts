@@ -26,6 +26,7 @@ export interface ReviewVDOLabel {
   label:string
   group:string
   confidence:number
+  isActive:number
 }
 
 export interface ReviewVDO {

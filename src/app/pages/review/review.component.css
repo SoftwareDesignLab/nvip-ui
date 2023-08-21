@@ -39,3 +39,9 @@
     padding-top: 2.5px;
     padding-bottom: 2.5px;
 }
+
+.nvip-review-select-active {
+    background-color: #21618C;
+    border: 2px solid #000;
+    color: #fff;
+}

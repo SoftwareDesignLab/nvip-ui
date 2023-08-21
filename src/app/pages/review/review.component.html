@@ -16,14 +16,14 @@
                         <c-col>
                             <div class="nvip-form-field" style="min-width: 300px;">
                                 <label for="desc">Description: </label>
-                                <textarea if="desc" name="desc" style="width: 90%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
+                                <textarea if="desc" name="desc" style="width: 100%;" descriptionArea="" rows="8" [(ngModel)]="update.desc"></textarea>
                             </div>
                         </c-col>
                     </c-row>
                 </c-container>
             </div>
             <div *ngIf="vuln.vdoList !== undefined">
-                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
+                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO()">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
                     <div>
                         <table cTable responsive>
@@ -44,22 +44,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let vdo of vdoMap | keyvalue" class="nvip-review-select">
-                                    <td>
-                                            <!-- TODO: connect checkbox -->
-                                            <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)">
-                                    </td>
-                                    <td>
-                                            <!-- <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
-                                            <span>{{ vdo.value.label }}</span>
-                                    </td>
-                                    <td >
-                                        {{ vdo.value.group }}
-                                    </td>
-                                    <td>
-                                        <!-- <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}"> -->
-                                        {{ getVdoConfidence(vdo.value) }}
-                                    </td>
+                                <tr *ngFor="let vdo of vdoMap | keyvalue" class="{{(getIsActive(vdo.key) === true) ? 'nvip-review-select-active' : 'nvip-review-select'}}">
+                                    <td><input type="checkbox" name="{{vdo.value.label}}" [checked]="getIsActive(vdo.key)" (change)="toggleActive(vdo.key)" ></td>
+                                    <td><span>{{ vdo.value.label }}</span></td>
+                                    <td >{{ vdo.value.group }}</td>
+                                    <td>{{ getVdoConfidence(vdo.key) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -67,14 +56,14 @@
                 </div>
             </div>
             <div *ngIf="vuln.cpes !== undefined">
-                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleAffProd($event)">Affected Releases</button>
+                <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleAffProd()">Affected Releases</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (aractive ? '2000px' : '0')}">
                     <div class="nvip-form-horizontal-block" *ngFor="let affrel of update.affprods; let aindex = index;">
                         <div class="nvip-form-field col-6" style="overflow: auto;">
                             {{affrel.cpe}}
                         </div>
                         <div class="nvip-form-field col-6">
-                            <button type="button" (click)="removeCPE(aindex, vuln)">Delete</button>
+                            <button type="button" (click)="removeCPE(aindex)">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -85,266 +74,3 @@
         </form>
     </div>
 </div>
-
-
-
-
-
-
-<!-- <div id="nvipContent" class="nvip-content-container col-12">
-    <div class="nvip-loading-bar col-12">
-        <div class="nvip-loading-bar-text-ctn">
-            <fa-icon [icon]="faSpinner" animation="spin" size="3x" [fixedWidth]="true" [ngStyle]="{ color: 'white'}"></fa-icon>
-            <span>Loading search results...</span>
-        </div>
-    </div>
-    <div class="nvip-search-form-ctn" [hidden]="!showForm">
-        <form novalidate class="nvip-search-form col-12" #form="ngForm" (ngSubmit)="detailSearchId($event, form)">
-            <div class="nvip-form-horizontal-block">
-                <c-container>
-                    <c-row>
-                        <c-col>
-                            <div class="nvip-form-field col-6">
-                                <label for="cveid">CVE ID: </label>
-                                <input id="cveid" name="cveid" [(ngModel)]="review.cveId" placeholder="">
-                            </div>
-                        </c-col>
-                        <c-col>
-                            <div class="nvip-form-field col-6">
-                                <label for="searchDate">Date</label>
-                                <input [ngModel]="review.searchDate | date:'yyyy-MM-dd'" (ngModelChange)="review.searchDate = $event" type="date" name="searchDate" ng-required ="true"/>
-                            </div>  
-                        </c-col>
-                    </c-row>
-                </c-container>
-            </div>
-            <div class="nvip-form-dropdown-field col-12 dropdown-opened" (click)="toggleContent($event, 'Status')">
-                <div class="nvip-form-dropdown-left col-11">
-                    <label>CVE Status:</label>
-                </div>
-                <div class="nvip-form-dropdown-right col-1">
-                    <fa-icon [icon]="faAngleDown" transform="rotate-{{rotationAmountStatus}}" class="nvip-form-dropdown-caret" aria-hidden="true"></fa-icon>
-                </div>
-            </div>
-            <div class="nvip-form-dropdown-content col-11" style="display: flex;">
-                <div *ngFor="let status of statuses" class="nvip-form-field col-4">
-                    <div class="nvip-form-field-block col-11">
-                        <label for="{{status}}">{{status}}</label>
-                        <input type="checkbox" (change)="onStatusChange($event, status)" />        
-                    </div>
-                </div>
-            </div>
-            <div class="nvip-form-btn-ctn col-12">
-                <button class="nvip-button nvip-form-btn col-3"><span>Search</span></button>
-            </div>
-        </form>
-    </div>
-    <div class="nvip-search-result-ctn" [hidden]="showForm">
-        <div class="nvip-search-top-ctn col-12">
-        </div>
-        <div class="nvip-search-page-ctn">
-            <div class="nvip-search-result-count col-12">
-                <p>{{resultTotalCount}} records found</p>
-            </div>
-            <div class="nvip-paging-index col-12">
-                <p>Showing records {{pageRecord[0]}} to {{pageRecord[1]}}</p>
-            </div>
-            <div class="nvip-paging-bar-ctn" [hidden]="reviewResults.length <= 10">
-                <div class="nvip-paging-bar" (click)="changePage(0)" [hidden]="currentPage == 0">
-                    <a>First</a>
-                </div>
-                <div class="nvip-paging-bar nvip-next-page" (click)="changePage(currentPage - 1)">
-                    <a>
-                        <fa-icon [icon]="faAngleDoubleLeft" size="lg" aria-hidden="true"></fa-icon>
-                    </a>
-                </div>
-                <div class="nvip-paging-bar" *ngFor="let pageIndex of pageBlocks" (click)="changePage(pageIndex)"
-                [ngClass]="{'current-page': pageIndex == currentPage}">
-                    <a>{{pageIndex + 1}}</a>
-                </div>
-                <div class="nvip-paging-bar nvip-next-page" (click)="changePage(currentPage + 1)">
-                    <a>
-                        <fa-icon [icon]="faAngleDoubleRight" size="lg" aria-hidden="true"></fa-icon>
-                    </a>
-                </div>
-                <div class="nvip-paging-bar" (click)="changePage(totalPages - 1)" [hidden]="currentPage >= (totalPages - 1)">
-                    <a>Last</a>
-                </div>
-            </div>
-            <div class="nvip-search-result-page col-10">
-                <p class="nvip-cve-panel-empty" [hidden]="reviewResults.length > 0">No CVEs identified</p>
-                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredReviewResults; let index = index;" [hidden]="reviewResults.length == 0">
-                    <button type="button" class="daily-vuln-dropdown-button col-12" (click)="selectReviewCve($event, vuln, index)">
-                            <div class="daily-vuln-dropdown-row">
-                                <div class="daily-vuln-dropdown-row-1">
-                                    <span class="nvip-cve-number-span" id="cve_id">{{vuln.cve_id}}</span>
-                                    <span class="nvip-cve-number-span" id="status">Status: {{statusIdToString(vuln.status_id)}}</span>
-                                </div>
-                            </div>
-                    </button>
-                        <div class="daily-vuln-content" [ngStyle]="{'max-height': (vuln.active ? '2000px' : '0')}">
-                            <form novalidate class="nvip-search-form col-12" (ngSubmit)="updateVuln($event, form, vuln)">
-                                
-                                <div class="nvip-form-horizontal-block">
-                                    <div class="nvip-form-field col-6">
-                                        <label for="info">Comment: </label>
-                                        <input if="info" name="info" [(ngModel)]="update.info" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="nvip-form-btn-ctn col-12">
-                                    <button class="nvip-button nvip-form-btn col-3"><span>Update</span></button>
-                                </div>
-                            </form>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<!-- <div class="nvip-search-result-header col-12">
-    <p ng-show="showForm">Review Form</p>
-</div>
-
-<div style="width: 100%;">
-    <div style="float: left; padding-left: 10px; width: 35%;">
-        <label id="cveIDLabel">currentCVEid</label> 
-
-        <label>Selected: selected.cve_id</label><br>
-        <label>CVE Status: review.readableStatus </label> <br>
-        <label>Edited by: cveDetails.userFname cveDetails.userLname (userName) at updateDate</label>
-        
-        <div>
-            <button ng-click="prevCVE()">Previous CVE</button>
-            <button ng-click="nextCVE()">Next CVE</button>
-        </div>
-
-        <textarea style="width: 100%;" descriptionArea rows="25" ng-model="review.currentCVEdesc"></textarea>
-        
-        <div id="detailsProgressCircle" style="width: 100%;  height: 100%;  position: absolute;  top: 50%;  left: 40%; display:none;">
-            <fa-icon [icon]="faSpinner" animation="spin" size="3x" [fixedWidth]="true" [ngStyle]="{ color: 'black'}"></fa-icon>
-            <span>Loading...</span>
-        </div>
-
-        <div class="nvip-form-field">
-            <button id="btnAccept" ng-click="acceptCVE()">Accept</button>
-            <button id="btnUpdate" ng-click="updateButton()">Update</button>
-            <button id="btnReject" ng-click="rejectCVE()">Reject</button>
-            <div style="display: inline; margin-left: 20px">
-                <input type="checkbox" id="chTweet" name="tweet" checked>
-                <label for="chTweet"> Tweet CVE upon accept</label>
-            </div>
-            <button style="float:right;" ng-click="updateDailyVulns()">Update<br/>Daily CVE Table</button>
-        </div>
-
-        <div class="nvip-message">
-            <p class="message-text" id="nvip_message_text">reviewMessage</p>
-        </div>
-
-    </div>
-    <div style="float: left; padding-left: 10px; padding-right: 10px; padding-bottom: 20px; width: 50%;">
-        
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>Impact Method:</label><br>
-            <div class="review-unchecked-vdo" ng-repeat="item in impctList" id="divitem">
-                <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)"> 
-                <label> item : </label> 
-                <input type="radio" id="highitem" name="confidenceitem" ng-click="enableRBgroup(item,1)" checked disabled> 
-                <label for="highitem"> High </label> 
-                <input type="radio" id="mediumitem" name="confidenceitem" ng-click="enableRBgroup(item,0.66)" disabled> 
-                <label for="mediumitem"> Medium </label>
-                <input type="radio" id="lowitem" name="confidenceitem" ng-click="enableRBgroup(item,0.33)" disabled>
-                <label for="lowitem"> Low </label><br>
-            </div>
-        </div>
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>Mitigation:</label><br>
-            <div class="review-unchecked-vdo" ng-repeat="item in mitigationList" id="divitem">
-                <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)"> 
-                <label> item : </label> 
-                <input type="radio" id="highitem" name="confidenceitem" ng-click="enableRBgroup(item,1)" checked disabled> 
-                <label for="highitem"> High </label> 
-                <input type="radio" id="mediumitem" name="confidenceitem" ng-click="enableRBgroup(item,0.66)" disabled> 
-                <label for="mediumitem"> Medium </label>
-                <input type="radio" id="lowitem" name="confidenceitem" ng-click="enableRBgroup(item,0.33)" disabled>
-                <label for="lowitem"> Low </label><br>
-            </div>
-        </div>
-    </div>
-    <div style="float: left; padding-left: 10px; padding-right: 10px; padding-bottom: 20px; width: 50%;">
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>Context:</label><br>
-            <div class="review-unchecked-vdo" ng-repeat="item in ctxList" id="divitem">
-                <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)"> 
-                <label> item : </label> 
-                <input type="radio" id="highitem" name="confidenceitem" ng-click="enableRBgroup(item,1)" checked disabled> 
-                <label for="highitem"> High </label> 
-                <input type="radio" id="mediumitem" name="confidenceitem" ng-click="enableRBgroup(item,0.66)" disabled> 
-                <label for="mediumitem"> Medium </label>
-                <input type="radio" id="lowitem" name="confidenceitem" ng-click="enableRBgroup(item,0.33)" disabled>
-                <label for="lowitem"> Low </label><br>
-            </div>
-        </div>
-        
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>Logical Impact:</label><br>
-            <div class="review-unchecked-vdo" ng-repeat="item in lgclImpctList" id="divitem">
-                <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)"> 
-                <label> item : </label> 
-                <input type="radio" id="highitem" name="confidenceitem" ng-click="enableRBgroup(item,1)" checked disabled> 
-                <label for="highitem"> High </label> 
-                <input type="radio" id="mediumitem" name="confidenceitem" ng-click="enableRBgroup(item,0.66)" disabled> 
-                <label for="mediumitem"> Medium </label>
-                <input type="radio" id="lowitem" name="confidenceitem" ng-click="enableRBgroup(item,0.33)" disabled>
-                <label for="lowitem"> Low </label><br>
-            </div>
-        </div>
-    </div>
-    <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>Attack Theater:</label><br>
-            <div class="review-unchecked-vdo" ng-repeat="item in attckThtrList" id="divitem">
-                <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)"> 
-                <label> item : </label> 
-                <input type="radio" id="highitem" name="confidenceitem" ng-click="enableRBgroup(item,1)" checked disabled> 
-                <label for="highitem"> High </label> 
-                <input type="radio" id="mediumitem" name="confidenceitem" ng-click="enableRBgroup(item,0.66)" disabled> 
-                <label for="mediumitem"> Medium </label>
-                <input type="radio" id="lowitem" name="confidenceitem" ng-click="enableRBgroup(item,0.33)" disabled>
-                <label for="lowitem"> Low </label><br>
-            </div>
-        </div>
-        
-        <div style="float: left; padding-left: 10px; padding-right: 10px; width: 50%;">
-            <label>CVSS Score:</label><br>
-            
-            <label>Severity:</label>
-            <div id="severityClassRBgroup">
-                <input type="radio" id="severiryLow" name="CVSSseverity" ng-click="setCVSSseverity('LOW')" > 
-                <label>LOW </label> 
-                <input type="radio" id="severiryMedium" name="CVSSseverity" ng-click="setCVSSseverity('MEDIUM')" > 
-                <label>MEDIUM </label> 
-                <input type="radio" id="severiryHigh" name="CVSSseverity" ng-click="setCVSSseverity('HIGH')" > 
-                <label>HIGH </label> 
-                <input type="radio" id="severiryCritical" name="CVSSseverity" ng-click="setCVSSseverity('CRITICAL')" > 
-                <label>CRITICAL</label> 
-            </div>
-            
-            <div>
-            <label>Impact Score:</label>
-            <input type="number" size="3" min="0" max="10" step="0.1"
-                ng-model="review.impactScore">
-            </div>
-            
-            
-            
-            <label>CPE Items:</label>
-            <div ng-repeat="product in cveDetails.vulnDomain">
-                <input type="checkbox" id="chProductproduct.product_id" name="product.cpe"> 
-                <label>Remove: </label>
-                <a style="color:black;"  href="https://nvd.nist.gov/products/cpe/search/results?namingFormat=2.3&keyword=product.cpe" target="_blank">product.cpe</a>
-                
-            </div>
-        </div>
-    </div>
-</div> -->

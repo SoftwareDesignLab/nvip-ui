@@ -21,17 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { faSpinner, faAngleDoubleLeft, faAngleDoubleRight, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
 import { Session } from 'src/app/services/Auth/auth-service.service';
 import { CookieService } from 'src/app/services/Cookie/cookie.service';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
-import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
-import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, VdoNounGroup } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
@@ -40,6 +37,7 @@ export interface updateVdo {
   vdogroup: string
   vdolabel: string
   confidence: number
+  isActive: number
 }
 
 export interface updateAffProd {
@@ -70,16 +68,11 @@ export class ReviewComponent {
   faSpinner = faSpinner;
   session = {} as Session;
   vuln = {} as Vulnerability;
-
   username: string = ""
   token: string = ""
-
-  cvssactive: boolean = false
   vdoactive: boolean = false
   aractive: boolean = false
-
   update = {} as updateObject
-
   vdoMap = {
     TRUST_FAILURE : new VdoLabel(1, "Trust Failure", VdoNounGroup.IMPACT_METHOD),
     MAN_IN_THE_MIDDLE : new VdoLabel(2, "Man-in-the-Middle", VdoNounGroup.IMPACT_METHOD),
@@ -114,9 +107,7 @@ export class ReviewComponent {
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
-    private funcs: FuncsService,
-    private route: ActivatedRoute,
-    private searchResService: SearchResultService
+    private route: ActivatedRoute
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
   }
@@ -140,10 +131,6 @@ export class ReviewComponent {
       .subscribe((res: any) => {
         this.handleRes(res)
       });
-  }
-
-  trackByIndex(index: number, obj: any): any {
-    return index;
   }
 
    /** legacy loading function to show and hide loading bar while search results are being called */
@@ -186,11 +173,13 @@ export class ReviewComponent {
     this.update.vuln_id = this.vuln.vulnId
 
     this.update.desc = this.vuln.description
+    console.log("handling res vdo list: ", this.vuln.vdoList)
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
       let vdo = {} as updateVdo
       vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
       vdo.vdogroup = this.vuln.vdoList[i].vdoNounGroup
       vdo.confidence = this.vuln.vdoList[i].vdoConfidence
+      vdo.isActive = this.vuln.vdoList[i].isActive
       this.update.vdos.push(vdo)
     }
     for(let prod of this.vuln.products){
@@ -198,35 +187,48 @@ export class ReviewComponent {
     }
   }
 
-  toggleVDO($event: any) {
+  toggleVDO() {
     this.vdoactive = !this.vdoactive
   }
 
-  toggleAffProd($event: any) {
+  toggleAffProd() {
     this.aractive = !this.aractive
   }
 
-  removeCPE(index: number, vuln: any) {
+  removeCPE(index: number) {
     this.update.affprods_to_remove.push(this.update.affprods[index])
     this.update.affprods.splice(index, 1)
   }
 
-  addVdo($event: any) {
-    let vdo = {} as updateVdo;
-    vdo.vdolabel = ""
-    vdo.vdogroup = ""
-    vdo.confidence = 0
-    this.update.vdos.push(vdo)
+  toggleActive(vdoKey: string) {
+    let inUpdate = false
+    for(let i = 0; i < this.update.vdos.length; i++) {
+      if (vdoKey === this.update.vdos[i].vdolabel) {
+        this.update.vdos[i].isActive = this.update.vdos[i].isActive === 1 ? 0 : 1
+        inUpdate = true
+      }
+    }
+    if (!inUpdate) {
+      let vdo = {} as updateVdo
+      vdo.vdolabel = vdoKey
+      vdo.vdogroup = this.vdoMap[vdoKey].group
+      vdo.confidence = 0
+      vdo.isActive = 1
+      this.update.vdos.push(vdo)
+    }
   }
 
-  removeVdo($event: any, index: number) {
-    this.update.vdos.splice(index, 1)
+  getIsActive(vdoKey: string) {
+    for(let i = 0; i < this.update.vdos.length; i++) {
+      if (vdoKey === this.update.vdos[i].vdolabel)
+        return this.update.vdos[i].isActive === 1 ? true : false
+    }
+    return false
   }
 
-  getVdoConfidence(vdo: VdoLabel) {
-    for(let i = 0; i < this.vuln.vdoList.length; i++){
-      // insensitive compare of VDO labels; Ex: vulnList vdoLabel "FIRMWARE" === vdo.label "Firmware"
-      if (this.vuln.vdoList[i].vdoLabel.localeCompare(vdo.label, undefined, { sensitivity: 'accent' }) === 0)
+  getVdoConfidence(vdoKey: string) {
+    for(let i = 0; i < this.vuln.vdoList.length; i++) {
+      if (vdoKey === this.vuln.vdoList[i].vdoLabel)
         return this.vuln.vdoList[i].vdoConfidence
     }
     return "-"
@@ -258,10 +260,13 @@ export class ReviewComponent {
         vdolabel: vdo.vdoLabel,
         vdogroup: vdo.vdoNounGroup,
         confidence: vdo.vdoConfidence,
+        isActive: vdo.isActive
       }
     })
 
     const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
+
+    console.log("handling vdo diff", vdoDiff, vulnVDOs, this.update.vdos)
 
     if (vdoDiff) {
       parameters.updateVDO = true;
@@ -272,6 +277,7 @@ export class ReviewComponent {
         vdo.label = this.update.vdos[i].vdolabel;
         vdo.group = this.update.vdos[i].vdogroup;
         vdo.confidence = this.update.vdos[i].confidence;
+        vdo.isActive = this.update.vdos[i].isActive;
         data.vdoUpdates.vdoLabels.push(vdo);
       }
     }
