@@ -57,7 +57,8 @@ import {
   AccordionModule,
   SharedModule,
   TableModule,
-  UtilitiesModule
+  UtilitiesModule,
+  BadgeModule
 } from '@coreui/angular';
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import {
     SharedModule,
     TableModule,
     UtilitiesModule
+    BadgeModule
   ],
   providers: [ApiService, AuthService],
   bootstrap: [AppComponent],

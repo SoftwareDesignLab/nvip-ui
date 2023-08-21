@@ -51,7 +51,6 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
         ['Base', 0]
       ]);
 
-      
       if (this.cvssScore != undefined && this.cvssScore != null) {
         this.data.setValue(0, 1, parseFloat(this.cvssScore.baseScore));
       }
