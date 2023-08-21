@@ -96,7 +96,7 @@ import {
     AccordionModule,
     SharedModule,
     TableModule,
-    UtilitiesModule
+    UtilitiesModule,
     BadgeModule
   ],
   providers: [ApiService, AuthService],

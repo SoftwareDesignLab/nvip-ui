@@ -265,9 +265,6 @@ export class ReviewComponent {
 
     if (vdoDiff) {
       parameters.updateVDO = true;
-
-    if(vdosToAdd.length > 0 || vdosToRemove.length > 0) {
-      parameters.updateVDO = true
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
       for(let i = 0; i < this.update.vdos.length; i++){
