@@ -254,13 +254,10 @@ export class ReviewComponent {
       }
     }
 
-    let vdosToRemove = this.vuln.vdoList.filter(item => this.update.vdos.findIndex(x => 
-      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
-    let vdosToAdd = this.update.vdos.filter(item => this.vuln.vdoList.findIndex(x => 
-      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
+    const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
 
-    if(vdosToAdd.length > 0 || vdosToRemove.length > 0) {
-      parameters.updateVDO = true
+    if (vdoDiff) {
+      parameters.updateVDO = true;
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
 
