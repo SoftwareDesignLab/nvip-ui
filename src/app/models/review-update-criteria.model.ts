@@ -34,6 +34,5 @@ export interface ReviewUpdateCriteria {
 
   updateDescription: boolean
   updateVDO: boolean
-  updateCVSS: boolean
   updateAffRel: boolean
 }
