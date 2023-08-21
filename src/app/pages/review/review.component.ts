@@ -223,6 +223,15 @@ export class ReviewComponent {
     this.update.vdos.splice(index, 1)
   }
 
+  getVdoConfidence(vdo: VdoLabel) {
+    for(let i = 0; i < this.vuln.vdoList.length; i++){
+      // insensitive compare of VDO labels; Ex: vulnList vdoLabel "FIRMWARE" === vdo.label "Firmware"
+      if (this.vuln.vdoList[i].vdoLabel.localeCompare(vdo.label, undefined, { sensitivity: 'accent' }) === 0)
+        return this.vuln.vdoList[i].vdoConfidence
+    }
+    return "-"
+  }
+
   updateVuln($event: any, f: NgForm, vuln: any) {
 
     let parameters = {} as ReviewUpdateCriteria

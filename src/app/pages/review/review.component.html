@@ -25,35 +25,44 @@
             <div *ngIf="vuln.vdoList !== undefined">
                 <button type="button" class="daily-vuln-dropdown-button col-12" (click)="toggleVDO($event)">VDOs</button>
                 <div class="daily-vuln-content" [ngStyle]="{'max-height': (vdoactive ? '2000px' : '0')}">
-                    <div class="nvip-form-horizontal-block" *ngFor="let vdo of vdoMap | keyvalue">
-                        <c-container>
-                            <c-row>
-                                <c-col>
-                                    <!-- TODO: connect checkbox -->
-                                    <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)">
-                                </c-col>
-                                <c-col>
-                                    <div class="nvip-form-field">
-                                        <label for="label">VDO Label: </label>
-                                        <!-- <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
-                                        <span>{{ vdo.value.label }}</span>
-                                    </div>
-                                </c-col>
-                                <c-col>
-                                    <div class="nvip-form-field">
-                                        <label for="group">VDO Group: </label>
-                                        <span>associated group</span>
-                                    </div>
-                                </c-col>
-                                <c-col>
-                                    <div class="nvip-form-field">
-                                        <label for="conf">VDO Confidence: </label>
+                    <div>
+                        <table cTable responsive>
+                            <thead>
+                                <tr class="nvip-review-select-header">
+                                    <th scope="col">
+                                        <strong>Show/Hide</strong>
+                                    </th>
+                                    <th scope="col">
+                                        <strong>VDO Label</strong>
+                                    </th>
+                                    <th scope="col">
+                                        <strong>Noun Group:</strong>
+                                    </th>
+                                    <th scope="col">
+                                        <strong>Confidence:</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let vdo of vdoMap | keyvalue" class="nvip-review-select">
+                                    <td>
+                                            <!-- TODO: connect checkbox -->
+                                            <input type="checkbox" id="chitem" name="item" ng-click="manualCheck(item)">
+                                    </td>
+                                    <td>
+                                            <!-- <input id="label" list="labeltypes" [(ngModel)]="update.vdos[vindex].vdolabel" [ngModelOptions]="{standalone: true}"> -->
+                                            <span>{{ vdo.value.label }}</span>
+                                    </td>
+                                    <td >
+                                        {{ vdo.value.group }}
+                                    </td>
+                                    <td>
                                         <!-- <input id="conf" [(ngModel)]="update.vdos[vindex].confidence" [ngModelOptions]="{standalone: true}"> -->
-                                        <span></span>
-                                    </div>
-                                </c-col>
-                            </c-row>
-                        </c-container>
+                                        {{ getVdoConfidence(vdo.value) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
