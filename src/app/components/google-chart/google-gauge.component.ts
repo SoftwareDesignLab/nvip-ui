@@ -23,13 +23,14 @@
  */
 import { Component, Input } from '@angular/core';
 import { GoogleChartComponent } from './google-chart.component';
+import { CVSSScore } from 'src/app/models/vulnerability.model';
 /** Gauge component for Vulnerability page */
 @Component({
   selector: 'cvss-gauge',
   template: `
     <div
       class="vuln-characteristics-graph-container"
-      id="{{cvssId}}"
+      id="cvssGauge"
       style="height: 130px; width: 100%"
     ></div>
   `,
@@ -39,8 +40,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   private options: any;
   private data: any;
   private chart: any;
-  @Input('cvssScore') cvssScore: any
-  @Input('cvssId') cvssId: any
+  @Input('cvssScore') cvssScore: CVSSScore | any;
 
   
 
@@ -77,7 +77,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
       };
 
     this.chart = this.createGauge(
-      document.getElementById(this.cvssId)
+      document.getElementById("cvssGauge")
     );
     this.chart.draw(this.data, this.options);
     
