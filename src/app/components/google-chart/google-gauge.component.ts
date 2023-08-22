@@ -30,8 +30,8 @@ import { CVSSScore } from 'src/app/models/vulnerability.model';
   template: `
     <div
       class="vuln-characteristics-graph-container"
-      id="cvssGauge"
-      style="height: 130px; width: 100%"
+      id="{{cvssId}}"
+      style="width: 100%"
     ></div>
   `,
 })
@@ -41,6 +41,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   private data: any;
   private chart: any;
   @Input('cvssScore') cvssScore: CVSSScore | any;
+  @Input('cvssId') cvssId: any;
 
   
 
@@ -57,14 +58,19 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
 
     this.options = {
         // width: 800, height: 225,
-        redFrom: 6.9, redTo: 10,
-        yellowFrom: 5.5, yellowTo: 7.4,
-        greenFrom:0, greenTo: 6.5,
+        redFrom: 7.0, redTo: 10,
+        yellowFrom: 4.0, yellowTo: 7.0,
+        greenFrom:0, greenTo: 4.0,
         minorTicks: 6, max: 10,
+        chartArea: {
+          left: 40,
+          width: '100%'
+        },
+        width: '100%',
       };
 
     this.chart = this.createGauge(
-      document.getElementById("cvssGauge")
+      document.getElementById(this.cvssId)
     );
     this.chart.draw(this.data, this.options);
     
