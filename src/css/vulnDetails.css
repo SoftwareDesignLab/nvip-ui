@@ -272,6 +272,10 @@
 	width: 100%;
 }
 
+.vulnbar-admin {
+	background-color: #777777;
+}
+
 .vuln-characteristics-bar > p {
 	color: #ffffff;
 	display: inline-block;
