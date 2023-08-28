@@ -31,7 +31,7 @@ import { CVSSScore } from 'src/app/models/vulnerability.model';
     <div
       class="vuln-characteristics-graph-container"
       id="{{cvssId}}"
-      style="width: 100%"
+      style="width: 100%;"
     ></div>
   `,
 })
@@ -74,9 +74,9 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
     );
     this.chart.draw(this.data, this.options);
     
-    let resizeHandler = () => this.chart.draw(this.data, this.options);
-    if (window.addEventListener) {
-        window.addEventListener('resize', resizeHandler, false);
-    }
+    // let resizeHandler = () => this.chart.draw(this.data, this.options);
+    // if (window.addEventListener) {
+    //     window.addEventListener('resize', resizeHandler, false);
+    // }
   }
 }
