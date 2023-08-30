@@ -202,7 +202,8 @@ export class ReviewComponent {
   getVdoConfidence(vdoKey: string) {
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
       if (vdoKey === this.vuln.vdoList[i].vdoLabel)
-        return this.vuln.vdoList[i].vdoConfidence
+        if (this.vuln.vdoList[i] !== null && this.vuln.vdoList[i].vdoConfidence !== 0 )
+          return this.vuln.vdoList[i].vdoConfidence
     }
     return "-"
   }
