@@ -59,7 +59,8 @@ import {
   TableModule,
   UtilitiesModule,
   BadgeModule,
-  ButtonModule 
+  ButtonModule,
+  TooltipModule
 } from '@coreui/angular';
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import {
     TableModule,
     UtilitiesModule,
     BadgeModule,
-    ButtonModule
+    ButtonModule,
+    TooltipModule
   ],
   providers: [ApiService, AuthService, HttpClientModule],
   bootstrap: [AppComponent],
