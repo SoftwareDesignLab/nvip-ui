@@ -27,13 +27,10 @@ import {
   HttpContext,
   HttpHeaders,
   HttpParams,
-  HttpResponse,
-  HttpParamsOptions
 } from '@angular/common/http';
 import { Observer } from 'rxjs';
 import { AuthCredentials } from '../Auth/auth-service.service';
 import { Routes } from './api_routes';
-import { ReviewCriteria } from 'src/app/models/review-criteria.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria } from 'src/app/models/review-data-criteria.model';
 
@@ -67,30 +64,6 @@ export type ApiRequestObserver =
   | Partial<Observer<Object>>
   | ((value: Object) => void);
 
-
-export interface CVEDetailsRequest {
-  cveId: string; // TODO: figure out the actual type of this
-  username: string;
-  token: string;
-}
-export interface CVESearchRequest {
-  username: string;
-  token: string;
-  searchDate: string; // TODO: find real type
-  crawled: boolean;
-  rejected: boolean;
-  accepted: boolean;
-  reviewed: boolean;
-}
-export interface CVEUpdateRequest {
-  atomicUpdate: boolean;
-  username: string;
-  token: string;
-  statusID: string; // TODO: find real type
-  vulnID: string; // TODO: find real type
-  info: string; // TODO: find real type
-  tweet: boolean;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -143,14 +116,6 @@ export class ApiService {
     .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }))
   }
 
-
-  // For Review page, which is currently unused
-
-  reviewDetails(detailRequest: ReviewCriteria) {
-    return this.httpClient
-      .get(Routes.review, this.injectGetParameters({ ...detailRequest }))
-  }
-
   reviewUpdate(id: string, updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
     const body = JSON.stringify(updateRequestData)
 
@@ -160,10 +125,6 @@ export class ApiService {
       // console.log("updateRequest - " + `${key}: ${value}`);
       params = params.append(`${key}`, `${value}`)
     }
-
-    // for (const key of params.keys()) {
-    //   console.log(key + ": " + params.get(key))
-    // }
 
     this.httpClient
       .post(Routes.review,
@@ -177,23 +138,6 @@ export class ApiService {
       )
       .subscribe(callback);
   }
-
-  // cveUpdateAtomic(
-  //   updateRequest: CVEUpdateRequest,
-  //   cveDescription: string,
-  //   callback: ApiRequestObserver
-  // ) {
-  //   this.httpClient.post(Routes.review, cveDescription, {
-  //     headers: {
-  //       'Content-Type': 'Text/plain',
-  //     },
-  //     params: {
-  //       ...updateRequest,
-  //     },
-  //   });
-  // }
-
-  // cveUpdateComplex(updateRequest: CVEUpdateRequest) {}
 
   vulnServlet(daily: boolean, dateRange: number) {
     return this.httpClient.get(
