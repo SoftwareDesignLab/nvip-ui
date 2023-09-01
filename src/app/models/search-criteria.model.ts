@@ -21,6 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+/** user entered search criteria to send to API */
 export interface SearchCriteria {
   keyword: string;
   cve_id: string;
@@ -30,8 +32,4 @@ export interface SearchCriteria {
   product: string;
   vdoLabels: Array<string>;
   cvssScores: Array<number>;
-}
-
-export interface VdoHash {
-  [details: string] : boolean;
 }

@@ -24,7 +24,6 @@
 import { Component, EventEmitter, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
-import { VdoHash } from 'src/app/models/search-criteria.model';
 
 /** Search dropdown component for VDO categories */
 @Component({

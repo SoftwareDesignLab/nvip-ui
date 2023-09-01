@@ -43,7 +43,6 @@ import { DailyVulnDropdownComponent } from './components/daily-vuln-dropdown/dai
 import { ApiService } from './services/Api/api-service.service';
 import { AuthService } from './services/Auth/auth-service.service';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NvipChartComponent } from './components/nvip-chart/nvip-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
