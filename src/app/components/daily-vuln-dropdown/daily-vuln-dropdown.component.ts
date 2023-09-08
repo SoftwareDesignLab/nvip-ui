@@ -42,11 +42,11 @@ export class DailyVulnDropdownComponent implements OnChanges {
   /** Noun groups constants */
   VDO_NOUN_GROUPS = {
     all: '*',
-    ATTACK_THEATER: 'ATTACK_THEATER',
-    CONTEXT: 'CONTEXT',
-    IMPACT_METHOD: 'IMPACT_METHOD',
-    LOGICAL_IMPACT: 'LOGICAL_IMPACT',
-    MITIGATION: 'MITIGATION',
+    ATTACK_THEATER: 'Attack Theater',
+    CONTEXT: 'Context',
+    IMPACT_METHOD: 'Impact Method',
+    LOGICAL_IMPACT: 'Logical Impact',
+    MITIGATION: 'Mitigation',
   };
 
   @Input('vuln') vuln: Vulnerability;
