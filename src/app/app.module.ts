@@ -54,6 +54,10 @@ import {
   CollapseModule, 
   GridModule,
   FooterModule,
+  AccordionModule,
+  SharedModule,
+  TableModule,
+  UtilitiesModule,
   BadgeModule
 } from '@coreui/angular';
 @NgModule({
@@ -89,6 +93,10 @@ import {
     CollapseModule,
     GridModule,
     FooterModule,
+    AccordionModule,
+    SharedModule,
+    TableModule,
+    UtilitiesModule,
     BadgeModule
   ],
   providers: [ApiService, AuthService],

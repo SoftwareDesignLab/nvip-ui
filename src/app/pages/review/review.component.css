@@ -25,3 +25,23 @@
 .nvip-radio > * input {
     margin-right: 3px;
 }
+
+.nvip-review-select-header {
+    border: 2px solid #d3d3d3;
+    /* border-radius: 5px; */
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.nvip-review-select {
+    border: 1px solid #d3d3d3;
+    /* border-radius: 5px; */
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
+}
+
+.nvip-review-select-active {
+    background-color: #21618C;
+    border: 2px solid #000;
+    color: #fff;
+}

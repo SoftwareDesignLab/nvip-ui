@@ -23,14 +23,15 @@
  */
 import { Component, Input } from '@angular/core';
 import { GoogleChartComponent } from './google-chart.component';
+import { CVSSScore } from 'src/app/models/vulnerability.model';
 /** Gauge component for Vulnerability page */
 @Component({
   selector: 'cvss-gauge',
   template: `
     <div
       class="vuln-characteristics-graph-container"
-      id="cvssGauge"
-      style="height: 130px; width: 100%"
+      id="{{cvssId}}"
+      style="width: 100%;"
     ></div>
   `,
 })
@@ -39,7 +40,8 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   private options: any;
   private data: any;
   private chart: any;
-  @Input('cvssScore') cvssScore: any
+  @Input('cvssScore') cvssScore: CVSSScore | any;
+  @Input('cvssId') cvssId: any;
 
   
 
@@ -47,42 +49,34 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   override drawGraph() {
     this.data = this.createDataTable([
         ['Label', 'Value'],
-        ['Base', 0],
-        ['Impact', 0],
+        ['Base', 0]
       ]);
 
-      if (this.cvssScore.baseScore == 4) {
-        this.data.setValue(0, 1, 9.0);
-      }
-      else if (this.cvssScore.baseScore == 1) { 
-        this.data.setValue(0, 1, 7.0);
-      }
-      else if (this.cvssScore.baseScore == 2) { 
-        this.data.setValue(0, 1, 5.0);
-      }
-      else if (this.cvssScore.baseScore == 5) { 
-        this.data.setValue(0, 1, 3.0);
-      }
       if (this.cvssScore != undefined && this.cvssScore != null) {
-        this.data.setValue(1, 1, parseFloat(this.cvssScore.impactScore));
+        this.data.setValue(0, 1, parseFloat(this.cvssScore.baseScore));
       }
 
     this.options = {
         // width: 800, height: 225,
-        redFrom: 6.9, redTo: 10,
-        yellowFrom: 5.5, yellowTo: 7.4,
-        greenFrom:0, greenTo: 6.5,
+        redFrom: 7.0, redTo: 10,
+        yellowFrom: 4.0, yellowTo: 7.0,
+        greenFrom:0, greenTo: 4.0,
         minorTicks: 6, max: 10,
+        chartArea: {
+          left: 40,
+          width: '100%'
+        },
+        width: '100%',
       };
 
     this.chart = this.createGauge(
-      document.getElementById('cvssGauge')
+      document.getElementById(this.cvssId)
     );
     this.chart.draw(this.data, this.options);
     
-    let resizeHandler = () => this.chart.draw(this.data, this.options);
-    if (window.addEventListener) {
-        window.addEventListener('resize', resizeHandler, false);
-    }
+    // let resizeHandler = () => this.chart.draw(this.data, this.options);
+    // if (window.addEventListener) {
+    //     window.addEventListener('resize', resizeHandler, false);
+    // }
   }
 }

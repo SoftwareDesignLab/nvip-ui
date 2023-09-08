@@ -260,6 +260,8 @@
 
 .vuln-characteristics-graph-container {
 	margin: 1em 1em 3em 0em;
+	width: 100%;
+	height: 90%;
 }
 
 .vuln-characteristics-bar {
@@ -270,6 +272,10 @@
 	margin-bottom: 1em;
 	vertical-align: center;
 	width: 100%;
+}
+
+.vulnbar-admin {
+	background-color: #777777;
 }
 
 .vuln-characteristics-bar > p {
@@ -303,9 +309,9 @@ nvip-vuln-nav-btn-ctn > .nvip-vuln-nav-btn {
 		max-width: 91.66%;
 	}
 
-	.vuln-characteristics-bar { 
+	/* .vuln-characteristics-bar { 
 		width: 55%;
-	}
+	} */
 }
 
 @media screen and (min-width: 1000px) {

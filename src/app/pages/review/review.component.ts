@@ -21,30 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { faSpinner, faAngleDoubleLeft, faAngleDoubleRight, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
 import { Session } from 'src/app/services/Auth/auth-service.service';
 import { CookieService } from 'src/app/services/Cookie/cookie.service';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
-import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { Vulnerability, CVSSScore, VDO } from 'src/app/models/vulnerability.model';
-import { ReviewCriteria } from 'src/app/models/review-criteria.model';
+import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
-import { ReviewDataCriteria, ReviewCVSS, ReviewVDO, ReviewVDOLabel } from 'src/app/models/review-data-criteria.model';
+import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, vdoMap } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
-
-export interface updateCvss {
-  base_score: number
-  impact_score: number
-}
 
 export interface updateVdo {
   vdogroup: string
   vdolabel: string
   confidence: number
+  isActive: number
 }
 
 export interface updateAffProd {
@@ -57,13 +50,14 @@ export interface updateObject {
   vuln_id: number;
   cve_id: string;
   desc: string;
-  cvss: Array<CVSSScore>;
-  vdos: Array<VDO>;
+  vdos: Array<updateVdo>;
   affprods: Array<updateAffProd>
   affprods_to_remove: Array<updateAffProd>
 }
 
-/** CURRENTLY UNUSED review page */
+export interface VdoMap { [key: string]: VdoLabel; }
+
+/** review page */
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
@@ -74,23 +68,19 @@ export class ReviewComponent {
   faSpinner = faSpinner;
   session = {} as Session;
   vuln = {} as Vulnerability;
-
   username: string = ""
   token: string = ""
-
-  cvssactive: boolean = false
   vdoactive: boolean = false
   aractive: boolean = false
-
   update = {} as updateObject
+  vdoMap = vdoMap
+
 
   constructor(
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
-    private funcs: FuncsService,
-    private route: ActivatedRoute,
-    private searchResService: SearchResultService
+    private route: ActivatedRoute
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
   }
@@ -105,8 +95,7 @@ export class ReviewComponent {
   init(id: string) {
     var session: Session = this.cookieService.get('nvip_user');
 
-    this.update.vdos = new Array<VDO>()
-    this.update.cvss = new Array<CVSSScore>()
+    this.update.vdos = new Array<updateVdo>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();
 
@@ -115,10 +104,6 @@ export class ReviewComponent {
       .subscribe((res: any) => {
         this.handleRes(res)
       });
-  }
-
-  trackByIndex(index: number, obj: any): any {
-    return index;
   }
 
    /** legacy loading function to show and hide loading bar while search results are being called */
@@ -161,19 +146,13 @@ export class ReviewComponent {
     this.update.vuln_id = this.vuln.vulnId
 
     this.update.desc = this.vuln.description
-    for(let i = 0; i < this.vuln.cvssScoreList.length; i++) {
-      let cvss = {} as CVSSScore
-      cvss.cveId = this.vuln.cvssScoreList[i].cveId
-      cvss.baseScore = this.vuln.cvssScoreList[i].baseScore
-      cvss.impactScore = this.vuln.cvssScoreList[i].impactScore
-      this.update.cvss.push(cvss)
-    }
+    console.log("handling res vdo list: ", this.vuln.vdoList)
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
-      let vdo = {} as VDO
-      vdo.cveId = this.vuln.vdoList[i].cveId
-      vdo.vdoConfidence = this.vuln.vdoList[i].vdoConfidence
-      vdo.vdoLabel = this.vuln.vdoList[i].vdoLabel
-      vdo.vdoNounGroup = this.vuln.vdoList[i].vdoNounGroup
+      let vdo = {} as updateVdo
+      vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
+      vdo.vdogroup = this.vuln.vdoList[i].vdoNounGroup
+      vdo.confidence = this.vuln.vdoList[i].vdoConfidence
+      vdo.isActive = this.vuln.vdoList[i].isActive
       this.update.vdos.push(vdo)
     }
     for(let prod of this.vuln.products){
@@ -181,47 +160,56 @@ export class ReviewComponent {
     }
   }
 
-  toggleCVSS($event: any) {
-    this.cvssactive = !this.cvssactive
-  }
-
-  toggleVDO($event: any) {
+  toggleVDO() {
     this.vdoactive = !this.vdoactive
   }
 
-  toggleAffProd($event: any) {
+  toggleAffProd() {
     this.aractive = !this.aractive
   }
 
-  removeCPE(index: number, vuln: any) {
+  removeCPE(index: number) {
     this.update.affprods_to_remove.push(this.update.affprods[index])
     this.update.affprods.splice(index, 1)
   }
 
-  addCvss($event: any) {
-    let cvss = {} as CVSSScore;
-    cvss.baseScore = 3
-    cvss.impactScore = 0
-    this.update.cvss.push(cvss)
+  toggleActive(vdoKey: string) {
+    let inUpdate = false
+    for(let i = 0; i < this.update.vdos.length; i++) {
+      if (vdoKey === this.update.vdos[i].vdolabel) {
+        this.update.vdos[i].isActive = this.update.vdos[i].isActive === 1 ? 0 : 1
+        inUpdate = true
+      }
+    }
+    if (!inUpdate) {
+      let vdo = {} as updateVdo
+      vdo.vdolabel = vdoKey
+      vdo.vdogroup = this.vdoMap[vdoKey].group
+      vdo.confidence = 0
+      vdo.isActive = 1
+      this.update.vdos.push(vdo)
+    }
   }
 
-  removeCvss($event: any, index: number) {
-    this.update.cvss.splice(index, 1)
+  getIsActive(vdoKey: string) {
+    for(let i = 0; i < this.update.vdos.length; i++) {
+      if (vdoKey === this.update.vdos[i].vdolabel)
+        return this.update.vdos[i].isActive === 1 ? true : false
+    }
+    return false
   }
 
-  addVdo($event: any) {
-    let vdo = {} as VDO;
-    vdo.vdoLabel = ""
-    vdo.vdoNounGroup = ""
-    vdo.vdoConfidence = 0
-    this.update.vdos.push(vdo)
-  }
-
-  removeVdo($event: any, index: number) {
-    this.update.vdos.splice(index, 1)
+  getVdoConfidence(vdoKey: string) {
+    for(let i = 0; i < this.vuln.vdoList.length; i++) {
+      if (vdoKey === this.vuln.vdoList[i].vdoLabel)
+        if (this.vuln.vdoList[i] !== null && this.vuln.vdoList[i].vdoConfidence !== 0 )
+          return this.vuln.vdoList[i].vdoConfidence
+    }
+    return "-"
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
+
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -236,38 +224,35 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    let cvssToRemove = this.vuln.cvssScoreList.filter(item => this.update.cvss.findIndex(x => 
-      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
-    let cvssToAdd = this.update.cvss.filter(item => this.vuln.cvssScoreList.findIndex(x => 
-      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
+    // TODO: CVSS calculation based on VDO label updates
 
-    if(cvssToAdd.length > 0 || cvssToRemove.length > 0) {
-      parameters.updateCVSS = true
-      data.cvss = new Array<ReviewCVSS>();
-      for(let cvssObj of cvssToAdd) {
-        let newCvss = {} as ReviewCVSS
-        newCvss.base_score = cvssObj.baseScore
-        newCvss.impact_score = cvssObj.impactScore
-        data.cvss.push(newCvss)
+    // map vdoList to something that looks like update.vdos
+    //TODO: it should match to begin with - shouldn't need cveId in there
+
+    const vulnVDOs = vuln.vdoList.map((vdo: VDO) => {
+      return {
+        vdolabel: vdo.vdoLabel,
+        vdogroup: vdo.vdoNounGroup,
+        confidence: vdo.vdoConfidence,
+        isActive: vdo.isActive
       }
-    }
+    })
 
-    let vdosToRemove = this.vuln.vdoList.filter(item => this.update.vdos.findIndex(x => 
-      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
-    let vdosToAdd = this.update.vdos.filter(item => this.vuln.vdoList.findIndex(x => 
-      (x.vdoLabel == item.vdoLabel && x.vdoNounGroup == item.vdoNounGroup && x.vdoConfidence == item.vdoConfidence)) < 0)
+    const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
 
-    if(vdosToAdd.length > 0 || vdosToRemove.length > 0) {
-      parameters.updateVDO = true
+    console.log("handling vdo diff", vdoDiff, vulnVDOs, this.update.vdos)
+
+    if (vdoDiff) {
+      parameters.updateVDO = true;
       data.vdoUpdates = {} as ReviewVDO
       data.vdoUpdates.vdoLabels = new Array<ReviewVDOLabel>()
-
-      for(let vdoObj of vdosToAdd) {
-        let newVdo = {} as ReviewVDOLabel
-        newVdo.label = vdoObj.vdoLabel
-        newVdo.group = vdoObj.vdoNounGroup
-        newVdo.confidence = vdoObj.vdoConfidence
-        data.vdoUpdates.vdoLabels.push(newVdo)
+      for(let i = 0; i < this.update.vdos.length; i++){
+        let vdo = {} as ReviewVDOLabel;
+        vdo.label = this.update.vdos[i].vdolabel;
+        vdo.group = this.update.vdos[i].vdogroup;
+        vdo.confidence = this.update.vdos[i].confidence;
+        vdo.isActive = this.update.vdos[i].isActive;
+        data.vdoUpdates.vdoLabels.push(vdo);
       }
     }
 
@@ -281,7 +266,7 @@ export class ReviewComponent {
     }
 
     this.apiService.reviewUpdate(this.update.cve_id, parameters, data, (res)=>{
-      // this.init(this.update.cve_id)
+      this.init(this.update.cve_id)
     })
   }
 }
