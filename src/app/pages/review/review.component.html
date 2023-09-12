@@ -48,7 +48,7 @@
                                     <td><input type="checkbox" name="{{vdo.value.label}}" [checked]="getIsActive(vdo.key)" (change)="toggleActive(vdo.key)" ></td>
                                     <td><span>{{ vdo.value.label }}</span></td>
                                     <td >{{ vdo.value.group }}</td>
-                                    <td>{{ getVdoConfidence(vdo.key) }}</td>
+                                    <td>{{ getVdoConfidence(vdo.value.label) }}</td>
                                 </tr>
                             </tbody>
                         </table>
