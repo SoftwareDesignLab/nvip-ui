@@ -2,17 +2,17 @@
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,7 +43,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
   @Input('cvssScore') cvssScore: CVSSScore | any;
   @Input('cvssId') cvssId: any;
 
-  
+
 
   /** child drawgraph class that inits graph data, options, and then draws on page */
   override drawGraph() {
@@ -52,7 +52,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
         ['Base', 0]
       ]);
 
-      if (this.cvssScore != undefined && this.cvssScore != null) {
+      if (this.cvssScore != undefined) {
         this.data.setValue(0, 1, parseFloat(this.cvssScore.baseScore));
       }
 
@@ -73,7 +73,7 @@ export class GoogleGaugeComponent extends GoogleChartComponent {
       document.getElementById(this.cvssId)
     );
     this.chart.draw(this.data, this.options);
-    
+
     // let resizeHandler = () => this.chart.draw(this.data, this.options);
     // if (window.addEventListener) {
     //     window.addEventListener('resize', resizeHandler, false);
