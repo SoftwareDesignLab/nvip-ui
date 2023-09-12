@@ -181,6 +181,7 @@ export class ReviewComponent {
   }
 
   toggleActive(vdoKey: string) {
+    console.log(vdoKey)
     let inUpdate = false
     for(let i = 0; i < this.update.vdos.length; i++) {
       if (vdoKey === this.update.vdos[i].vdolabel) {
