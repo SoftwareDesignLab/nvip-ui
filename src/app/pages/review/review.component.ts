@@ -190,7 +190,7 @@ export class ReviewComponent {
     }
     if (!inUpdate) {
       let vdo = {} as updateVdo
-      vdo.vdolabel = vdoKey
+      vdo.vdolabel = this.vdoMap[vdoKey].label
       vdo.vdogroup = this.vdoMap[vdoKey].group
       vdo.confidence = 0
       vdo.isActive = 1
