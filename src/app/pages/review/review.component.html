@@ -91,7 +91,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let vdo of vdoMap | keyvalue" class="{{(getIsActive(vdo.key) === true) ? 'nvip-review-select-active' : 'nvip-review-select'}}">
-                                    <td><input type="checkbox" name="{{vdo.value.label}}" [checked]="getIsActive(vdo.value.label)" (change)="toggleActive(vdo.value.label)" ></td>
+                                    <td><input type="checkbox" name="{{vdo.value.label}}" [checked]="getIsActive(vdo.key)" (change)="toggleActive(vdo.value.label)" ></td>
                                     <td><span>{{ vdo.value.label }}</span></td>
                                     <td >{{ vdo.value.group }}</td>
                                     <td>{{ getVdoConfidence(vdo.value.label) }}</td>
