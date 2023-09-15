@@ -27,7 +27,6 @@ import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/services/Auth/auth-service.service';
 import { faTimes, faKey, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FuncsService } from 'src/app/services/Funcs/funcs.service';
-import { SHA256 } from 'crypto-js';
 
 @Component({
   selector: 'nvip-login-panel',
