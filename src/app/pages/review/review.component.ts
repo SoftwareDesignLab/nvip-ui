@@ -30,7 +30,7 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
-import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, vdoMap } from 'src/app/models/review-data-criteria.model';
+import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, VdoNounGroup, vdoMap } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
 
 export interface updateVdo {
@@ -55,7 +55,7 @@ export interface updateObject {
   affprods_to_remove: Array<updateAffProd>
 }
 
-export interface VdoMap { [key: string]: VdoLabel; }
+export interface VdoMap { [key: string]: VdoNounGroup; }
 
 /** review page */
 @Component({
@@ -184,8 +184,8 @@ export class ReviewComponent {
     }
     if (!inUpdate) {
       let vdo = {} as updateVdo
-      vdo.vdolabel = this.vdoMap[vdoKey].label
-      vdo.vdogroup = this.vdoMap[vdoKey].group
+      vdo.vdolabel = vdoKey
+      vdo.vdogroup = this.vdoMap[vdoKey]
       vdo.confidence = 0
       vdo.isActive = 1
       this.update.vdos.push(vdo)
