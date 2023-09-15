@@ -146,7 +146,6 @@ export class ReviewComponent {
     this.update.vuln_id = this.vuln.vulnId
 
     this.update.desc = this.vuln.description
-    console.log("handling res vdo list: ", this.vuln.vdoList)
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
       let vdo = {} as updateVdo
       vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
@@ -174,7 +173,6 @@ export class ReviewComponent {
   }
 
   toggleActive(vdoKey: string) {
-    console.log(vdoKey)
     let inUpdate = false
     for(let i = 0; i < this.update.vdos.length; i++) {
       if (vdoKey === this.update.vdos[i].vdolabel) {
