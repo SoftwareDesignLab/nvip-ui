@@ -32,6 +32,7 @@ import { RecentComponent } from './pages/recent/recent.component';
 import { ReviewComponent } from './pages/review/review.component';
 import { SearchComponent } from './pages/search/search.component';
 import { VulnerabilityComponent } from './pages/vulnerability/vulnerability.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
@@ -42,7 +43,8 @@ const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'search', component: SearchComponent },
   { path: 'vulnerability/:id', component: VulnerabilityComponent },
-  { path: 'createaccount', component: CreateAccountComponent }
+  { path: 'createaccount', component: CreateAccountComponent },
+  { path: 'login', component: LoginComponent }
 ];
 
 @NgModule({

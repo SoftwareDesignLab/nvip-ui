@@ -32,7 +32,6 @@ import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, vdoMap } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 
 export interface updateVdo {
   vdogroup: string
@@ -83,7 +82,6 @@ export class ReviewComponent {
     private apiService: ApiService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private funcs: FuncsService
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
   }
@@ -96,9 +94,6 @@ export class ReviewComponent {
 
   /** ensure the user is signed on when navigating to this page */
   init(id: string) {
-    if (!this.authService.isAuthenticated()) {
-      this.funcs.openLogin();
-    }
     var session: Session = this.cookieService.get('nvip_user');
     this.update.vdos = new Array<updateVdo>()
     this.update.affprods = new Array<updateAffProd>();

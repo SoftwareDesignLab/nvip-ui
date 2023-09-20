@@ -32,7 +32,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { MainComponent } from './pages/main/main.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ReviewComponent } from './pages/review/review.component';
-import { LoginPanelComponent } from './components/login-panel/login-panel.component';
 import { RecentComponent } from './pages/recent/recent.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { DailyComponent } from './pages/daily/daily.component';
@@ -49,9 +48,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchDropdownComponent } from './components/search-dropdown/search-dropdown.component';
 import { GoogleChartComponent } from './components/google-chart/google-chart.component';
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
-import { 
-  NavbarModule, 
-  CollapseModule, 
+import { LoginComponent } from './pages/login/login.component';
+import {
+  NavbarModule,
+  CollapseModule,
   GridModule,
   FooterModule,
   AccordionModule,
@@ -69,7 +69,6 @@ import {
     MainComponent,
     AboutComponent,
     ReviewComponent,
-    LoginPanelComponent,
     RecentComponent,
     CreateAccountComponent,
     DailyComponent,
@@ -80,7 +79,8 @@ import {
     NvipChartComponent,
     SearchDropdownComponent,
     GoogleChartComponent,
-    GoogleGaugeComponent
+    GoogleGaugeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

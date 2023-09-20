@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, EventEmitter, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges, Output } from '@angular/core';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 
 /** Search dropdown component for VDO categories */
 @Component({
@@ -53,7 +52,7 @@ export class SearchDropdownComponent {
    * search dropdown constructor
    * @param funcs access globally defined functions instance
    */
-  constructor(private funcs: FuncsService) {
+  constructor() {
     this.label = "";
     this.entityLabels = [];
   }
