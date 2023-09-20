@@ -6,7 +6,7 @@ on: [push]
 
 env:
   AWS_REGION: 'us-east-1'
-  S3_BUCKET_NAME_UI: 'www-staging.cve.live'
+  S3_BUCKET_NAME_UI: 'www.cve.live'
   ANGULAR_CLI_VERSION: '15.1.0'
 
 jobs:
@@ -30,12 +30,12 @@ jobs:
         run: |
           npm install -g @angular/cli
           npm install
-          ng build angular-ui --configuration=staging
+          ng build angular-ui --configuration=production
       
       - name: Run Tests
         run: npm test -- --watch=false --browsers=ChromeHeadless
-
+          
       - name: Deploy to S3
-        if: ${{ success() && github.ref == 'refs/heads/dev' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         run: |
           aws s3 sync ./dist/angular-ui s3://${{ env.S3_BUCKET_NAME_UI }}

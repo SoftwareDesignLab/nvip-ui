@@ -72,8 +72,6 @@ export class RecentComponent implements OnInit {
   /** call recent vulnerabilites on page init */
   ngOnInit() {
     this.vulnService.onRecentInit().subscribe((res: any) => {
-      console.log("onRecentInit result")
-      console.log(res)
       this.apiCallDone = true;
       Object.keys(res).forEach((key) => {
         this.dailyVulns.push({
@@ -84,7 +82,6 @@ export class RecentComponent implements OnInit {
       })
     });
     this.vulnService.getRecentCounts().subscribe((res: any) => {
-      console.log(res);
       res.forEach((element: any) => {
         this.dailyCounts.push({
           date: this.formatDate(element.date),
@@ -92,7 +89,6 @@ export class RecentComponent implements OnInit {
         });
       }
       );
-      console.log(this.dailyCounts)
     });
   }
 
