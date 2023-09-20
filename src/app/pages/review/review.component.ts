@@ -2,17 +2,17 @@
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,13 +30,9 @@ import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
-import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, vdoMap } from 'src/app/models/review-data-criteria.model';
-import { ActivatedRoute } from '@angular/router';
 
-export interface updateCvss {
-  base_score: number
-  impact_score: number
-}
+import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, VdoNounGroup, vdoMap } from 'src/app/models/review-data-criteria.model';
+import { ActivatedRoute } from '@angular/router';
 
 export interface updateVdo {
   vdogroup: string
@@ -55,13 +51,12 @@ export interface updateObject {
   vuln_id: number;
   cve_id: string;
   desc: string;
-  cvss: Array<CVSSScore>;
-  vdos: Array<VDO>;
+  vdos: Array<updateVdo>;
   affprods: Array<updateAffProd>
   affprods_to_remove: Array<updateAffProd>
 }
 
-export interface VdoMap { [key: string]: VdoLabel; }
+export interface VdoMap { [key: string]: VdoNounGroup; }
 
 /** review page */
 @Component({
@@ -101,8 +96,7 @@ export class ReviewComponent {
   init(id: string) {
     var session: Session = this.cookieService.get('nvip_user');
 
-    this.update.vdos = new Array<VDO>()
-    this.update.cvss = new Array<CVSSScore>()
+    this.update.vdos = new Array<updateVdo>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();
 
@@ -153,7 +147,7 @@ export class ReviewComponent {
     this.update.vuln_id = this.vuln.vulnId
 
     this.update.desc = this.vuln.description
-    console.log("handling res vdo list: ", this.vuln.vdoList)
+
     for(let i = 0; i < this.vuln.vdoList.length; i++) {
       let vdo = {} as updateVdo
       vdo.vdolabel = this.vuln.vdoList[i].vdoLabel
@@ -181,7 +175,7 @@ export class ReviewComponent {
   }
 
   toggleActive(vdoKey: string) {
-    console.log(vdoKey)
+
     let inUpdate = false
     for(let i = 0; i < this.update.vdos.length; i++) {
       if (vdoKey === this.update.vdos[i].vdolabel) {
@@ -191,8 +185,8 @@ export class ReviewComponent {
     }
     if (!inUpdate) {
       let vdo = {} as updateVdo
-      vdo.vdolabel = this.vdoMap[vdoKey].label
-      vdo.vdogroup = this.vdoMap[vdoKey].group
+      vdo.vdolabel = vdoKey
+      vdo.vdogroup = this.vdoMap[vdoKey]
       vdo.confidence = 0
       vdo.isActive = 1
       this.update.vdos.push(vdo)
@@ -217,6 +211,7 @@ export class ReviewComponent {
   }
 
   updateVuln($event: any, f: NgForm, vuln: any) {
+
     let parameters = {} as ReviewUpdateCriteria
     let data = {} as ReviewDataCriteria
 
@@ -231,11 +226,6 @@ export class ReviewComponent {
       data.description = this.update.desc
     }
 
-    let cvssToRemove = this.vuln.cvssScoreList.filter(item => this.update.cvss.findIndex(x => 
-      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
-    let cvssToAdd = this.update.cvss.filter(item => this.vuln.cvssScoreList.findIndex(x => 
-      (x.baseScore===item.baseScore && x.impactScore===item.impactScore)) < 0)
-
     // map vdoList to something that looks like update.vdos
     //TODO: it should match to begin with - shouldn't need cveId in there
 
@@ -246,7 +236,7 @@ export class ReviewComponent {
         confidence: vdo.vdoConfidence,
         isActive: vdo.isActive
       }
-    }
+    })
 
     const vdoDiff = JSON.stringify(vulnVDOs) !== JSON.stringify(this.update.vdos)
 
@@ -276,7 +266,7 @@ export class ReviewComponent {
     }
 
     this.apiService.reviewUpdate(this.update.cve_id, parameters, data, (res)=>{
-      // this.init(this.update.cve_id)
+      this.init(this.update.cve_id)
     })
   }
 }
