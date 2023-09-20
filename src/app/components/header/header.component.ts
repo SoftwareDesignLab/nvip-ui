@@ -36,26 +36,6 @@ export class HeaderComponent {
   faSignOut = faSignOut;
   constructor(private authService: AuthService, private router: Router, private funcs: FuncsService) {}
 
-  /** legacy AngularJS openLogin function that uses HTML styling to overlay 
-   * login panel over current page and displays to user 
-   */
-  openLogin() {
-    this.authService.isAuthenticated();
-    var loginPanel = document.getElementById('loginPanel') as HTMLDivElement;
-    var nvipContent = document.getElementById('nvipContent') as HTMLDivElement;
-    var loginMessage = document.getElementById(
-      'loginMessage'
-    ) as HTMLDivElement;
-    var loginForm = document.getElementById('loginForm') as HTMLDivElement;
-
-    loginPanel.style.display = 'block';
-    loginPanel.style.visibility = 'visible';
-    loginPanel.style.opacity = '1';
-    nvipContent.style.filter = 'blur(100px)';
-    loginMessage.style.display = 'none';
-    loginForm.style.marginTop = '4em';
-  }
-
   /** ensure user is logged in before accessing a certain page */
   isLoggedIn(): boolean {
     return this.authService.isAuthenticated();
@@ -72,11 +52,15 @@ export class HeaderComponent {
     this.router.navigate(['']);
   }
 
+  openLogin() {
+    this.funcs.openLogin();
+  }
+
   /** navigate to a certain page */
   goTo(link: any) {
     if (this.isLoggedIn()) {
       this.router.navigate(link);
-    } else this.openLogin();
+    } else this.funcs.openLogin();
   }
 
   /** Links that do not require login to navigate to */

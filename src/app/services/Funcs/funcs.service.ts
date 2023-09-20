@@ -28,6 +28,25 @@ import { Injectable } from '@angular/core';
 })
 export class FuncsService {
 
+  /** legacy AngularJS openLogin function that uses HTML styling to overlay 
+   * login panel over current page and displays to user 
+   */
+  openLogin() {
+    var loginPanel = document.getElementById('loginPanel') as HTMLDivElement;
+    var nvipContent = document.getElementById('nvipContent') as HTMLDivElement;
+    var loginMessage = document.getElementById(
+      'loginMessage'
+    ) as HTMLDivElement;
+    var loginForm = document.getElementById('loginForm') as HTMLDivElement;
+
+    loginPanel.style.display = 'block';
+    loginPanel.style.visibility = 'visible';
+    loginPanel.style.opacity = '1';
+    nvipContent.style.filter = 'blur(100px)';
+    loginMessage.style.display = 'none';
+    loginForm.style.marginTop = '4em';
+  }
+
   /**
    * modifies CSS to hide login panel
    */

@@ -25,13 +25,14 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
-import { Session } from 'src/app/services/Auth/auth-service.service';
+import { AuthService, Session } from 'src/app/services/Auth/auth-service.service';
 import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
 import { ReviewUpdateCriteria } from 'src/app/models/review-update-criteria.model';
 import { ReviewDataCriteria, ReviewVDO, ReviewVDOLabel, VdoLabel, vdoMap } from 'src/app/models/review-data-criteria.model';
 import { ActivatedRoute } from '@angular/router';
+import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 
 export interface updateVdo {
   vdogroup: string
@@ -80,7 +81,9 @@ export class ReviewComponent {
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private funcs: FuncsService
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
   }
@@ -93,8 +96,10 @@ export class ReviewComponent {
 
   /** ensure the user is signed on when navigating to this page */
   init(id: string) {
+    if (!this.authService.isAuthenticated()) {
+      this.funcs.openLogin();
+    }
     var session: Session = this.cookieService.get('nvip_user');
-
     this.update.vdos = new Array<updateVdo>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();
