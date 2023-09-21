@@ -51,22 +51,11 @@ export class HeaderComponent {
     this.router.navigate(['']);
   }
 
-  openLogin() {
-    // this.funcs.openLogin(); //TODO: login
-  }
-
   /** navigate to a certain page */
   goTo(link: any) {
     if (this.isLoggedIn()) {
       this.router.navigate(link);
     } else 
-    console.log("fix1")
-    // this.funcs.openLogin(); // TODO: login
-  }
-
-  /** Links that do not require login to navigate to */
-  goToSafely(link: any) {
-    this.router.navigate(link);
-    // this.funcs.closeLogin(); //TODO: login
+      this.router.navigate(['login'])
   }
 }

@@ -1,6 +1,6 @@
 <c-navbar colorScheme="light" expand="md" class="nvip-header">
   <c-container fluid style="justify-content: left">
-    <a cNavbarBrand (click)="goToSafely([''])" class="nvip-logo">
+    <a cNavbarBrand routerLink="" class="nvip-logo">
       <img src="assets/images/nvip-simple-logo.jpg" alt="NVIP" />
     </a>
     <div class="collapse-button">
@@ -14,7 +14,7 @@
       >
         <!-- <div id="userView"> -->
         <c-navbar-nav class="me-auto mb-2 mb-lg-0" style="width: 100%">
-          <c-nav-item class="nvip-header-link" (click)="goToSafely(['about'])">
+          <c-nav-item class="nvip-header-link" routerLink="about">
             <a cNavLink>About NVIP</a>
           </c-nav-item>
           <c-nav-item class="nvip-header-link" (click)="goTo(['recent'])">

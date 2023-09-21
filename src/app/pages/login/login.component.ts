@@ -88,7 +88,6 @@ export class LoginComponent {
      */
     incorrectLogin(){
         var incorrectMessage = document.getElementById('loginMessage') as HTMLDivElement;
-
         incorrectMessage.style.display = 'block';
     }
 

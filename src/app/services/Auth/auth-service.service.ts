@@ -24,6 +24,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../Api/api-service.service';
 import { CookieService } from '../Cookie/cookie.service';
+import { Router } from '@angular/router';
 
 /* Related Interfaces */
 
@@ -55,7 +56,7 @@ export class AuthService {
    * @param api access login endpoints
    * @param cookieService access browser cookie
    */
-  constructor(private api: ApiService, private cookieService: CookieService) {}
+  constructor(private api: ApiService, private cookieService: CookieService, private router: Router) {}
 
   /** establish a session on a successful user login */
   onLogin(credentials: AuthCredentials) {
@@ -76,7 +77,7 @@ export class AuthService {
             expirationDate: response.expirationDate
           }
           this.cookieService.put('nvip_user', session)
-          // this.funcs.closeLogin(); //TODO: login redirect to page they were on
+          this.router.navigate(['/']); //TODO: login redirect to page user was previously on
         },
         error: (e) => {
           // this.funcs.incorrectLogin(); // TODO: login HANDLE
