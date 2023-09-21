@@ -32,8 +32,6 @@ import { faTimes, faKey, faLock } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
-
     /** Font Awesome Icons */
     faTimes = faTimes;
     faKey = faKey;
@@ -44,6 +42,7 @@ export class LoginComponent {
         username: '',
         password: '',
     };
+    registerSelected = false;
 
     /**
      * login panel constructor
@@ -62,7 +61,12 @@ export class LoginComponent {
 
     /** handle close login */
     clearListener() {
-        // this.funcs.closeLogin(); //TODO: login
+        this.registerSelected = false;
+    }
+
+    /** handle register button click */
+    registerListener() {
+        this.registerSelected = true;
     }
     
     /**

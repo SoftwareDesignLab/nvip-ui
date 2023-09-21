@@ -1,5 +1,5 @@
 <div id="nvipContent" class="nvip-content-container col-12">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" [hidden]="registerSelected">
         <div id="loginPanel" class="login-border">
             <div class="login-form-header col-11">
                 <p class="login-header">
@@ -62,7 +62,7 @@
                     <a style="margin-left: 8em" routerLink="createaccount">
                         <button
                             class="login-submit-button btn btn-danger"
-                            (click)="clearListener()"
+                            (click)="registerListener()"
                         >
                             Register
                         </button>
@@ -71,4 +71,5 @@
             </form>
         </div>
     </div>
+    <app-create-account (cancel)="clearListener()" [hidden]="!registerSelected" />
 </div>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faKey, faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/Auth/auth-service.service';
@@ -48,6 +48,8 @@ export class CreateAccountComponent {
     email: ''
   }
 
+  @Output() cancel = new EventEmitter<{ registerSelected: boolean }>;
+
   /**
    * create account constructor
    * @param authService access create account endpoint
@@ -68,6 +70,11 @@ export class CreateAccountComponent {
     var formSpacing = document.getElementById('regForm') as HTMLDivElement;
     passwordError.style.display = 'block';
     formSpacing.style.marginTop = "6em";
+  }
+
+  /** handle close create account */
+  clearListener() {
+    this.cancel.emit({ registerSelected: false });
   }
 
 }

@@ -59,7 +59,6 @@ export class AuthService {
 
   /** establish a session on a successful user login */
   onLogin(credentials: AuthCredentials) {
-
     this.api
       .login({
         userName: credentials.userName,

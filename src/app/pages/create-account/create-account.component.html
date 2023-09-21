@@ -7,6 +7,13 @@
     <div class="login-form-header col-11" style="margin-left: 0.5em">
       <p>
         Create NVIP Account
+        <fa-icon
+          [icon]="faTimes"
+          aria-hidden="true"
+          [ngStyle]="{ float: 'right' }"
+          (click)="clearListener()"
+          style="cursor: pointer;"
+          ></fa-icon>
         <a href="#\login" style="color: black">
         </a>
       </p>
