@@ -51,22 +51,16 @@
     right: 25px;
     font-size: 36px;
   }
-  
-  .login-panel {
-      opacity: 1;
-      display: block;
-      z-index: 2;
-      border: 2px solid #d3d3d3;
-      border-radius: 25px;
-      background-color: #ffffff;
-      margin-top: 6.5em;
-      max-width: calc(35em + 10em);
-      min-height: 10em;
-      padding-bottom: 1em;
-      width: 100%;
-      height: 325px;
-      position:absolute;
-      /*transition: .2s ease-in;*/
+
+  .login-border {
+    border: 2px solid #d3d3d3;
+    border-radius: 25px;
+    background-color: #ffffff;
+    margin-top: 6.5em;
+    max-width: calc(35em + 10em);
+    min-height: 10em;
+    padding-bottom: 1em;
+    width: 100%;
   }
   
   .login-form-header {
@@ -92,13 +86,6 @@
   }
   
   /** Login Styles  */
-  
-  .nvip-login-container {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      filter: blur(100px);
-  }
   
   .nvip-login-form {
       margin-top: 4em;
