@@ -117,9 +117,9 @@ export class RecentComponent implements OnInit {
   }
 
   /** helper to determine whether a show more or show less button is disabled */
-  isDisabled(isMore: boolean, panelIndex: number, vulnMap: VulnMap) {
+  isDisabled(isMore: boolean, panelIndex: number, date: string) {
     if (isMore)
-      return this.dailyVulnLimit[panelIndex] >= vulnMap.cve_list.length;
+      return this.dailyVulnLimit[panelIndex] >= this.getCount(date);
     else return this.dailyVulnLimit[panelIndex] <= this.vulnLimitIncr;
   }
 
@@ -132,11 +132,13 @@ export class RecentComponent implements OnInit {
   }
 
   /** trigger API call to show more recent vulns under that day to show */
-  showMore(panelIndex: number, date: String) {
+  showMore(panelIndex: number, date: string) {
     const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
     const totalVulns = this.dailyVulns[indexToUpdate].cve_list.length
-    if (this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr + 5 > totalVulns)
-      this.vulnService.getByDateAndPage(this.unformatDate(date), (totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
+    // make sure this total vuln count is enough too
+    const vulnCount = this.getCount(date)
+    if (totalVulns < this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr && totalVulns !== vulnCount)
+      this.vulnService.getByDateAndPage(this.unformatDate(date), Math.floor(totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
         // push res to VulnMap corresponding to date String
         let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
         thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
