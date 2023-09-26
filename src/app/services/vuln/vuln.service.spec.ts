@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 import { TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { VulnService } from './vuln.service';
 
 describe('VulnService', () => {
   let service: VulnService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+    });
     service = TestBed.inject(VulnService);
   });
 

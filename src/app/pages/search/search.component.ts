@@ -28,10 +28,9 @@ import { faSpinner, faAngleDoubleLeft, faAngleDoubleRight, faAngleDown, faAngleR
 import { ApiService } from 'src/app/services/Api/api-service.service';
 import { Session } from 'src/app/services/Auth/auth-service.service';
 import { CookieService } from 'src/app/services/Cookie/cookie.service';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
 import { SearchResultService } from 'src/app/services/SearchResult/search-result.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
-import { SearchCriteria, VdoHash } from 'src/app/models/search-criteria.model';
+import { SearchCriteria } from 'src/app/models/search-criteria.model';
 
 /** Search Page */
 @Component({
@@ -47,8 +46,8 @@ export class SearchComponent implements OnInit {
   faAngleRight = faAngleRight;
   faAngleDown = faAngleDown;
   /** Hold state of icon rotation, rotated if a dropdown is opened */
-  rotationAmountVDO = 0;
-  rotationAmountCVSS = 0;
+  rotationAmountVDO = 90;
+  rotationAmountCVSS = 90;
   /** Hold state for currently active dropdown, collapse all others */
   currentSelected: number = -1;
   search = {} as SearchCriteria;
@@ -69,11 +68,14 @@ export class SearchComponent implements OnInit {
   vdoNounGroupLabels = [] as Array<any>;
   vdoEntityLabels = {} as Record<string, Array<any>>;
 
+  /** Whether or not we see the CVSS or VDO dropdowns */
+  toggledDropCVSS = false;
+  toggledDropVDO = false;
+
   constructor(
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
-    private funcs: FuncsService,
     private searchResService: SearchResultService
   ) {}
 
@@ -112,41 +114,15 @@ export class SearchComponent implements OnInit {
       searchFormBtn.disabled = false;
     }
   }
+  
+  toggleCVSSDrop() { 
+    this.toggledDropCVSS = !this.toggledDropCVSS;
+    this.rotationAmountCVSS = this.toggledDropCVSS ? 0 : 90;
+  }
 
-  //TODO: can probably make this more intuitive - current copy from old UI
-  toggleContent($event: any, drop: string) {
-    // If the triggering element is a form checkbox, do not toggle.
-    if ($event.srcElement.classList.contains('nvip-form-dropdown-checkbox')) {
-      return;
-    }
-
-    var formDropdown = this.funcs.getAncestor(
-      $event.srcElement as HTMLElement,
-      'nvip-form-dropdown-field'
-    );
-    var formContent = this.funcs.getSiblingByClassName(
-      formDropdown as HTMLElement,
-      'nvip-form-dropdown-content'
-    );
-    var caretIcon = formDropdown!.getElementsByClassName(
-      'nvip-form-dropdown-caret'
-    )[0];
-
-    if (formContent!.style.display == 'flex') {
-      if (drop === 'VDO') this.rotationAmountVDO = 90;
-      else if (drop === 'CVSS') this.rotationAmountCVSS = 90;
-      formDropdown!.classList.remove('dropdown-opened');
-      formContent!.style.display = 'none';
-      caretIcon.classList.add('fa-angle-left');
-      caretIcon.classList.remove('fa-angle-down');
-    } else {
-      if (drop === 'VDO') this.rotationAmountVDO = 0;
-      else if (drop === 'CVSS') this.rotationAmountCVSS = 0;
-      formDropdown!.classList.add('dropdown-opened');
-      formContent!.style.display = 'flex';
-      caretIcon.classList.remove('fa-angle-left');
-      caretIcon.classList.add('fa-angle-down');
-    }
+  toggleVDODrop() {
+    this.toggledDropVDO = !this.toggledDropVDO;
+    this.rotationAmountVDO = this.toggledDropVDO ? 0 : 90;
   }
 
   /** driver function for calling searchServlet, loading,

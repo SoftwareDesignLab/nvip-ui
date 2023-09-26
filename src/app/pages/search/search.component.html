@@ -49,7 +49,7 @@
                     <input type="text" name="product" id="product" [(ngModel)]="search.product" />
                 </div>
             </div>
-            <div class="nvip-form-dropdown-field col-12 dropdown-opened" (click)="toggleContent($event, 'CVSS')">
+            <div class="nvip-form-dropdown-field col-12 {{toggledDropCVSS ? 'dropdown-opened' : ''}}" (click)="toggleCVSSDrop()">
                 <div class="nvip-form-dropdown-left col-11">
                     <label>CVSS Scores</label>
                 </div>
@@ -57,7 +57,7 @@
                     <fa-icon [icon]="faAngleDown" transform="rotate-{{rotationAmountCVSS}}" class="nvip-form-dropdown-caret" aria-hidden="true"></fa-icon>
                 </div>
             </div>
-            <div class="nvip-form-dropdown-content col-11" style="display: flex;">
+            <div class="nvip-form-dropdown-content col-11" style="display: flex;" *ngIf="toggledDropCVSS">
                 <div *ngFor="let cvssScore of cvssScores" class="nvip-form-field col-4">
                     <div class="nvip-form-field-block col-11">
                         <label for="{{cvssScore}}">{{cvssScore}}</label>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <div class="nvip-form-dropdown-field col-12 dropdown-opened" (click)="toggleContent($event, 'VDO')">
+            <div class="nvip-form-dropdown-field col-12 {{toggledDropVDO ? 'dropdown-opened' : ''}}" (click)="toggleVDODrop()">
                 <div class="nvip-form-dropdown-left col-11">
                     <label>VDO</label>
                 </div>
@@ -73,7 +73,7 @@
                     <fa-icon [icon]="faAngleDown" transform="rotate-{{rotationAmountVDO}}" class="nvip-form-dropdown-caret" aria-hidden="true"></fa-icon>
                 </div>
             </div>
-            <div class="nvip-form-dropdown-content col-11" style="display: flex;">
+            <div class="nvip-form-dropdown-content col-11" style="display: flex;" *ngIf="toggledDropVDO">
                 <div class="nvip-form-dropdown-ctn col-4" *ngFor="let vdoNounGroupLabel of vdoNounGroupLabels">
                     <search-dropdown 
                         [label]="vdoNounGroupLabel"
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <!-- FORM PARAMETER FOR IF THE VULNERABILITY IS IN MITRE OR NVD, STILL IN WORKS  -->
-            <!--<div class="nvip-form-dropdown-field col-12" style="border-bottom-width: 2px;" ng-click="toggleContent($event)">
+            <!--<div class="nvip-form-dropdown-field col-12" style="border-bottom-width: 2px;">
                 <div class="nvip-form-dropdown-left col-11">
                     <label>Vulnerability Sites</label>
                 </div>
@@ -100,7 +100,7 @@
                     </div>
                 </div>
             </div>-->				
-             <div class="nvip-form-dropdown-field col-12" style="border-bottom-width: 2px;" ng-click="toggleContent($event)">
+             <div class="nvip-form-dropdown-field col-12" style="border-bottom-width: 2px;">
             
             </div>
             <div class="nvip-form-btn-ctn col-12">

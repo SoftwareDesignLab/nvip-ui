@@ -74,12 +74,4 @@ export class NvipChartComponent implements OnInit, OnDestroy {
     this.loaded.emit({ loaded: true })
   }
 
-  onSelect(data: unknown): void {
-  }
-
-  onActivate(data: unknown): void {
-  }
-
-  onDeactivate(data: unknown): void {
-  }
 }

@@ -42,7 +42,7 @@ import { VulnerabilityComponent } from './pages/vulnerability/vulnerability.comp
 import { DailyVulnDropdownComponent } from './components/daily-vuln-dropdown/daily-vuln-dropdown.component';
 import { ApiService } from './services/Api/api-service.service';
 import { AuthService } from './services/Auth/auth-service.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NvipChartComponent } from './components/nvip-chart/nvip-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -58,7 +58,8 @@ import {
   SharedModule,
   TableModule,
   UtilitiesModule,
-  BadgeModule
+  BadgeModule,
+  ButtonModule 
 } from '@coreui/angular';
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import {
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
+    NgxChartsModule,
     FormsModule,
     NgxChartsModule,
     BrowserAnimationsModule,
@@ -97,10 +99,15 @@ import {
     SharedModule,
     TableModule,
     UtilitiesModule,
-    BadgeModule
+    BadgeModule,
+    ButtonModule
   ],
-  providers: [ApiService, AuthService],
+  providers: [ApiService, AuthService, HttpClientModule],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIcons();
+  }
+}

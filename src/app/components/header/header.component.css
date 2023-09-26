@@ -77,10 +77,6 @@
   font-size: 16.8px;
 }
 
-.collapse-button {
-  /* margin-left: (100% - var(--nvip-logo-width) - var(--nvip-logo-margin-width)); */
-}
-
 .nvip-header-link:hover {
   background-color: #4b7699;
   color: #ffffff !important;
