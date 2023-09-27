@@ -31,7 +31,10 @@ jobs:
           npm install -g @angular/cli
           npm install
           ng build angular-ui --configuration=production
-
+      
+      - name: Run Tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+          
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}
         run: |

@@ -23,8 +23,10 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NvipChartComponent } from './nvip-chart.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 describe('NvipChartComponent', () => {
   let component: NvipChartComponent;
@@ -32,6 +34,7 @@ describe('NvipChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, NgxChartsModule, BrowserAnimationsModule],
       declarations: [ NvipChartComponent ]
     })
     .compileComponents();

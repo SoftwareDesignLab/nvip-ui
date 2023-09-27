@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SearchDropdownComponent } from './search-dropdown.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('SearchDropdownComponent', () => {
   let component: SearchDropdownComponent;
@@ -31,6 +32,7 @@ describe('SearchDropdownComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, FontAwesomeModule],
       declarations: [ SearchDropdownComponent ]
     })
     .compileComponents();

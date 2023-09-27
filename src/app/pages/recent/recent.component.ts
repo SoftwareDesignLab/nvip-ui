@@ -106,9 +106,8 @@ export class RecentComponent implements OnInit {
 
   /** convert date back to YYYY-MM-DD to be passed into dailyPage call */
   unformatDate(dateString: String) {
-    const inputFormat = 'ddd MMM DD YYYY';
     // Split the date string into its components
-    const [weekday, month, day, year] = dateString.split(' ');
+    const [, month, day, year] = dateString.split(' ');
     // Convert the month string to a numerical representation (0-11)
     const monthIndex = new Date(`${month} 1, 2000`).getMonth();
     // Create a new Date object with the components
