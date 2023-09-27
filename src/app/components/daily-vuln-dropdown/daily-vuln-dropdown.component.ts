@@ -103,9 +103,7 @@ export class DailyVulnDropdownComponent implements OnChanges {
    * @returns true (green) or false (red)
    */
   isFixed() {
-    if (this.vuln.fixDate !== "N/A")
-      return true;
-    return false;
+    return this.vuln.fixes.length > 0;
   }
 
   /** get VDO list based on a given noun group constant */
