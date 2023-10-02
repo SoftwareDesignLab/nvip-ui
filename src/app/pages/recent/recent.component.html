@@ -31,8 +31,7 @@
       <div class="nvip-daily-cve-panel-header col-8">
         <button
           class="nvip-button nvip-prev-day"
-          (click)="incrementDailyVulnDay(-1)"
-          [disabled]="dailyVulnIndex == 0"
+          (click)="incrementDailyVulnDay(1)"
           aria-label="Previous Day"
         >
           <div class="nvip-arrow-left"></div>
@@ -45,8 +44,8 @@
         </div>
         <button
           class="nvip-button nvip-next-day"
-          (click)="incrementDailyVulnDay(1)"
-          [disabled]="dailyVulnIndex == dailyVulns.length - 1"
+          (click)="incrementDailyVulnDay(-1)"
+          [disabled]="vulnMap.date == today"
           aria-label="Next Day"
         >
           <div class="nvip-arrow-right"></div>
@@ -69,7 +68,7 @@
               [index]="vulnIndex"
               [currentToggle]="currentSelected"
               (selected)="setCurrentSelected($event)"
-              *ngIf="vulnIndex < dailyVulnLimit[panelIndex]"
+              *ngIf="vulnIndex < vulnsDisplayed"
             ></daily-vuln-dropdown>
           </div>
         </div>
@@ -77,16 +76,16 @@
           <button
             class="nvip-button nvip-show-more"
             type="button"
-            (click)="showMore(panelIndex, vulnMap.date)"
-            [disabled]="isDisabled(true, panelIndex, vulnMap.date)"
+            (click)="showMore()"
+            [disabled]="isDisabled(true, vulnMap.date)"
           >
             <span>Show More</span>
           </button>
           <button
             class="nvip-button nvip-show-less"
             type="button"
-            (click)="showLess(panelIndex)"
-            [disabled]="isDisabled(false, panelIndex, vulnMap.date)"
+            (click)="showLess()"
+            [disabled]="isDisabled(false, vulnMap.date)"
           >
             <span>Show Less</span>
           </button>
