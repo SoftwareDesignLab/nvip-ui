@@ -80,24 +80,22 @@ export class ApiService {
 
   login(credentials: AuthCredentials) {
     //callback: ApiRequestObserver) {
-    const request = this.httpClient.get(
+    const request = this.httpClient.post(
       Routes.login,
-      this.injectGetParameters({ ...credentials })
+      { ...credentials }
     );
     // request.subscribe(callback)
     return request;
   }
 
+  //TODO: change to createUser
   createAccount(credentials: object, callback: ApiRequestObserver) {
     const body = JSON.stringify(credentials);
     this.httpClient
-      .post(Routes.login, body, {
+      .post(Routes.register, body, {
         headers: {
           'Content-Type': 'application/json',
-        },
-        params: {
-          createUser: true,
-        },
+        }
       })
       .subscribe(callback);
   }
@@ -185,6 +183,10 @@ export class ApiService {
         dateRange: dateRange
       })
     );
+  }
+
+  private injectPostBody(body: object) {
+    return { ...this.POST_OPTIONS, body: body };
   }
 
   private injectGetParameters(params: HttpRequestParams) {

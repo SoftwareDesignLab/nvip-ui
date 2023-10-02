@@ -55,7 +55,7 @@ export class LoginComponent {
     login(f: NgForm) {
         this.authService.onLogin({
         userName: f.value.username,
-        passwordHash: f.value.password,
+        password: f.value.password,
         });
     }
 

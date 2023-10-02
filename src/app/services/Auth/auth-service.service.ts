@@ -31,7 +31,7 @@ import { Router } from '@angular/router';
 /** user credentials from login form */
 export interface AuthCredentials {
   userName: string;
-  passwordHash: string;
+  password: string;
 }
 
 /** User session - containing valuable information on who's logged in
@@ -63,7 +63,7 @@ export class AuthService {
     this.api
       .login({
         userName: credentials.userName,
-        passwordHash: credentials.passwordHash,
+        password: credentials.password,
       })
       .subscribe({
         next: (res) => {
