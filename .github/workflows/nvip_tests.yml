@@ -6,7 +6,6 @@ on: [push]
 
 env:
   AWS_REGION: 'us-east-1'
-  S3_BUCKET_NAME_UI: 'www.cve.live'
   ANGULAR_CLI_VERSION: '15.1.0'
 
 jobs:
@@ -53,7 +52,7 @@ jobs:
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}
         run: |
-          aws s3 sync ./dist/angular-ui s3://${{ env.S3_BUCKET_NAME }}
+          aws s3 sync ./dist/angular-ui s3://${{ vars.S3_BUCKET_NAME }}
 
   # Deploy crawler component project to container registry
   production-deploy:
@@ -82,4 +81,4 @@ jobs:
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}
         run: |
-          aws s3 sync ./dist/angular-ui s3://${{ env.S3_BUCKET_NAME }}
+          aws s3 sync ./dist/angular-ui s3://${{ vars.S3_BUCKET_NAME }}
