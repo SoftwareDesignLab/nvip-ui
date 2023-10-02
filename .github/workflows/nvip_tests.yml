@@ -34,6 +34,11 @@ jobs:
       
       - name: Run Tests
         run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Deploy to Staging S3
+        if: ${{ success() && github.ref == 'refs/heads/dev' }}
+        run: |
+          aws s3 sync ./dist/angular-ui s3://www-staging.cve.live
           
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}
