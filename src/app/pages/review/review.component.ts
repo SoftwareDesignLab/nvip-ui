@@ -157,7 +157,9 @@ export class ReviewComponent {
       this.update.vdos.push(vdo)
     }
     for(let prod of this.vuln.products){
+      console.log(prod)
       this.update.affprods.push(prod)
+
     }
   }
 
