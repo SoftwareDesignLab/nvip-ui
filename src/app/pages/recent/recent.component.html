@@ -37,7 +37,7 @@
           <div class="nvip-arrow-left"></div>
         </button>
         <div class="daily-cve-date col-12">
-          <p>{{ vulnMap.date }}</p>
+          <p>{{ formatDate(vulnMap.date) }}</p>
         </div>
         <div class="daily-cve-counts col-12">
           <p>{{ getCount(vulnMap.date) }} CVEs identified</p>
@@ -45,7 +45,7 @@
         <button
           class="nvip-button nvip-next-day"
           (click)="incrementDailyVulnDay(-1)"
-          [disabled]="vulnMap.date == today"
+          [disabled]="isToday(vulnMap.date)"
           aria-label="Next Day"
         >
           <div class="nvip-arrow-right"></div>

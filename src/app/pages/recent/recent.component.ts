@@ -55,8 +55,6 @@ export class RecentComponent implements OnInit {
   currentSelected: number = -1;
   // show/hide loading spinner
   apiCallDone: boolean = false;
-  // compare against todays date for prev and next arrows
-  today = new Date().toDateString();
 
   /**
    * constructor
@@ -70,13 +68,18 @@ export class RecentComponent implements OnInit {
     this.getVulnsByDate(today.toDateString());
   }
 
+  isToday(date: string) {
+    return date === this.unformatDate(new Date().toDateString());
+  }
+
   getVulnsByDate(date: string) {
     this.apiCallDone = false;
+    // convert DateStrng to YYYY-MM-DD
+    date = this.unformatDate(date);
     this.vulnService.getByDate(date).subscribe((res: any) => {
       this.dailyVulns.push({ date: date, cve_list: res });
       this.apiCallDone = true;
     })
-    console.log("vuln map is now", this.dailyVulns)
   }
 
   getCount(date: string) {
@@ -110,7 +113,7 @@ export class RecentComponent implements OnInit {
   }
 
   prevDate(dateString: string) {
-    const date = new Date(dateString);
+    const date = new Date(this.formatDate(dateString));
     date.setDate(date.getDate() - 1);
     return date.toDateString();
   }

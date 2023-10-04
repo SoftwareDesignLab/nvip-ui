@@ -162,10 +162,7 @@ export class ApiService {
 
   vulnServGetByDate(date: string) {
     return this.httpClient.get(
-      Routes.vulnerability + '/vulnByDate',
-      this.injectGetParameters({
-        date: date
-      })
+      Routes.vulnerability + '/date/' + date
     );
   }
 
