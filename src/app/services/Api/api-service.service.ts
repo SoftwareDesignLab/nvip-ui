@@ -102,7 +102,7 @@ export class ApiService {
 
   countGraphs(callback: ApiRequestObserver) {
     this.httpClient
-      .get(Routes.main, this.injectGetParameters({ countGraphs: 'all' }))
+      .get(Routes.main, this.injectGetParameters({ countGraphs: 'all' }, ""))
       .subscribe(callback);
   }
 
@@ -111,7 +111,7 @@ export class ApiService {
     console.log("SEARCH REQUEST")
     console.log(searchRequest)
     return this.httpClient
-    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }))
+    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }, searchRequest.token))
   }
 
   reviewUpdate(id: string, updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
@@ -137,10 +137,10 @@ export class ApiService {
       .subscribe(callback);
   }
 
-  vulnServlet(daily: boolean, dateRange: number) {
+  vulnServlet(daily: boolean, dateRange: number, token: string) {
     return this.httpClient.get(
       Routes.vulnerability+"/daily",
-      this.injectGetParameters({ dateRange: dateRange })
+      this.injectGetParameters({ dateRange: dateRange }, token)
     );
   }
 
@@ -150,7 +150,7 @@ export class ApiService {
       this.injectGetParameters({
         token: token,
         username: username
-      })
+      }, token)
     );
   }
 
@@ -161,27 +161,28 @@ export class ApiService {
         searchInfo: true,
         token: token,
         username: username
-      })
+      }, token)
     );
   }
 
-  vulnServGetByDateAndPage(date: string, page: number, size: number) {
+  vulnServGetByDateAndPage(date: string, page: number, size: number, token: string) {
     return this.httpClient.get(
       Routes.vulnerability + '/dailyPage',
       this.injectGetParameters({
         date: date,
         pageNum: page,
         pageSize: size
-      })
+      }, token)
     );
   }
 
-  vulnServGetRecentCounts(dateRange: number) {
+  vulnServGetRecentCounts(dateRange: number, token: string) {
     return this.httpClient.get(
       Routes.vulnerability + '/dailyPageCount',
       this.injectGetParameters({
         dateRange: dateRange
-      })
+      }, token),
+      
     );
   }
 
@@ -189,10 +190,20 @@ export class ApiService {
     return { ...this.POST_OPTIONS, body: body };
   }
 
-  private injectGetParameters(params: HttpRequestParams) {
-    return { ...this.GET_OPTIONS, params: params };
+  private injectGetParameters(params: HttpRequestParams, token: string) {
+    return { 
+      ...this.GET_OPTIONS, 
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      },
+      params: params };
   }
-  private injectPostParameters(params: HttpRequestParams) {
-    return { ...this.POST_OPTIONS, params: params };
+  private injectPostParameters(params: HttpRequestParams, token: string) {
+    return { 
+      ...this.POST_OPTIONS, 
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      },
+      params: params };
   }
 }

@@ -23,6 +23,8 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Session } from 'src/app/services/Auth/auth-service.service';
+import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 /** Recent Vulnerabilities page */
 
@@ -62,16 +64,18 @@ export class RecentComponent implements OnInit {
   dailyCounts: VulnCountMaps = [];
   currentSelected: number = -1;
   apiCallDone: boolean = false;
+  session = {} as Session;
 
   /**
    * constructor
    * @param vulnService to access vulnerabilityServlet endpoints
    */
-  constructor(private vulnService: VulnService) {}
+  constructor(private vulnService: VulnService, private cookieService: CookieService) { }
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
-    this.vulnService.onRecentInit().subscribe((res: any) => {
+    this.session = this.cookieService.get('nvip_user') as Session;
+    this.vulnService.onRecentInit(this.session.token).subscribe((res: any) => {
       console.log("onRecentInit result")
       console.log(res)
       this.apiCallDone = true;
@@ -83,7 +87,7 @@ export class RecentComponent implements OnInit {
         this.dailyVulnLimit.push(this.vulnLimitIncr);
       })
     });
-    this.vulnService.getRecentCounts().subscribe((res: any) => {
+    this.vulnService.getRecentCounts(this.session.token).subscribe((res: any) => {
       console.log(res);
       res.forEach((element: any) => {
         this.dailyCounts.push({
@@ -139,7 +143,7 @@ export class RecentComponent implements OnInit {
     const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
     const totalVulns = this.dailyVulns[indexToUpdate].cve_list.length
     if (this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr + 5 > totalVulns)
-      this.vulnService.getByDateAndPage(this.unformatDate(date), (totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
+      this.vulnService.getByDateAndPage(this.unformatDate(date), (totalVulns / this.vulnLimitIncr), this.vulnLimitIncr, this.session.token).subscribe((res: any) => {
         // push res to VulnMap corresponding to date String
         let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
         thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]

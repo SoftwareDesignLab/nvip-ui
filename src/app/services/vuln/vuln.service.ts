@@ -29,10 +29,11 @@ import { ApiService } from '../Api/api-service.service';
 })
 export class VulnService {
   
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService) { 
+  }
 
-  onRecentInit() {
-    return this.api.vulnServlet(true, 10)
+  onRecentInit(token: string) {
+    return this.api.vulnServlet(true, 10, token);
   }
 
   getByID(id: string, username: string, token: string) {
@@ -43,12 +44,12 @@ export class VulnService {
     return this.api.searchInfo(username, token);
   }
 
-  getByDateAndPage(date: string, page: number, size: number) {
-    return this.api.vulnServGetByDateAndPage(date, page, size);
+  getByDateAndPage(date: string, page: number, size: number, token: string) {
+    return this.api.vulnServGetByDateAndPage(date, page, size, token);
   }
 
-  getRecentCounts() {
-    return this.api.vulnServGetRecentCounts(10);
+  getRecentCounts(token: string) {
+    return this.api.vulnServGetRecentCounts(10, token);
   }
 
 
