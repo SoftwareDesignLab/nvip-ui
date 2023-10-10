@@ -98,6 +98,14 @@ export class AuthService {
     return  cookie !== undefined && cookie !== null && Object.keys(cookie).length > 0 ;
   }
 
+  canActivate() {
+    if (this.isAuthenticated()) {
+      return true;
+    }
+    this.router.navigate(['login']);
+    return false;
+}
+
   /** access browser cookie of logged in user */
   get() {
     return this.cookieService.get('nvip_user');

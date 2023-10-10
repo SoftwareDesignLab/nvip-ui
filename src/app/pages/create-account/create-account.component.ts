@@ -73,8 +73,6 @@ export class CreateAccountComponent {
           alert("Your account is Created!");
         },
         error: (e) => {
-          console.log("error: ", e.error.message)
-          console.log(e)
           this.invalidCreateAccount = e.error.message;
         },
       });

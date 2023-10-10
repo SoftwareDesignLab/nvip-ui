@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './pages/about/about.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
@@ -33,17 +33,18 @@ import { ReviewComponent } from './pages/review/review.component';
 import { SearchComponent } from './pages/search/search.component';
 import { VulnerabilityComponent } from './pages/vulnerability/vulnerability.component';
 import { LoginComponent } from './pages/login/login.component';
+import { AuthService } from './services/Auth/auth-service.service';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'review/:id', component: ReviewComponent },
-  { path: 'recent', component: RecentComponent },
-  { path: 'daily', component: DailyComponent },
+  { path: 'review/:id', component: ReviewComponent, canActivate: [() => inject(AuthService).canActivate()] },
+  { path: 'recent', component: RecentComponent, canActivate: [() => inject(AuthService).canActivate()] },
+  { path: 'daily', component: DailyComponent, canActivate: [() => inject(AuthService).canActivate()] },
   { path: 'privacy', component: PrivacyComponent },
-  { path: 'search', component: SearchComponent },
-  { path: 'vulnerability/:id', component: VulnerabilityComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'search', component: SearchComponent, canActivate: [() => inject(AuthService).canActivate()] },
+  { path: 'vulnerability/:id', component: VulnerabilityComponent, canActivate: [() => inject(AuthService).canActivate()] },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
