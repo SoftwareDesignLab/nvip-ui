@@ -127,6 +127,7 @@ export class ApiService {
         {
           headers: {
             'Content-Type': 'application/json',
+            'Authorization' : 'Bearer ' + updateRequest.token
           },
           params: params
         }
