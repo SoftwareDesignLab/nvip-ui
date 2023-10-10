@@ -43,6 +43,7 @@ export interface Session {
   userName: string;
   roleId: number;
   firstName: string;
+  lastName: string;
   token: string;
   expirationDate: object;
 }
@@ -77,6 +78,7 @@ export class AuthService {
             userName: response.userName,
             roleId: response.roleId,
             firstName: response.firstName,
+            lastName: response.lastName,
             token: response.token,
             expirationDate: response.expirationDate
           }
