@@ -41,7 +41,7 @@
           <p>{{ vulnMap.date }}</p>
         </div>
         <div class="daily-cve-counts col-12">
-          <p>{{ vulnMap.cve_list.length }} CVEs identified</p>
+          <p>{{ getCount(vulnMap.date) }} CVEs identified</p>
         </div>
         <button
           class="nvip-button nvip-next-day"
@@ -78,7 +78,7 @@
             class="nvip-button nvip-show-more"
             type="button"
             (click)="showMore(panelIndex, vulnMap.date)"
-            [disabled]="isDisabled(true, panelIndex, vulnMap)"
+            [disabled]="isDisabled(true, panelIndex, vulnMap.date)"
           >
             <span>Show More</span>
           </button>
@@ -86,7 +86,7 @@
             class="nvip-button nvip-show-less"
             type="button"
             (click)="showLess(panelIndex)"
-            [disabled]="isDisabled(false, panelIndex, vulnMap)"
+            [disabled]="isDisabled(false, panelIndex, vulnMap.date)"
           >
             <span>Show Less</span>
           </button>
