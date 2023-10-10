@@ -43,7 +43,6 @@ const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'search', component: SearchComponent },
   { path: 'vulnerability/:id', component: VulnerabilityComponent },
-  { path: 'createaccount', component: CreateAccountComponent },
   { path: 'login', component: LoginComponent }
 ];
 

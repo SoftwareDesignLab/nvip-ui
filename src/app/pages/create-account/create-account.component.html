@@ -17,6 +17,7 @@
         <a href="#\login" style="color: black">
         </a>
       </p>
+      <p class="invalid-message" [hidden]="!invalidCreateAccount">{{invalidCreateAccount}}</p>
       <p id="registrationMessage" class="registration-message">
         Passwords don't match
       </p>

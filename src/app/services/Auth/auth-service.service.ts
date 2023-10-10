@@ -26,6 +26,7 @@ import { ApiService } from '../Api/api-service.service';
 import { CookieService } from '../Cookie/cookie.service';
 import { Router } from '@angular/router';
 
+
 /* Related Interfaces */
 
 /** user credentials from login form */
@@ -51,6 +52,9 @@ export interface Session {
 })
 export class AuthService {
 
+  /** if we get error msg from logging in, store it here */
+  incorrectAuth = "";
+
   /**
    * Authentication service constructor
    * @param api access login endpoints
@@ -59,7 +63,7 @@ export class AuthService {
   constructor(private api: ApiService, private cookieService: CookieService, private router: Router) {}
 
   /** establish a session on a successful user login */
-  onLogin(credentials: AuthCredentials) {
+  onLogin(credentials: AuthCredentials, returnUrl: string) {
     this.api
       .login({
         userName: credentials.userName,
@@ -77,19 +81,15 @@ export class AuthService {
             expirationDate: response.expirationDate
           }
           this.cookieService.put('nvip_user', session)
-          this.router.navigate(['/']); //TODO: login redirect to page user was previously on
+          this.router.navigate([returnUrl]);
+          this.incorrectAuth = "";
         },
         error: (e) => {
-          // this.funcs.incorrectLogin(); // TODO: login HANDLE
-          console.log(e); return false
+          this.incorrectAuth = e.error.message;
+          return false;
         },
         complete: () => {return true},
       });
-  }
-
-  /** access login servlet endpoint to create user account */
-  createUser(credentials: object) {
-    this.api.createAccount(credentials, (res) => {alert("Your account is Created!")} );
   }
 
   /** check for login by accessing browser cookie */

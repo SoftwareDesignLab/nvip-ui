@@ -52,11 +52,17 @@ export class LoginComponent {
     constructor(private authService: AuthService) {}
 
     /** access login endpoint from loginServlet */
-    login(f: NgForm) {
+    login(f: NgForm, ) {
+        this.dataLoading = true;
         this.authService.onLogin({
         userName: f.value.username,
         password: f.value.password,
-        });
+        }, "/");
+        this.dataLoading = false;
+    }
+
+    incorrectLoginListener() {
+        return this.authService.incorrectAuth;
     }
 
     /** handle close login */
@@ -67,28 +73,6 @@ export class LoginComponent {
     /** handle register button click */
     registerListener() {
         this.registerSelected = true;
-    }
-    
-    /**
-     * modifies CSS to hide login panel
-     */
-    closeLogin() {
-        var loginPanel = document.getElementById('loginPanel') as HTMLDivElement;
-        var nvipContent = document.getElementById('nvipContent') as HTMLDivElement;
-        var loginForm = document.getElementById('loginForm') as HTMLDivElement;
-
-        loginPanel.style.display = 'none';
-        loginPanel.style.opacity = '0';
-        loginForm.style.marginTop = '0';
-        nvipContent.style.filter = 'blur(0px)';
-    }
-
-    /**
-     * modifies CSS to add login failure message
-     */
-    incorrectLogin(){
-        var incorrectMessage = document.getElementById('loginMessage') as HTMLDivElement;
-        incorrectMessage.style.display = 'block';
     }
 
 }
