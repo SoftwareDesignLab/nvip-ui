@@ -40,8 +40,8 @@ export class VulnService {
     return this.api.searchInfo(username, token);
   }
 
-  getByDate(date: string) {
-    return this.api.vulnServGetByDate(date);
+  getByDate(date: string, token: string) {
+    return this.api.vulnServGetByDate(date, token);
   }
 
 

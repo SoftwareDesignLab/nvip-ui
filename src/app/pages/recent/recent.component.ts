@@ -67,6 +67,7 @@ export class RecentComponent implements OnInit {
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
+    this.session = this.cookieService.get('nvip_user');
     const today = new Date();
     this.getVulnsByDate(today.toDateString());
   }
@@ -79,7 +80,7 @@ export class RecentComponent implements OnInit {
     this.apiCallDone = false;
     // convert DateStrng to YYYY-MM-DD
     date = this.unformatDate(date);
-    this.vulnService.getByDate(date).subscribe((res: any) => {
+    this.vulnService.getByDate(date, this.session.token).subscribe((res: any) => {
       this.dailyVulns.push({ date: date, cve_list: res });
       this.apiCallDone = true;
     })
