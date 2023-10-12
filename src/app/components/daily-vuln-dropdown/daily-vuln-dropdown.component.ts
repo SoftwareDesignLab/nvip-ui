@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import {faAngleDown, faUserGear} from '@fortawesome/free-solid-svg-icons';
 import { Vulnerability, VDO } from 'src/app/models/vulnerability.model';
 /** Vulnerability dropdown component - holds CVE state in dropdown on review and search pages */
 @Component({
@@ -33,6 +33,7 @@ import { Vulnerability, VDO } from 'src/app/models/vulnerability.model';
 export class DailyVulnDropdownComponent implements OnChanges {
   /** FontAwesome Icons */
   faAngleDown = faAngleDown;
+  faUserGear = faUserGear;
   /** Styling variables */
   confidenceThreshold = 0.3;
   active: boolean = false;
@@ -48,6 +49,8 @@ export class DailyVulnDropdownComponent implements OnChanges {
     LOGICAL_IMPACT: 'Logical Impact',
     MITIGATION: 'Mitigation',
   };
+  /** additional variables **/
+  admin_reviewed: boolean = false;
 
   @Input('vuln') vuln: Vulnerability;
   @Input('index') index: number;
@@ -189,4 +192,5 @@ export class DailyVulnDropdownComponent implements OnChanges {
   vulnDescToggle($event: any) {
     this.showMoreDescription = !this.showMoreDescription;
   }
+
 }
