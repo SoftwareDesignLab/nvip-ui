@@ -23,7 +23,7 @@
  */
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,6 +62,7 @@ import {
   ButtonModule,
   TooltipModule
 } from '@coreui/angular';
+import { AuthInterceptor } from './services/Auth/app-http-interceptor.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -104,7 +105,13 @@ import {
     ButtonModule,
     TooltipModule
   ],
-  providers: [ApiService, AuthService, HttpClientModule],
+  providers: [
+    ApiService, 
+    AuthService, 
+    HttpClientModule,
+    // AuthInterceptor
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
