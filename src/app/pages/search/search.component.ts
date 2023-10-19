@@ -200,6 +200,7 @@ export class SearchComponent implements OnInit {
               this.toggleLoading();
               this.searchResults = [];
               this.filteredSearchResults = [];
+              this.handleRes([]);
               this.searchResService.setSearchResults([]);
 
               if (e.status == 401) {
