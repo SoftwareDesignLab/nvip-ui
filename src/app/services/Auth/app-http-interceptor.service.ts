@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
-  HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable, finalize, tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { AuthService } from './auth-service.service';
 
 
@@ -19,10 +18,11 @@ export class AuthInterceptor implements HttpInterceptor {
             tap({
             // Succeeds when there is a response; ignore other events
             next: (event) => {
-                console.log("Good response from server");
+                // console.log("Good response from server");
             },
             // Operation failed; error is an HttpErrorResponse
             error: (error) => {
+                // console.log("Bad response from server, status: " + error.status);
                 if (error.status == 401) {
                     // console.log("redirecting to login");
                     this.authService.logout();

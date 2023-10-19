@@ -109,7 +109,6 @@ import { AuthInterceptor } from './services/Auth/app-http-interceptor.service';
     ApiService, 
     AuthService, 
     HttpClientModule,
-    // AuthInterceptor
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
