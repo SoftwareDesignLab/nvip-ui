@@ -32,15 +32,8 @@ export interface VulnMap {
   cve_list: Array<any>;
 }
 
-export interface VulnCountMap {
-  date: string;
-  count: number;
-}
-
 /** Array of date-list vuln pages to navigate through */
 export interface VulnMaps extends Array<VulnMap> {}
-
-export interface VulnCountMaps extends Array<VulnCountMap> {}
 
 @Component({
   selector: 'nvip-recent',
@@ -51,16 +44,16 @@ export class RecentComponent implements OnInit {
   /** FontAwesome Icon */
   faSpinner = faSpinner;
 
-  /** Variables to hold state of which date we are on and
-   * how much we have increased/decreased a certain pages limit,
-   * and what vulns are on each page
-   */
-  dailyVulnLimit: Array<number> = [];
-  vulnLimitIncr: number = 5;
+  // track which day is currently rendered
   dailyVulnIndex: number = 0;
+  // store all the CVEs we have gathered so far organized by date
+  // this goes in reverse order Ex. [today, yesterday, ...]
   dailyVulns: VulnMaps = [];
-  dailyCounts: VulnCountMaps = [];
+  // store how many vulns are currently being displayed
+  vulnsDisplayed: number = 5;
+  // emitter for daily vuln dropdowns - close all other dropdowns when one is opened
   currentSelected: number = -1;
+  // show/hide loading spinner
   apiCallDone: boolean = false;
 
   /**
@@ -71,30 +64,27 @@ export class RecentComponent implements OnInit {
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
-    this.vulnService.onRecentInit().subscribe((res: any) => {
+    const today = new Date();
+    this.getVulnsByDate(today.toDateString());
+  }
+
+  isToday(date: string) {
+    return date === this.unformatDate(new Date().toDateString());
+  }
+
+  getVulnsByDate(date: string) {
+    this.apiCallDone = false;
+    // convert DateStrng to YYYY-MM-DD
+    date = this.unformatDate(date);
+    this.vulnService.getByDate(date).subscribe((res: any) => {
+      this.dailyVulns.push({ date: date, cve_list: res });
       this.apiCallDone = true;
-      Object.keys(res).forEach((key) => {
-        this.dailyVulns.push({
-          date: this.formatDate(key),
-          cve_list: res[key],
-        });
-        this.dailyVulnLimit.push(this.vulnLimitIncr);
-      })
-    });
-    this.vulnService.getRecentCounts().subscribe((res: any) => {
-      res.forEach((element: any) => {
-        this.dailyCounts.push({
-          date: this.formatDate(element.date),
-          count: element.count,
-        });
-      }
-      );
-    });
+    })
   }
 
   getCount(date: string) {
-    const idx = this.dailyCounts.findIndex(vuln => vuln.date === date);
-    return this.dailyCounts[idx].count;
+    const idx = this.dailyVulns.findIndex(vuln => vuln.date === date);
+    return this.dailyVulns[idx].cve_list.length;
   }
 
   /** format title date */
@@ -116,45 +106,35 @@ export class RecentComponent implements OnInit {
   }
 
   /** helper to determine whether a show more or show less button is disabled */
-  isDisabled(isMore: boolean, panelIndex: number, date: string) {
+  isDisabled(isMore: boolean, date: string) {
     if (isMore)
-      return this.dailyVulnLimit[panelIndex] >= this.getCount(date);
-    else return this.dailyVulnLimit[panelIndex] <= this.vulnLimitIncr;
+      return this.getCount(date) <= this.vulnsDisplayed;
+    else return this.getCount(date) > this.vulnsDisplayed || this.vulnsDisplayed === 5;
+  }
+
+  prevDate(dateString: string) {
+    const date = new Date(this.formatDate(dateString));
+    date.setDate(date.getDate() - 1);
+    return date.toDateString();
   }
 
   /** helper for arrows back and forth between recent dates */
   incrementDailyVulnDay(incr: number) {
-    if ( (this.dailyVulnIndex + incr < 0) || (this.dailyVulnIndex + incr >= this.dailyVulns.length) ) {
-      return;
-    }
     this.dailyVulnIndex = this.dailyVulnIndex += incr;
+    // if we do not have the vulns for this date yet, call by create date
+    if (this.dailyVulns.length === this.dailyVulnIndex) {
+      this.getVulnsByDate(this.prevDate(this.dailyVulns[this.dailyVulns.length - 1].date));
+    }
   }
 
-  /** trigger API call to show more recent vulns under that day to show */
-  showMore(panelIndex: number, date: string) {
-    const indexToUpdate = this.dailyVulns.findIndex(vuln => vuln.date === date);
-    const totalVulns = this.dailyVulns[indexToUpdate].cve_list.length
-    // make sure this total vuln count is enough too
-    const vulnCount = this.getCount(date)
-    if (totalVulns < this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr && totalVulns !== vulnCount)
-      this.vulnService.getByDateAndPage(this.unformatDate(date), Math.floor(totalVulns / this.vulnLimitIncr), this.vulnLimitIncr).subscribe((res: any) => {
-        // push res to VulnMap corresponding to date String
-        let thisVulnObj: VulnMap = this.dailyVulns[indexToUpdate]
-        thisVulnObj.cve_list = [...thisVulnObj.cve_list, ...res]
-        this.dailyVulns[indexToUpdate] = thisVulnObj
-      })
-    this.dailyVulnLimit[panelIndex] =
-      this.dailyVulnLimit[panelIndex] + this.vulnLimitIncr;
+  /** increase the number of vulns rendered for a given date */
+  showMore() {
+    this.vulnsDisplayed += 5;
   }
 
   /** trigger removal of last 5 vulns showing under that day */
-  showLess(panelIndex: number) {
-    const newLimit: number = this.dailyVulnLimit[panelIndex] - this.vulnLimitIncr;
-    if (newLimit < this.vulnLimitIncr) {
-      this.dailyVulnLimit[panelIndex] = this.vulnLimitIncr;
-    } else {
-      this.dailyVulnLimit[panelIndex] = newLimit;
-    }
+  showLess() {
+    this.vulnsDisplayed -= 5;
   }
 
   /** helper function for emitting collapsing of other dropdowns when a new one is selected */

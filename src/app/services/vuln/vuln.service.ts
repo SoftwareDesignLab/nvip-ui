@@ -31,10 +31,6 @@ export class VulnService {
   
   constructor(private api: ApiService) { }
 
-  onRecentInit() {
-    return this.api.vulnServlet(true, 10)
-  }
-
   getByID(id: string, username: string, token: string) {
     return this.api.vulnServGetByID(id, username, token);
   }
@@ -43,12 +39,8 @@ export class VulnService {
     return this.api.searchInfo(username, token);
   }
 
-  getByDateAndPage(date: string, page: number, size: number) {
-    return this.api.vulnServGetByDateAndPage(date, page, size);
-  }
-
-  getRecentCounts() {
-    return this.api.vulnServGetRecentCounts(10);
+  getByDate(date: string) {
+    return this.api.vulnServGetByDate(date);
   }
 
 
