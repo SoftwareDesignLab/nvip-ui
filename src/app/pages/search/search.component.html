@@ -36,7 +36,7 @@
                     <label for="startDate">Start Date</label>
                     <input [ngModel]="search.startDate | date:'yyyy-MM-dd'" (ngModelChange)="search.startDate = $event" type="date" name="startDate"/>
                     <!-- <span class="error" ng-show="myForm.input.$error.required">Required!</span> -->
-                </div>	
+                </div>
                 <div class="nvip-form-field col-6">
                     <label for="endDate">End Date</label>
                     <input [ngModel]="search.endDate | date:'yyyy-MM-dd'" (ngModelChange)="search.endDate = $event" type="date" name="startDate"/>
@@ -61,7 +61,7 @@
                 <div *ngFor="let cvssScore of cvssScores" class="nvip-form-field col-4">
                     <div class="nvip-form-field-block col-11">
                         <label for="{{cvssScore}}">{{cvssScore}}</label>
-                        <input type="checkbox" (change)="onCVSSChange($event, cvssScore)" />		
+                        <input type="checkbox" (change)="onCVSSChange($event, cvssScore)" />
                     </div>
                 </div>
             </div>
@@ -75,12 +75,12 @@
             </div>
             <div class="nvip-form-dropdown-content col-11" style="display: flex;" *ngIf="toggledDropVDO">
                 <div class="nvip-form-dropdown-ctn col-4" *ngFor="let vdoNounGroupLabel of vdoNounGroupLabels">
-                    <search-dropdown 
+                    <search-dropdown
                         [label]="vdoNounGroupLabel"
                         [entityLabels]="vdoEntityLabels[vdoNounGroupLabel]"
                         (selected)="updateSelectedLabels($event)">
                     </search-dropdown>
-                    
+
                 </div>
             </div>
             <!-- FORM PARAMETER FOR IF THE VULNERABILITY IS IN MITRE OR NVD, STILL IN WORKS  -->
@@ -96,12 +96,12 @@
                 <div ng-repeat="siteLabel in searchInfo.siteLabels" class="nvip-form-field col-4">
                     <div class="nvip-form-field-block col-11">
                         <label for="{{siteLabel}}">{{siteLabel}}</label>
-                        <input type="checkbox" ng-class="sites[$index]" checked/>		
+                        <input type="checkbox" ng-class="sites[$index]" checked/>
                     </div>
                 </div>
-            </div>-->				
+            </div>-->
              <div class="nvip-form-dropdown-field col-12" style="border-bottom-width: 2px;">
-            
+
             </div>
             <div class="nvip-form-btn-ctn col-12">
                 <button class="nvip-button nvip-form-btn col-3"><span>Search</span></button>
@@ -111,6 +111,9 @@
     <div class="nvip-search-result-ctn" [hidden]="showForm">
         <div class="nvip-search-top-ctn col-12">
         </div>
+      <input type="checkbox" id="reviewedFilter" name="reviewedFilter" value="reviewedOnly" (change)="updateReviewedCheckbox($event)">
+      <!--<script src="/app/pages/search/searchsearch.component.ts"></script>-->
+      <label for="reviewedFilter"> Show only reviewed results</label><br>
         <div class="nvip-search-page-ctn">
             <div class="nvip-search-result-count col-12">
                 <p>{{resultTotalCount}} records found</p>
@@ -142,7 +145,7 @@
             </div>
             <div class="nvip-search-result-page col-10">
                 <p class="nvip-cve-panel-empty" [hidden]="searchResults.length > 0">No CVEs identified</p>
-                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredSearchResults; let index = index;" [hidden]="searchResults.length == 0">
+                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredSearchResults; let index = index;" [hidden]="searchResults.length == 0" [hidden]="!vuln.reviewed && filterReviewed">
                     <daily-vuln-dropdown [vuln]="vuln" [index]="index" [currentToggle]="currentSelected" (selected)="setCurrentSelected($event)"></daily-vuln-dropdown>
                 </div>
             </div>

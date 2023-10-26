@@ -56,6 +56,7 @@ export class SearchComponent implements OnInit {
   searchSuccess: boolean = false;
   searchResults: Array<any> = [];
   filteredSearchResults: Array<any> = [];
+  reviewedSearchResults: Array<any> = []; /** for a change to implementation idea **/
   cvssScores = [];
   resultTotalCount = 0;
   pageRecord: Array<number> = [];
@@ -71,6 +72,11 @@ export class SearchComponent implements OnInit {
   /** Whether or not we see the CVSS or VDO dropdowns */
   toggledDropCVSS = false;
   toggledDropVDO = false;
+
+  /** boolean for if filter is used **/
+  filterReviewed:boolean = false;
+
+
 
   constructor(
     private vulnService: VulnService,
@@ -114,8 +120,8 @@ export class SearchComponent implements OnInit {
       searchFormBtn.disabled = false;
     }
   }
-  
-  toggleCVSSDrop() { 
+
+  toggleCVSSDrop() {
     this.toggledDropCVSS = !this.toggledDropCVSS;
     this.rotationAmountCVSS = this.toggledDropCVSS ? 0 : 90;
   }
@@ -417,4 +423,9 @@ export class SearchComponent implements OnInit {
       window.location.assign('/search');
     }
   }
+
+  updateReviewedCheckbox(event: any){
+    this.filterReviewed= event.target.checked;
+  }
+
 }
