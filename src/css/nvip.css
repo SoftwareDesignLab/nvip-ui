@@ -338,4 +338,6 @@ p {
 	height: 100%;
 }
 
-
+.tree-tooltip {
+	height: 15%;
+}

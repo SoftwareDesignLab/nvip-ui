@@ -7,7 +7,20 @@ var custOrient :any ='LR';
 export const TREE_OPTION = {
   tooltip: {
     trigger: 'item',
-    triggerOn: 'mousemove'
+    triggerOn: 'mousemove',
+    textStyle: {
+        height: 100,
+        width: 100,
+    },
+    confine: true,
+    className: 'tree-tooltip',
+    formatter: function (params: any) {
+        // console.log("PARAMS", params);
+        return [
+            '<span class="fs-mini me-2">Automatable:</span><b class="text-blue"> TEST'+'</b><hr size=1 style="margin: 3px 0">',
+            '<span class="fs-mini me-2">Technical Impact:</span><b class="text-blue"> TEST2' + '</b><br/>',
+           ].join('')
+    }
   },
   legend: {
     top: '2%',
