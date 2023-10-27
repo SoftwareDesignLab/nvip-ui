@@ -49,6 +49,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchDropdownComponent } from './components/search-dropdown/search-dropdown.component';
 import { GoogleChartComponent } from './components/google-chart/google-chart.component';
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
+import { SSVCTreeComponent } from './components/ssvc-tree/ssvc-tree.component';
 import {
   NavbarModule,
   CollapseModule,
@@ -62,6 +63,7 @@ import {
   ButtonModule,
   TooltipModule
 } from '@coreui/angular';
+import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +83,8 @@ import {
     NvipChartComponent,
     SearchDropdownComponent,
     GoogleChartComponent,
-    GoogleGaugeComponent
+    GoogleGaugeComponent,
+    SSVCTreeComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +105,10 @@ import {
     UtilitiesModule,
     BadgeModule,
     ButtonModule,
-    TooltipModule
+    TooltipModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    })
   ],
   providers: [ApiService, AuthService, HttpClientModule],
   bootstrap: [AppComponent],
