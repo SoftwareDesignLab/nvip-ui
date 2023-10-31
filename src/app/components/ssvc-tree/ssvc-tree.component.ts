@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { rootExploitation } from './ssvc-tree-nodes';
 
@@ -17,8 +17,9 @@ export const TREE_OPTION = {
     formatter: function (params: any) {
         // console.log("PARAMS", params);
         return [
-            '<span class="fs-mini me-2">Automatable:</span><b class="text-blue"> TEST'+'</b><hr size=1 style="margin: 3px 0">',
-            '<span class="fs-mini me-2">Technical Impact:</span><b class="text-blue"> TEST2' + '</b><br/>',
+            // '<span class="fs-mini me-2">Automatable:</span><b class="text-blue"> TEST'+'</b><hr size=1 style="margin: 3px 0">',
+            // '<span class="fs-mini me-2">Technical Impact:</span><b class="text-blue"> TEST2' + '</b><br/>',
+            "ACTIVE: Shared, observable, reliable evidence that the exploit is being used in the wild by real attackers; there is credible public reporting."
            ].join('')
     }
   },
@@ -73,6 +74,7 @@ export const TREE_OPTION = {
       leaves: {
         label: {
           normal: {
+            show: true,
             position: 'top',
             // distance: 50,
             verticalAlign: 'top',
@@ -105,13 +107,16 @@ templateUrl: './ssvc-tree.component.html',
 styleUrls: [ './ssvc-tree.component.css' ]
 })
 export class SSVCTreeComponent  {
+    @Input('treeData') treeData: Object;
     options = TREE_OPTION as EChartsOption;
     mergeData = {};
     
-    constructor() { }
+    constructor() {
+        this.treeData = {};
+     }
 
     ngOnInit() {
-        TREE_OPTION.series[0].data = [rootExploitation] as any;
+        TREE_OPTION.series[0].data = [rootExploitation(this.treeData)] as any;
         this.mergeData = {
             series: TREE_OPTION.series
         };
