@@ -59,6 +59,7 @@ export class SearchComponent implements OnInit {
   reviewedSearchResults: Array<any> = []; /** for a change to implementation idea **/
   cvssScores = [];
   resultTotalCount = 0;
+  reviewedResultTotalCount = 0;
   pageRecord: Array<number> = [];
   currentPage = 0;
   pageBlocks: Array<number> = [];
@@ -183,6 +184,7 @@ export class SearchComponent implements OnInit {
 
       this.searchResults = [];
       this.filteredSearchResults = [];
+      this.reviewedSearchResults = [];
       if(this.search.cve_id != null){
         this.vulnService
           .getByID(this.search.cve_id, username, token)
@@ -263,18 +265,31 @@ export class SearchComponent implements OnInit {
     } else {
       this.totalPageLimit = Math.ceil(this.resultTotalCount / 10) - 1;
     }
-    this.filteredSearchResults = this.searchResults.slice(0, this.pageLimit);
-    this.getTotalPages();
-    this.updatePages(this.searchResults.length);
+    if(this.filterReviewed){
+      this.filteredSearchResults = this.reviewedSearchResults.slice(0,this.pageLimit);
+      this.getTotalPages();
+      this.updatePages(this.reviewedSearchResults.length);
+    } else {
+      this.filteredSearchResults = this.searchResults.slice(0, this.pageLimit);
+      this.getTotalPages();
+      this.updatePages(this.searchResults.length);
+    }
   }
 
   /** calculate and hold state for total number of pages to be displayed */
   getTotalPages() {
-    var totalPages =
-      this.resultTotalCount % this.pageLimit == 0
-        ? this.resultTotalCount / this.pageLimit
-        : Math.floor(this.resultTotalCount / this.pageLimit) + 1;
-
+    var totalPages = 0;
+    if(this.filterReviewed){
+      totalPages =
+        this.reviewedResultTotalCount % this.pageLimit == 0
+          ? this.reviewedResultTotalCount / this.pageLimit
+          : Math.floor(this.reviewedResultTotalCount / this.pageLimit) + 1;
+    } else {
+      totalPages =
+        this.resultTotalCount % this.pageLimit == 0
+          ? this.resultTotalCount / this.pageLimit
+          : Math.floor(this.resultTotalCount / this.pageLimit) + 1;
+    }
     // Set the total number of pages
     this.totalPages = totalPages;
   }
@@ -426,6 +441,16 @@ export class SearchComponent implements OnInit {
 
   updateReviewedCheckbox(event: any){
     this.filterReviewed= event.target.checked;
+    if(this.filterReviewed){
+      this.updateReviewedResults()
+    }
+    this.handleRes(this.searchResults)
+  }
+
+  updateReviewedResults(){
+    this.reviewedSearchResults = [];
+    this.reviewedSearchResults = this.searchResults.filter((value) => value.reviewed);
+    //console.log(this.reviewedSearchResults);
   }
 
 }

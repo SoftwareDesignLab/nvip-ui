@@ -111,7 +111,8 @@
     <div class="nvip-search-result-ctn" [hidden]="showForm">
         <div class="nvip-search-top-ctn col-12">
         </div>
-      <input type="checkbox" id="reviewedFilter" name="reviewedFilter" value="reviewedOnly" (change)="updateReviewedCheckbox($event)">
+      <input type="checkbox" id="reviewedFilter" name="reviewedFilter" value="reviewedOnly"
+             (change)="updateReviewedCheckbox($event)">
       <!--<script src="/app/pages/search/searchsearch.component.ts"></script>-->
       <label for="reviewedFilter"> Show only reviewed results</label><br>
         <div class="nvip-search-page-ctn">
@@ -145,7 +146,8 @@
             </div>
             <div class="nvip-search-result-page col-10">
                 <p class="nvip-cve-panel-empty" [hidden]="searchResults.length > 0">No CVEs identified</p>
-                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredSearchResults; let index = index;" [hidden]="searchResults.length == 0" [hidden]="!vuln.reviewed && filterReviewed">
+                <!--<div class="nvip-search-result col-12" *ngFor="let vuln of filteredSearchResults; let index = index;" [hidden]="searchResults.length == 0" [hidden]="!vuln.reviewed && filterReviewed">-->
+                <div class="nvip-search-result col-12" *ngFor="let vuln of filteredSearchResults; let index = index;" [hidden]="searchResults.length == 0" >
                     <daily-vuln-dropdown [vuln]="vuln" [index]="index" [currentToggle]="currentSelected" (selected)="setCurrentSelected($event)"></daily-vuln-dropdown>
                 </div>
             </div>
