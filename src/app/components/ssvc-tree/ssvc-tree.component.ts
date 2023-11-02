@@ -8,18 +8,14 @@ export const TREE_OPTION = {
   tooltip: {
     trigger: 'item',
     triggerOn: 'mousemove',
-    textStyle: {
-        height: 100,
-        width: 100,
-    },
     confine: true,
     className: 'tree-tooltip',
+    extraCssText: 'width:500px; height:250px; white-space:pre-wrap;',
     formatter: function (params: any) {
-        // console.log("PARAMS", params);
+        const info = params.data.toolTipInfo;
         return [
-            // '<span class="fs-mini me-2">Automatable:</span><b class="text-blue"> TEST'+'</b><hr size=1 style="margin: 3px 0">',
-            // '<span class="fs-mini me-2">Technical Impact:</span><b class="text-blue"> TEST2' + '</b><br/>',
-            "ACTIVE: Shared, observable, reliable evidence that the exploit is being used in the wild by real attackers; there is credible public reporting."
+            `<span class="fs-mini me-2">${info.name}:</span><b style='color:${info.color} !important;'>${info.value}</b><hr size=1 style="margin: 3px 0">`,
+            `<div>${info.text}</div>`,
            ].join('')
     }
   },
