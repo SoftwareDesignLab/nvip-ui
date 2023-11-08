@@ -20,3 +20,57 @@
     color: white;
     background-color:#21618C;
 }
+
+.callout-background {
+    background-color: white;
+}
+
+.decision-pane {
+    background-color: white;
+    border: 2px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 1em;
+    margin: 1em 0em;
+}
+
+.decision-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.decision-value {
+    font-size: .8em;
+}
+
+.decision-tab {
+    display: flex;
+    align-items: center;
+}
+
+.decision-tab button {
+    flex: 1;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.dec-selected-button {
+    /* background-color: #3498db; */
+    color: #fff;
+}
+
+.dec-unselected-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.decision-tab-pane {
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 1em;
+    margin: 1em 0em;
+}

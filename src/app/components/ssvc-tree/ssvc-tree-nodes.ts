@@ -2,7 +2,7 @@
 // for SSVC tree
 
 // Tooltip text source: https://democert.org/ssvc/
-export const exploitationTooltipText: Object = {
+export const exploitationTooltipText: Object | any = {
     none: "There is no evidence of active exploitation and no public proof of concept (PoC) of how to exploit the vulnerability.",
     poc: "One of the following cases is true: (1) private evidence of exploitation is attested but not shared; (2) widespread hearsay attests to exploitation; (3) typical public" +
         " PoC in places such as Metasploit or ExploitDB; or (4) the vulnerability has a well-known method of exploitation. Some examples of conditition (4) are open-source web" +
@@ -11,7 +11,7 @@ export const exploitationTooltipText: Object = {
     active: "Shared, observable, reliable evidence that the exploit is being used in the wild by real attackers; there is credible public reporting.",
 }
 
-export const automatableTooltipText = {
+export const automatableTooltipText: any = {
     no: "Steps 1-4 of the kill chain cannot be reliably automated for this vulnerability for some reason. These steps are reconnaissance, weaponization, delivery, and exploitation." +
         " Example reasons for why a step may not be reliably automatable include (1) the vulnerable component is not searchable or enumerable on the network, (2) weaponization may" +
         " require human direction for each target, (3) delivery may require channels that widely deployed network security configurations block, and (4) exploitation may be frustrated" + 
@@ -19,14 +19,14 @@ export const automatableTooltipText = {
     yes: "Steps 1-4 of the kill chain can be reliably automated. If the vulnerability allows unauthenticated remote code execution (RCE) or command injection, the response is likely yes."   
 }
 
-export const technicalImpactTooltipText = {
+export const technicalImpactTooltipText: any = {
     partial: "The exploit gives the adversary limited control over, or information exposure about, the behavior of the software that contains the vulnerability. Or the exploit gives" + 
         " the adversary an importantly low stochastic opportunity for total control. In this context, \"low\" means that the attacker cannot reasonably make enough attempts to overcome" +
         " the low chance of each attempt not working. Denial of service is a form of limited over the behavior of the vulnerable component.",
     total: "The exploit gives the adversary total control over the behavior of the software, or it gives total disclosure of all information on the system that contains the vulnerability."
 }
 
-export const missionAndWellbeingTooltipText = {
+export const missionAndWellbeingTooltipText: any = {
     low: "Mission Prevalence is Minimal and Public well-being impact is Minimal",
     medium: "{Mission Prevalence is Support and Public well-being is Minimal or Material} OR {Mission Prevalence is Minimal or Support and Public well-being is Material}",
     high: "Mission Prevalence is Essential or Public well-being impact is Irreversible",
@@ -53,7 +53,7 @@ export const missionAndWellbeingTooltipText = {
     },
 }
 
-export const decisionTooltipText = {
+export const decisionTooltipText: any = {
     track: "The vulnerability does not require attention outside of Vulnerability Management (VM) at this time. Continue to track the situation and reasses the severity of vulnerability if necessary.",
     trackstar: "Track these closely, especially if mitigation is unavailable or difficult. Recommended that analyst discuss with other analysts and get a second opinion.",
     attend: "The vulnerability requires to be attended to by stakeholders outside VM. The action is a request to others for assistance / information / details, as well as a potential publication about the issue.",
@@ -83,13 +83,17 @@ export const boxColors = {
     borderWidth: 2.5,
 }
 
+export function scoreColor(score: string): string {
+    return score === 'Act' ? colors.red : score === 'Attend' ? colors.orange : score === 'Track*' ? colors.yellow : colors.green;
+}
+
 export function scoreNode(value: string, score: string) {
     // color based on SSVC decision
     // Track - green
     // Track* - yellow
     // Attend - orange
     // Act - red
-    const color = score === 'Act' ? colors.red : score === 'Attend' ? colors.orange : score === 'Track*' ? colors.yellow : colors.green;
+    const color = scoreColor(score);
     return {
         'name': value + ": " + score,
         toolTipInfo: {
@@ -120,6 +124,10 @@ export function scoreNode(value: string, score: string) {
             opacity:1,
         },
     }
+}
+
+export function missionColor(mission: string) {
+    return mission === 'low' ? colors.green : mission === 'medium' ? colors.yellow : mission === 'high' ? colors.red : colors.black;
 }
 
 export function missionAndWellbeingNode(treeData: Object) {
@@ -178,12 +186,14 @@ export function missionAndWellbeingNode(treeData: Object) {
     }
 }
 
+export function technicalImpactColor(technical: string) {
+    return technical === 'Total' ? colors.red : technical === 'Partial' ? colors.yellow : colors.black;
+}
+
 // TODO: model the treeData import instead of any
 export function technicalImpactNode(treeData: Object|any) { 
     const technical = treeData.technicalImpact;
-    const technicalColor = technical === 'Total' ? colors.red :
-                            technical === 'Partial' ? colors.yellow :
-                            colors.black;
+    const technicalColor = technicalImpactColor(technical);
     return {
         'name': 'Technical Impact',
         toolTipInfo: {
@@ -231,11 +241,13 @@ export function technicalImpactNode(treeData: Object|any) {
     }
 }
 
+export function automatableColor(automate: string) {
+    return automate === 'Yes' ? colors.red : automate === 'No' ? colors.green : colors.black;
+}
+
 export function automatableNode(treeData: Object|any) {
     const automate = treeData.automatable;
-    const automateColor = automate === 'No' ? colors.green :
-                            automate === 'Yes' ? colors.red :
-                            colors.black;
+    const automateColor = automatableColor(automate);
     return {
         'name': 'Automatable',
         toolTipInfo: {
@@ -283,6 +295,10 @@ export function automatableNode(treeData: Object|any) {
     }
 }
 
+export function exploitationColor(exploit: string) {
+    return exploit === 'None' ? colors.green : exploit === 'POC' ? colors.yellow : exploit === 'Active' ? colors.red : colors.black;
+}
+
 export function rootExploitation(treeDataa: Object) {
     // console.log("this is tree data", treeData);
     // TODO: pass in Exploitation, Automatable, and Technical impact decisions through here
@@ -292,10 +308,7 @@ export function rootExploitation(treeDataa: Object) {
         technicalImpact: 'Total'
     }
     const exploitation = treeData.exploitation;
-    const exploitColor = exploitation === 'None' ? colors.green : 
-                            exploitation === 'POC' ? colors.yellow : 
-                            exploitation === 'Active' ? colors.red : 
-                            colors.black
+    const exploitColor = exploitationColor(exploitation);
     return {
         toolTipInfo: {
             name: 'Exploitation',

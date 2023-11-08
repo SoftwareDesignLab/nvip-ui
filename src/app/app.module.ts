@@ -50,6 +50,7 @@ import { SearchDropdownComponent } from './components/search-dropdown/search-dro
 import { GoogleChartComponent } from './components/google-chart/google-chart.component';
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
 import { SSVCTreeComponent } from './components/ssvc-tree/ssvc-tree.component';
+import { SSVCCalloutsComponent } from './components/ssvc-tree/ssvc-callouts.component';
 import {
   NavbarModule,
   CollapseModule,
@@ -61,7 +62,10 @@ import {
   UtilitiesModule,
   BadgeModule,
   ButtonModule,
-  TooltipModule
+  TooltipModule,
+  CalloutModule,
+  NavModule,
+  TabsModule
 } from '@coreui/angular';
 import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
@@ -84,7 +88,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
     SearchDropdownComponent,
     GoogleChartComponent,
     GoogleGaugeComponent,
-    SSVCTreeComponent
+    SSVCTreeComponent,
+    SSVCCalloutsComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +111,9 @@ import { NgxEchartsModule } from 'ngx-echarts';
     BadgeModule,
     ButtonModule,
     TooltipModule,
+    CalloutModule,
+    NavModule,
+    TabsModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })
