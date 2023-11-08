@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input, OnInit, } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { rootExploitation } from './ssvc-tree-nodes';
 
@@ -102,20 +102,43 @@ selector: 'ssvc-tree',
 templateUrl: './ssvc-tree.component.html',
 styleUrls: [ './ssvc-tree.component.css' ]
 })
-export class SSVCTreeComponent  {
+export class SSVCTreeComponent implements OnInit  {
     @Input('treeData') treeData: Object;
     options = TREE_OPTION as EChartsOption;
     mergeData = {};
-    
+
     constructor() {
         this.treeData = {};
      }
 
     ngOnInit() {
-        TREE_OPTION.series[0].data = [rootExploitation(this.treeData)] as any;
-        this.mergeData = {
-            series: TREE_OPTION.series
-        };
+      if (window.innerWidth < 768) custOrient ='TB';
+      else custOrient ='LR';
+      TREE_OPTION.series[0].orient=custOrient;
+      TREE_OPTION.series[0].data = [rootExploitation(this.treeData)] as any;
+      this.mergeData = {
+          series: TREE_OPTION.series
+      };
+    }
+
+    @HostListener('window:resize')
+    onResize() {
+      if (window.innerWidth < 768 && custOrient=='LR') {
+        custOrient ='TB';
+        TREE_OPTION.series[0].orient='TB';
+        this. mergeData = {};
+        this.ngOnInit();
+      } else if (window.innerWidth > 768 && custOrient=='TB') {
+        custOrient ='LR';
+        TREE_OPTION.series[0].orient='LR';
+        TREE_OPTION.series[0].label.normal = { ...TREE_OPTION.series[0].label.normal, ...{
+          position: 'left',
+          verticalAlign: 'middle',
+          align: 'right',
+      } };
+      this.mergeData = {};
+      this.ngOnInit();
+      }
     }
 
     changeOrientation(){
@@ -155,5 +178,7 @@ export class SSVCTreeComponent  {
         this. mergeData = {};
         this.ngOnInit();
     } 
+
+    
 
 } 

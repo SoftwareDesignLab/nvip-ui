@@ -1,5 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { automatableColor, automatableTooltipText, decisionTooltipText, exploitationColor, exploitationTooltipText, missionAndWellbeingTooltipText, missionColor, scoreColor, technicalImpactColor, technicalImpactTooltipText } from './ssvc-tree-nodes';
+import { automatableColor, 
+    automatableTooltipText, 
+    decisionTooltipText, 
+    exploitationColor, 
+    exploitationTooltipText, 
+    missionAndWellbeingTooltipText, 
+    missionColor, 
+    scoreColor, 
+    technicalImpactColor, 
+    technicalImpactTooltipText 
+} from './ssvc-tree-nodes';
 
 export interface TreeData {
     exploitation: string;
