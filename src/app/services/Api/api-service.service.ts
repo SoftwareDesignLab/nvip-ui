@@ -139,13 +139,6 @@ export class ApiService {
       .subscribe(callback);
   }
 
-  vulnServlet(daily: boolean, dateRange: number) {
-    return this.httpClient.get(
-      Routes.vulnerability+"/daily",
-      this.injectGetParameters({ dateRange: dateRange })
-    );
-  }
-
   vulnServGetByID(id: string, username: string, token: string) {
     return this.httpClient.get(
       Routes.vulnerability+'/'+id,
@@ -167,23 +160,9 @@ export class ApiService {
     );
   }
 
-  vulnServGetByDateAndPage(date: string, page: number, size: number) {
+  vulnServGetByDate(date: string) {
     return this.httpClient.get(
-      Routes.vulnerability + '/dailyPage',
-      this.injectGetParameters({
-        date: date,
-        pageNum: page,
-        pageSize: size
-      })
-    );
-  }
-
-  vulnServGetRecentCounts(dateRange: number) {
-    return this.httpClient.get(
-      Routes.vulnerability + '/dailyPageCount',
-      this.injectGetParameters({
-        dateRange: dateRange
-      })
+      Routes.vulnerability + '/date/' + date
     );
   }
 
