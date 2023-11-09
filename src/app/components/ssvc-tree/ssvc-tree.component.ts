@@ -1,6 +1,6 @@
-import { Component, HostListener, Input, OnInit, } from '@angular/core';
+import { Component, HostListener, Input, OnInit, SimpleChanges } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { rootExploitation } from './ssvc-tree-nodes';
+import { SSVCData, rootExploitation } from './ssvc-tree-nodes';
 
 var custOrient :any ='LR';
 
@@ -95,27 +95,35 @@ export const TREE_OPTION = {
     }
   ]
 };
-
-
 @Component({
 selector: 'ssvc-tree',
 templateUrl: './ssvc-tree.component.html',
 styleUrls: [ './ssvc-tree.component.css' ]
 })
 export class SSVCTreeComponent implements OnInit  {
-    @Input('treeData') treeData: Object;
+    @Input('ssvc') ssvc: SSVCData;
     options = TREE_OPTION as EChartsOption;
     mergeData = {};
 
     constructor() {
-        this.treeData = {};
-     }
+        this.ssvc = {} as SSVCData;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['ssvc']) {
+            this.ssvc = changes['ssvc'].currentValue[0];
+            TREE_OPTION.series[0].data = [rootExploitation(this.ssvc)] as any;
+            this.mergeData = {
+                series: TREE_OPTION.series
+            };
+        }
+    }
 
     ngOnInit() {
       if (window.innerWidth < 768) custOrient ='TB';
       else custOrient ='LR';
       TREE_OPTION.series[0].orient=custOrient;
-      TREE_OPTION.series[0].data = [rootExploitation(this.treeData)] as any;
+      TREE_OPTION.series[0].data = [rootExploitation(this.ssvc)] as any;
       this.mergeData = {
           series: TREE_OPTION.series
       };

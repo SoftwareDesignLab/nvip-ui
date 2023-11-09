@@ -1,5 +1,22 @@
 // holds all of the options and structures for rendering nodes on tree
+
+import { SSVC } from "src/app/models/vulnerability.model";
+
 // for SSVC tree
+export interface SSVCScores {
+    ssvcScoreLow: string;
+    ssvcScoreMedium: string;
+    ssvcScoreHigh: string;
+}
+
+export interface SSVCData {
+    cveId: string;
+    automatable: boolean;
+    exploitStatus: string;
+    technicalImpact: boolean;
+    scores: SSVCScores;
+}
+
 
 // Tooltip text source: https://democert.org/ssvc/
 export const exploitationTooltipText: Object | any = {
@@ -127,10 +144,10 @@ export function scoreNode(value: string, score: string) {
 }
 
 export function missionColor(mission: string) {
-    return mission === 'low' ? colors.green : mission === 'medium' ? colors.yellow : mission === 'high' ? colors.red : colors.black;
+    return mission === 'ssvcScoreLow' ? colors.green : mission === 'ssvcScoreMedium' ? colors.yellow : mission === 'ssvcScoreHigh' ? colors.red : colors.black;
 }
 
-export function missionAndWellbeingNode(treeData: Object) {
+export function missionAndWellbeingNode(treeData: SSVCData) {
     return { 
         'name': 'Mission & Well-being',
         toolTipInfo: {
@@ -179,28 +196,28 @@ export function missionAndWellbeingNode(treeData: Object) {
         }, 
         'value': 8833,
         'children': [
-            scoreNode('Low', 'Track'),
-            scoreNode('Medium', 'Attend'),
-            scoreNode('High', 'Act')
+            scoreNode('Low', treeData.scores.ssvcScoreLow),
+            scoreNode('Medium', treeData.scores.ssvcScoreMedium),
+            scoreNode('High', treeData.scores.ssvcScoreHigh),
         ]
     }
 }
 
-export function technicalImpactColor(technical: string) {
-    return technical === 'Total' ? colors.red : technical === 'Partial' ? colors.yellow : colors.black;
+export function technicalImpactColor(technical: boolean) {
+    return technical ? colors.red : colors.green;
 }
 
-// TODO: model the treeData import instead of any
-export function technicalImpactNode(treeData: Object|any) { 
+export function technicalImpactNode(treeData: SSVCData) { 
     const technical = treeData.technicalImpact;
+    const techDecision = technical ? 'Total' : 'Partial';
     const technicalColor = technicalImpactColor(technical);
     return {
         'name': 'Technical Impact',
         toolTipInfo: {
             name: 'Technical Impact',
-            value: technical,
+            value: techDecision,
             color: technicalColor,
-            text: technicalImpactTooltipText[technical.toLowerCase() as keyof Object]
+            text: technicalImpactTooltipText[technical ? 'total' : 'partial']
         },
         lineStyle: {
             color: colors.black,
@@ -218,7 +235,7 @@ export function technicalImpactNode(treeData: Object|any) {
             ...boxColors,
             formatter: [
                 '{title| Technical Impact: }',
-                `{a| ${technical} }`
+                `{a| ${techDecision} }`
             ].join(''),
         
             rich: {
@@ -241,20 +258,21 @@ export function technicalImpactNode(treeData: Object|any) {
     }
 }
 
-export function automatableColor(automate: string) {
-    return automate === 'Yes' ? colors.red : automate === 'No' ? colors.green : colors.black;
+export function automatableColor(automate: boolean) {
+    return automate ? colors.red : colors.green;
 }
 
-export function automatableNode(treeData: Object|any) {
+export function automatableNode(treeData: SSVCData) {
     const automate = treeData.automatable;
+    const automateDecision = automate ? 'Yes' : 'No';
     const automateColor = automatableColor(automate);
     return {
         'name': 'Automatable',
         toolTipInfo: {
             name: 'Automatable',
-            value: automate,
+            value: automateDecision,
             color: automateColor,
-            text: automatableTooltipText[automate.toLowerCase() as keyof Object]
+            text: automatableTooltipText[automateDecision.toLowerCase()]
         },
         lineStyle: {
             color: colors.black,
@@ -272,7 +290,7 @@ export function automatableNode(treeData: Object|any) {
             ...boxColors,
             formatter: [
                 '{title| Automatable: }',
-                `{a| ${automate} }`
+                `{a| ${automateDecision} }`
             ].join(''),
         
             rich: {
@@ -299,22 +317,15 @@ export function exploitationColor(exploit: string) {
     return exploit === 'None' ? colors.green : exploit === 'POC' ? colors.yellow : exploit === 'Active' ? colors.red : colors.black;
 }
 
-export function rootExploitation(treeDataa: Object) {
-    // console.log("this is tree data", treeData);
-    // TODO: pass in Exploitation, Automatable, and Technical impact decisions through here
-    const treeData = {
-        exploitation: 'Active',
-        automatable: 'No',
-        technicalImpact: 'Total'
-    }
-    const exploitation = treeData.exploitation;
+export function rootExploitation(treeData: SSVCData) {
+    const exploitation = treeData.exploitStatus;
     const exploitColor = exploitationColor(exploitation);
     return {
         toolTipInfo: {
             name: 'Exploitation',
             value: exploitation,
             color: exploitColor,
-            text: exploitationTooltipText[exploitation.toLowerCase() as keyof Object]
+            text: exploitationTooltipText[exploitation.toLowerCase()]
         },
         itemStyle:{
             color: exploitColor,

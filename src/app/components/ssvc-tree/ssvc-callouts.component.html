@@ -1,35 +1,35 @@
 <div class="tree-background">
     <div class="decision-tab">
-        <button *ngFor="let score of ssvcScores; index as i;" (click)="onTabChange(i)"
+        <button *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
             [class.dec-selected-button]="activePane === i"
             [class.dec-unselected-button]="activePane !== i"
-            [ngStyle]="{ 'background-color': activePane === i ? getScoreColor(score.score) : '#ccc' }"
+            [ngStyle]="{ 'background-color': activePane === i ? getScoreColor(score.value) : '#ccc' }"
         >
-        {{score.score}}
+        {{score.value}}
         </button>
     </div>
-    <div *ngFor="let score of ssvcScores; index as i;" 
+    <div *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" 
         [hidden]="activePane !== i" 
         class="decision-pane" 
-        [ngStyle]="{ 'border-color': getScoreColor(score.score) }">
+        [ngStyle]="{ 'border-color': getScoreColor(score.value) }">
         <div class="decision-text">
-            <b [ngStyle]="{color: getScoreColor(score.score)}">{{score.score}}</b>
+            <b [ngStyle]="{color: getScoreColor(score.value)}">{{score.value}}</b>
         </div>
         <br>
         <br>
-        {{getDecisionText(score.score)}}
+        {{getDecisionText(score.value)}}
     </div>
-    <c-callout *ngFor="let score of ssvcScores; index as i;" 
+    <c-callout *ngFor="let score of ssvc.scores | keyvalue: unsorted; index as i;" 
         [hidden]="activePane !== i"  
-        [ngStyle]="{ 'border-left-color': getMissionColor(score.missionAndWellbeing) }" 
+        [ngStyle]="{ 'border-left-color': getMissionColor(score.key) }" 
         class="callout-background">
         <b>Mission & Well-Being</b><br>
         <b class="decision-value"
-            [ngStyle]="{color: getMissionColor(score.missionAndWellbeing)}"
-        >{{score.missionAndWellbeing}}</b>
+            [ngStyle]="{color: getMissionColor(score.key)}"
+        >{{getMissionLevel(score.key)}}</b>
         <br>
         <br>
-        {{getMissionText(score.missionAndWellbeing)}}
+        {{getMissionText(score.key)}}
         <br>
         <br>
         <br>
@@ -49,16 +49,16 @@
 
     </c-callout>
     <div
-    *ngFor="let decision of treeDataa | keyvalue"
+    *ngFor="let decision of decisionData | keyvalue: unsorted"
     >
-        <c-callout [ngStyle]="{ 'border-left-color': decisionData[decision.key].color }" class="callout-background">
-            <b>{{decisionData[decision.key].name}}</b><br>
+        <c-callout [ngStyle]="{ 'border-left-color': decision.value.color }" class="callout-background">
+            <b>{{decision.value.name}}</b><br>
             <b class="decision-value"
-                [ngStyle]="{color: decisionData[decision.key].color}"
-            >{{decisionData[decision.key].value}}</b>
+                [ngStyle]="{color: decision.value.color}"
+            >{{decision.value.value}}</b>
             <br>
             <br>
-            {{decisionData[decision.key].info}}
+            {{decision.value.info}}
         </c-callout>
     </div>
 </div>
