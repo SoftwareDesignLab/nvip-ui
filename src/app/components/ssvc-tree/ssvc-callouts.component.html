@@ -23,22 +23,22 @@
         [hidden]="activePane !== i"  
         [ngStyle]="{ 'border-left-color': getMissionColor(score.key) }" 
         class="callout-background">
-        <b>Mission & Well-Being</b><br>
+        <b class="decision-title">Mission & Well-Being</b><br>
         <b class="decision-value"
             [ngStyle]="{color: getMissionColor(score.key)}"
         >{{getMissionLevel(score.key)}}</b>
         <br>
         {{getMissionText(score.key)}}
         <br>
-        <b>Mission Prevalence</b>
+        <b class="decision-subvalue">Mission Prevalence</b>
         <br>
-        <p *ngFor="let m of missionPrev | keyvalue" class="decision-value">
+        <p *ngFor="let m of missionPrev | keyvalue" class="decision-subtext">
             <b>{{m.key.charAt(0).toUpperCase() + m.key.slice(1)}}</b>: 
             {{m.value}}
         </p>
         <b>Public Well-Being Impact</b>
         <br>
-        <p *ngFor="let p of pubWellBeing | keyvalue" class="decision-value">
+        <p *ngFor="let p of pubWellBeing | keyvalue" class="decision-subtext">
             <b>{{p.key.charAt(0).toUpperCase() + p.key.slice(1)}}</b>:
             {{p.value}}
         </p>
@@ -48,7 +48,7 @@
     *ngFor="let decision of decisionData | keyvalue: unsorted"
     >
         <c-callout [ngStyle]="{ 'border-left-color': decision.value.color }" class="callout-background">
-            <b>{{decision.value.name}}</b><br>
+            <b class="decision-title">{{decision.value.name}}</b><br>
             <b class="decision-value"
                 [ngStyle]="{color: decision.value.color}"
             >{{decision.value.value}}</b>

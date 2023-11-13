@@ -105,6 +105,11 @@ export function scoreColor(score: string): string {
     return score === 'act' ? colors.red : score === 'attend' ? colors.orange : score === 'track*' ? colors.yellow : colors.green;
 }
 
+export function mapScoreToText(score: string): string {
+    score = score.toLowerCase();
+    return score === 'act' ? decisionTooltipText.act : score === 'attend' ? decisionTooltipText.attend : score === 'track*' ? decisionTooltipText.trackstar : decisionTooltipText.track;
+}
+
 export function scoreNode(value: string, score: string) {
     // color based on SSVC decision
     // Track - green
@@ -119,7 +124,7 @@ export function scoreNode(value: string, score: string) {
             value: value,
             color: color,
             score: score,
-            text: decisionTooltipText[score.toLowerCase() as keyof Object]
+            text: mapScoreToText(score)
         },
         label: {
             position: 'right',

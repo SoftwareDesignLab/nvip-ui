@@ -4,6 +4,7 @@ import { SSVCData, automatableColor,
     decisionTooltipText, 
     exploitationColor, 
     exploitationTooltipText, 
+    mapScoreToText, 
     missionAndWellbeingTooltipText, 
     missionColor, 
     scoreColor, 
@@ -94,7 +95,7 @@ export class SSVCCalloutsComponent  {
     }
 
     getDecisionText(decision: string) {
-        return decisionTooltipText[decision.toLowerCase()];
+        return mapScoreToText(decision);
     }
     
     onTabChange($event: number) {

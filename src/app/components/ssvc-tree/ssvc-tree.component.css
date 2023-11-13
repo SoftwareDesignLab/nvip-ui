@@ -40,7 +40,20 @@
 }
 
 .decision-value {
-    font-size: .8em;
+    font-size: 1.1em;
+}
+
+.decision-subtext {
+    padding-left: 1em;
+}
+
+.decision-title {
+    font-size: 1.2em;
+}
+
+.decision-subvalue {
+    font-size: 1.1em;
+
 }
 
 .decision-tab {
