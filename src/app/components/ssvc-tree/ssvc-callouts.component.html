@@ -1,0 +1,64 @@
+<div class="tree-background">
+    <div class="decision-tab">
+        <button *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
+            [class.dec-selected-button]="activePane === i"
+            [class.dec-unselected-button]="activePane !== i"
+            [ngStyle]="{ 'background-color': activePane === i ? getScoreColor(score.value) : '#ccc' }"
+        >
+        {{score.value}}
+        </button>
+    </div>
+    <div *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" 
+        [hidden]="activePane !== i" 
+        class="decision-pane" 
+        [ngStyle]="{ 'border-color': getScoreColor(score.value) }">
+        <div class="decision-text">
+            <b [ngStyle]="{color: getScoreColor(score.value)}">{{score.value}}</b>
+        </div>
+        <br>
+        <br>
+        {{getDecisionText(score.value)}}
+    </div>
+    <c-callout *ngFor="let score of ssvc.scores | keyvalue: unsorted; index as i;" 
+        [hidden]="activePane !== i"  
+        [ngStyle]="{ 'border-left-color': getMissionColor(score.key) }" 
+        class="callout-background">
+        <b>Mission & Well-Being</b><br>
+        <b class="decision-value"
+            [ngStyle]="{color: getMissionColor(score.key)}"
+        >{{getMissionLevel(score.key)}}</b>
+        <br>
+        <br>
+        {{getMissionText(score.key)}}
+        <br>
+        <br>
+        <br>
+        <br>
+        <b>Mission Prevalence</b>
+        <br>
+        <p *ngFor="let m of missionPrev | keyvalue" class="decision-value">
+            <b>{{m.key.charAt(0).toUpperCase() + m.key.slice(1)}}</b>: 
+            {{m.value}}
+        </p>
+        <b>Public Well-Being Impact</b>
+        <br>
+        <p *ngFor="let p of pubWellBeing | keyvalue" class="decision-value">
+            <b>{{p.key.charAt(0).toUpperCase() + p.key.slice(1)}}</b>:
+            {{p.value}}
+        </p>
+
+    </c-callout>
+    <div
+    *ngFor="let decision of decisionData | keyvalue: unsorted"
+    >
+        <c-callout [ngStyle]="{ 'border-left-color': decision.value.color }" class="callout-background">
+            <b>{{decision.value.name}}</b><br>
+            <b class="decision-value"
+                [ngStyle]="{color: decision.value.color}"
+            >{{decision.value.value}}</b>
+            <br>
+            <br>
+            {{decision.value.info}}
+        </c-callout>
+    </div>
+</div>
