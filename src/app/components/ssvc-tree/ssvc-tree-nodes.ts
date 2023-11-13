@@ -101,7 +101,8 @@ export const boxColors = {
 }
 
 export function scoreColor(score: string): string {
-    return score === 'Act' ? colors.red : score === 'Attend' ? colors.orange : score === 'Track*' ? colors.yellow : colors.green;
+    score = score.toLowerCase();
+    return score === 'act' ? colors.red : score === 'attend' ? colors.orange : score === 'track*' ? colors.yellow : colors.green;
 }
 
 export function scoreNode(value: string, score: string) {
