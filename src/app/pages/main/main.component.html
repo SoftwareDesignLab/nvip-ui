@@ -112,7 +112,7 @@
       <span>Loading NVIP statistics...</span>
     </div>
 
-    <div class="container" style="width: 100%" [hidden]="!isChartsLoaded()">
+    <div class="container" style="width: 100%; display: flex; justify-content: center; align-items: center;" [hidden]="!isChartsLoaded()">
       <c-row class="row">
         <c-col id="graph" class="col-bullet">
           <h5 class="chart-header">Number of CVEs added to NVIP</h5>
@@ -126,13 +126,6 @@
           <nvip-chart [chartType]="1" (loaded)="isLoaded($event, 1)"></nvip-chart>
         </c-col>
         <div class="graph-breakpoint1"></div>
-        <c-col class="col-bullet">
-          <h5 class="chart-header">
-            Average time gap compared to NVD in hours
-          </h5>
-          <div id="chart_values3"></div>
-          <nvip-chart [chartType]="2" (loaded)="isLoaded($event, 2)"></nvip-chart>
-        </c-col>
       </c-row>
     </div>
   </div>
