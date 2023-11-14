@@ -64,7 +64,7 @@ export class NvipChartComponent implements OnInit, OnDestroy {
     this.mySubscription?.unsubscribe();
   }
   ngOnInit(): void {
-    let labels = ["CVEs Added", "CVEs not in NVD", "Avg. Hours"];
+    let labels = ["CVEs Added", "CVEs not in NVD"];
     this.chartsService.getData().subscribe((data) => {
       this.data = [{ name: labels[this.chartType], series: data[this.chartType] }];
     })

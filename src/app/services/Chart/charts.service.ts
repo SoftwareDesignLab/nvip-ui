@@ -60,12 +60,7 @@ export class ChartsService {
         dates
       )
 
-      const avgTimeGapNvdSeries = this.makeAverageGapTimeSeries(
-        avgTimeGapNvd.split(";").map((d: string) => parseInt(d)),
-        dates
-      )
-
-      temp.next([addedOrUpdatedSeries, notInNvdSeries, avgTimeGapNvdSeries]);
+      temp.next([addedOrUpdatedSeries, notInNvdSeries]);
     })
     this.chartData = temp.asObservable()
   }
@@ -76,10 +71,6 @@ export class ChartsService {
 
   private makeNotInNVDSeries(notInNvdCount: number[], dates: Date[]) {
     return dates.map((dateTime: Date, index: number) => ({ name: this.formatDateForColumnName(dateTime), value: notInNvdCount[index] })).reverse()
-  }
-
-  private makeAverageGapTimeSeries(avgTimeGapNvd: number[], dates: Date[]) {
-    return dates.map((dateTime: Date, index: number) => ({ name: this.formatDateForColumnName(dateTime), value: avgTimeGapNvd[index] })).reverse()
   }
 
   private formatDateForColumnName(date: Date) {
