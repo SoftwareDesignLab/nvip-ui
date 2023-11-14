@@ -43,6 +43,37 @@ export class SSVCCalloutsComponent  {
     pubWellBeing: Object = missionAndWellbeingTooltipText.publicWellbeingImpact;
     decisionData = {} as DecisionData;
     treeData = {} as Object;
+    buttonValues: Array<String> = ["Low", "Medium", "High"];
+
+    customColor: string = '#ff9900';
+    hoverColor: string = '#cc7700';
+    customBorder: string = '1px solid #ff9900';
+    hover: number = 0;
+
+    setHover(index: number) {
+        this.hover = index;
+    }
+
+    getActiveBorder(score: string) {
+        return `3px solid ${this.adjustColor(scoreColor(score), 20)}`
+    }
+
+    changeColors(newColor: string, newHoverColor: string) {
+        this.customColor = newColor;
+        this.hoverColor = newHoverColor;
+    }
+
+    adjustColor(color: string, percent: number): string {
+        const values: number[] = color.match(/\d+/g)!.map(Number);
+        const adjustedValues: number[] = values.map(value => {
+            let adjusted = value + (percent / 100) * 255;
+            adjusted = adjusted > 255 ? 255 : adjusted < 0 ? 0 : adjusted;
+            return Math.round(adjusted);
+        });
+        return `rgb(${adjustedValues[0]}, ${adjustedValues[1]}, ${adjustedValues[2]})`;
+    }
+
+
     constructor() {
         this.ssvc = {} as SSVCData;
         this.activePane = 0;

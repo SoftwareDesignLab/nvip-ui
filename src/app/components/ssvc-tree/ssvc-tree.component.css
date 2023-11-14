@@ -71,12 +71,10 @@
 }
 
 .dec-selected-button {
-    /* background-color: #3498db; */
     color: #fff;
 }
 
 .dec-unselected-button {
-    background-color: #ccc;
     color: #333;
 }
 
@@ -86,4 +84,10 @@
     border-radius: 5px;
     padding: 1em;
     margin: 1em 0em;
+}
+
+.decisions-header {
+    font-size: 1em;
+    font-weight: bold;
+    /* text-align: center; */
 }

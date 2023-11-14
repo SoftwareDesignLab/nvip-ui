@@ -1,11 +1,13 @@
 <div class="tree-background">
+    <h4 class="decisions-header">Select Mission & Well-Being Decision:</h4>
     <div class="decision-tab">
-        <button *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
-            [class.dec-selected-button]="activePane === i"
-            [class.dec-unselected-button]="activePane !== i"
-            [ngStyle]="{ 'background-color': activePane === i ? getScoreColor(score.value) : '#ccc' }"
+        <button type="button" *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
+            [style.background-color]="activePane === i ? adjustColor(getScoreColor(score.value), -10) : hover === i ? adjustColor(getScoreColor(score.value), -10) : getScoreColor(score.value)"
+            [style.border]="activePane === i ? getActiveBorder(score.value) : '3px solid ' + getScoreColor(score.value)"
+            (mouseenter)="setHover(i)" 
+            (mouseleave)="setHover(activePane)"
         >
-        {{score.value}}
+        {{buttonValues[i]}}
         </button>
     </div>
     <div *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" 
