@@ -106,12 +106,12 @@ export class SSVCTreeComponent implements OnInit  {
     mergeData = {};
 
     constructor() {
-        this.ssvc = {} as SSVCData;
+      this.ssvc = {} as SSVCData;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['ssvc']) {
-            this.ssvc = changes['ssvc'].currentValue[0];
+            this.ssvc = changes['ssvc'].currentValue;
             TREE_OPTION.series[0].data = [rootExploitation(this.ssvc)] as any;
             this.mergeData = {
                 series: TREE_OPTION.series
