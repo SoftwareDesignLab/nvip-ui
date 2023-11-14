@@ -36,9 +36,9 @@ export const TREE_OPTION = {
       name: 'SSVC',
       initialTreeDepth: -1,
       data: [],
-      top: '5%',
+      top: '10%',
     //   left: '7%',
-      bottom: '2%',
+      bottom: '10%',
       right: '30%',
       symbolSize: 10,
       symbol:'emptyCircle',
@@ -120,8 +120,14 @@ export class SSVCTreeComponent implements OnInit  {
     }
 
     ngOnInit() {
-      if (window.innerWidth < 768) custOrient ='TB';
-      else custOrient ='LR';
+      if (window.innerWidth < 768) {
+        custOrient ='TB';
+        this.ssvc.mobile = true;
+      }
+      else {
+        custOrient ='LR';
+        this.ssvc.mobile = false;
+      }
       TREE_OPTION.series[0].orient=custOrient;
       TREE_OPTION.series[0].data = [rootExploitation(this.ssvc)] as any;
       this.mergeData = {

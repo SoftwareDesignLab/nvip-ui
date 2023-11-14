@@ -1,11 +1,13 @@
 <div class="tree-background">
+    <h4 class="decisions-header">Select Mission & Well-Being Decision:</h4>
     <div class="decision-tab">
-        <button *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
-            [class.dec-selected-button]="activePane === i"
-            [class.dec-unselected-button]="activePane !== i"
-            [ngStyle]="{ 'background-color': activePane === i ? getScoreColor(score.value) : '#ccc' }"
+        <button type="button" *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" (click)="onTabChange(i)"
+            [style.background-color]="activePane === i ? adjustColor(getScoreColor(score.value), -10) : hover === i ? adjustColor(getScoreColor(score.value), -10) : getScoreColor(score.value)"
+            [style.border]="activePane === i ? getActiveBorder(score.value) : '3px solid ' + getScoreColor(score.value)"
+            (mouseenter)="setHover(i)" 
+            (mouseleave)="setHover(activePane)"
         >
-        {{score.value}}
+        {{buttonValues[i]}}
         </button>
     </div>
     <div *ngFor="let score of ssvc.scores | keyvalue: unsorted ; index as i;" 
@@ -23,26 +25,22 @@
         [hidden]="activePane !== i"  
         [ngStyle]="{ 'border-left-color': getMissionColor(score.key) }" 
         class="callout-background">
-        <b>Mission & Well-Being</b><br>
+        <b class="decision-title">Mission & Well-Being</b><br>
         <b class="decision-value"
             [ngStyle]="{color: getMissionColor(score.key)}"
         >{{getMissionLevel(score.key)}}</b>
         <br>
-        <br>
         {{getMissionText(score.key)}}
         <br>
+        <b class="decision-subvalue">Mission Prevalence</b>
         <br>
-        <br>
-        <br>
-        <b>Mission Prevalence</b>
-        <br>
-        <p *ngFor="let m of missionPrev | keyvalue" class="decision-value">
+        <p *ngFor="let m of missionPrev | keyvalue" class="decision-subtext">
             <b>{{m.key.charAt(0).toUpperCase() + m.key.slice(1)}}</b>: 
             {{m.value}}
         </p>
         <b>Public Well-Being Impact</b>
         <br>
-        <p *ngFor="let p of pubWellBeing | keyvalue" class="decision-value">
+        <p *ngFor="let p of pubWellBeing | keyvalue" class="decision-subtext">
             <b>{{p.key.charAt(0).toUpperCase() + p.key.slice(1)}}</b>:
             {{p.value}}
         </p>
@@ -52,7 +50,7 @@
     *ngFor="let decision of decisionData | keyvalue: unsorted"
     >
         <c-callout [ngStyle]="{ 'border-left-color': decision.value.color }" class="callout-background">
-            <b>{{decision.value.name}}</b><br>
+            <b class="decision-title">{{decision.value.name}}</b><br>
             <b class="decision-value"
                 [ngStyle]="{color: decision.value.color}"
             >{{decision.value.value}}</b>

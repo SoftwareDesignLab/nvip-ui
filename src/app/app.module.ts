@@ -65,7 +65,8 @@ import {
   TooltipModule,
   CalloutModule,
   NavModule,
-  TabsModule
+  TabsModule,
+  AlertModule
 } from '@coreui/angular';
 import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
@@ -114,6 +115,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     CalloutModule,
     NavModule,
     TabsModule,
+    AlertModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })

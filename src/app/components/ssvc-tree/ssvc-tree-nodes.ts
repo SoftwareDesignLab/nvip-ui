@@ -15,6 +15,8 @@ export interface SSVCData {
     exploitStatus: string;
     technicalImpact: boolean;
     scores: SSVCScores;
+    // mobile screen view? change position of tree node labels
+    mobile: boolean;
 }
 
 
@@ -101,10 +103,16 @@ export const boxColors = {
 }
 
 export function scoreColor(score: string): string {
-    return score === 'Act' ? colors.red : score === 'Attend' ? colors.orange : score === 'Track*' ? colors.yellow : colors.green;
+    score = score.toLowerCase();
+    return score === 'act' ? colors.red : score === 'attend' ? colors.orange : score === 'track*' ? colors.yellow : colors.green;
 }
 
-export function scoreNode(value: string, score: string) {
+export function mapScoreToText(score: string): string {
+    score = score.toLowerCase();
+    return score === 'act' ? decisionTooltipText.act : score === 'attend' ? decisionTooltipText.attend : score === 'track*' ? decisionTooltipText.trackstar : decisionTooltipText.track;
+}
+
+export function scoreNode(value: string, score: string, mobile: boolean = false) {
     // color based on SSVC decision
     // Track - green
     // Track* - yellow
@@ -118,12 +126,12 @@ export function scoreNode(value: string, score: string) {
             value: value,
             color: color,
             score: score,
-            text: decisionTooltipText[score.toLowerCase() as keyof Object]
+            text: mapScoreToText(score)
         },
         label: {
-            position: 'right',
+            position: mobile ? 'bottom' : 'right',
             verticalAlign: 'middle',
-            align: 'left',
+            align: mobile ? 'middle' : 'left',
             distance: 10,
             // backgroundColor: color,
             // borderColor: color
@@ -196,9 +204,9 @@ export function missionAndWellbeingNode(treeData: SSVCData) {
         }, 
         'value': 8833,
         'children': [
-            scoreNode('Low', treeData.scores.ssvcScoreLow),
-            scoreNode('Medium', treeData.scores.ssvcScoreMedium),
-            scoreNode('High', treeData.scores.ssvcScoreHigh),
+            scoreNode('Low', treeData.scores.ssvcScoreLow, treeData.mobile),
+            scoreNode('Medium', treeData.scores.ssvcScoreMedium, treeData.mobile),
+            scoreNode('High', treeData.scores.ssvcScoreHigh, treeData.mobile),
         ]
     }
 }
