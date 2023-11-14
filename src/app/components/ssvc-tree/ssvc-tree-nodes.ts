@@ -15,6 +15,8 @@ export interface SSVCData {
     exploitStatus: string;
     technicalImpact: boolean;
     scores: SSVCScores;
+    // mobile screen view? change position of tree node labels
+    mobile: boolean;
 }
 
 
@@ -110,7 +112,7 @@ export function mapScoreToText(score: string): string {
     return score === 'act' ? decisionTooltipText.act : score === 'attend' ? decisionTooltipText.attend : score === 'track*' ? decisionTooltipText.trackstar : decisionTooltipText.track;
 }
 
-export function scoreNode(value: string, score: string) {
+export function scoreNode(value: string, score: string, mobile: boolean = false) {
     // color based on SSVC decision
     // Track - green
     // Track* - yellow
@@ -127,9 +129,9 @@ export function scoreNode(value: string, score: string) {
             text: mapScoreToText(score)
         },
         label: {
-            position: 'right',
+            position: mobile ? 'bottom' : 'right',
             verticalAlign: 'middle',
-            align: 'left',
+            align: mobile ? 'middle' : 'left',
             distance: 10,
             // backgroundColor: color,
             // borderColor: color
@@ -202,9 +204,9 @@ export function missionAndWellbeingNode(treeData: SSVCData) {
         }, 
         'value': 8833,
         'children': [
-            scoreNode('Low', treeData.scores.ssvcScoreLow),
-            scoreNode('Medium', treeData.scores.ssvcScoreMedium),
-            scoreNode('High', treeData.scores.ssvcScoreHigh),
+            scoreNode('Low', treeData.scores.ssvcScoreLow, treeData.mobile),
+            scoreNode('Medium', treeData.scores.ssvcScoreMedium, treeData.mobile),
+            scoreNode('High', treeData.scores.ssvcScoreHigh, treeData.mobile),
         ]
     }
 }

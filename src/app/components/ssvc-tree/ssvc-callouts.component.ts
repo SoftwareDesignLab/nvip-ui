@@ -1,7 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { SSVCData, automatableColor, 
-    automatableTooltipText, 
-    decisionTooltipText, 
+    automatableTooltipText,
     exploitationColor, 
     exploitationTooltipText, 
     mapScoreToText, 
