@@ -70,7 +70,7 @@ export class DailyVulnDropdownComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['vuln']) this.vuln = changes['vuln'].currentValue;
     if (changes['index']) this.index = changes['index']?.currentValue;
-    if (this.index !== changes['currentToggle'].currentValue) this.active = false;
+    if (changes['currentToggle'] !=null && this.index !== changes['currentToggle'].currentValue) this.active = false;
   }
 
   /**
