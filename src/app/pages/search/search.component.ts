@@ -374,12 +374,21 @@ export class SearchComponent implements OnInit {
     ) {
       const pageOffset = this.pageLimit * pageNum;
       this.currentPage = pageNum;
-      if (pageOffset < this.searchResults.length)
-        this.filteredSearchResults = this.searchResults.slice(
-          pageOffset,
-          pageOffset + this.pageLimit
-        );
-      this.updatePages(this.searchResults.length);
+      if(this.filterReviewed){
+        if (pageOffset < this.reviewedSearchResults.length)
+          this.filteredSearchResults = this.reviewedSearchResults.slice(
+            pageOffset,
+            pageOffset + this.pageLimit
+          );
+        this.updatePages(this.reviewedSearchResults.length);
+      } else {
+        if (pageOffset < this.searchResults.length)
+          this.filteredSearchResults = this.searchResults.slice(
+            pageOffset,
+            pageOffset + this.pageLimit
+          );
+        this.updatePages(this.searchResults.length);
+      }
     }
   }
 
@@ -444,12 +453,14 @@ export class SearchComponent implements OnInit {
     if(this.filterReviewed){
       this.updateReviewedResults()
     }
-    this.handleRes(this.searchResults)
+    this.handleRes(this.searchResults);
+    this.changePage(0);
   }
 
   updateReviewedResults(){
     this.reviewedSearchResults = [];
     this.reviewedSearchResults = this.searchResults.filter((value) => value.reviewed);
+    this.reviewedResultTotalCount = this.reviewedSearchResults.length;
     //console.log(this.reviewedSearchResults);
   }
 
