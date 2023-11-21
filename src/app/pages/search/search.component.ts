@@ -275,7 +275,11 @@ export class SearchComponent implements OnInit {
       this.filteredSearchResults = this.searchResults.slice(0, this.pageLimit);
     }
     this.getTotalPages();
-    this.updatePages(this.searchResults.length);
+    if(this.filterReviewed){
+      this.updatePages(this.reviewedSearchResults.length);
+    } else {
+      this.updatePages(this.searchResults.length);
+    }
   }
 
   /** calculate and hold state for total number of pages to be displayed */
