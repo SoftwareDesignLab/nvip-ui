@@ -258,6 +258,9 @@ export class SearchComponent implements OnInit {
   handleRes(res: any) {
     this.resultTotalCount = res.length;
     this.searchResults = res;
+    if(this.filterReviewed){
+      this.resultTotalCount = this.reviewedResultTotalCount;
+    }
     console.log(this.searchResults)
     this.searchSuccess = true;
     if (this.resultTotalCount < 10) {
@@ -267,13 +270,12 @@ export class SearchComponent implements OnInit {
     }
     if(this.filterReviewed){
       this.filteredSearchResults = this.reviewedSearchResults.slice(0,this.pageLimit);
-      this.getTotalPages();
-      this.updatePages(this.reviewedSearchResults.length);
+      this.resultTotalCount = this.reviewedResultTotalCount;
     } else {
       this.filteredSearchResults = this.searchResults.slice(0, this.pageLimit);
-      this.getTotalPages();
-      this.updatePages(this.searchResults.length);
     }
+    this.getTotalPages();
+    this.updatePages(this.searchResults.length);
   }
 
   /** calculate and hold state for total number of pages to be displayed */
