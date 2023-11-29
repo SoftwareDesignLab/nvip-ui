@@ -89,7 +89,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     SearchDropdownComponent,
     GoogleChartComponent,
     GoogleGaugeComponent,
-    LoginComponent
+    LoginComponent,
     GoogleGaugeComponent,
     SSVCTreeComponent,
     SSVCCalloutsComponent
