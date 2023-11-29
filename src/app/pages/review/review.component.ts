@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/Api/api-service.service';
-import { Session } from 'src/app/services/Auth/auth-service.service';
+import { AuthService, Session } from 'src/app/services/Auth/auth-service.service';
 import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 import { VDO, Vulnerability } from 'src/app/models/vulnerability.model';
@@ -81,7 +81,8 @@ export class ReviewComponent {
     private vulnService: VulnService,
     private cookieService: CookieService,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
   ) {
     this.route.params.subscribe((params) => this.init(params['id']))
   }
@@ -95,7 +96,6 @@ export class ReviewComponent {
   /** ensure the user is signed on when navigating to this page */
   init(id: string) {
     var session: Session = this.cookieService.get('nvip_user');
-
     this.update.vdos = new Array<updateVdo>()
     this.update.affprods = new Array<updateAffProd>();
     this.update.affprods_to_remove = new Array<updateAffProd>();

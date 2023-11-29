@@ -23,7 +23,7 @@
  */
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,7 +32,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { MainComponent } from './pages/main/main.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ReviewComponent } from './pages/review/review.component';
-import { LoginPanelComponent } from './components/login-panel/login-panel.component';
 import { RecentComponent } from './pages/recent/recent.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { DailyComponent } from './pages/daily/daily.component';
@@ -51,6 +50,7 @@ import { GoogleChartComponent } from './components/google-chart/google-chart.com
 import { GoogleGaugeComponent } from './components/google-chart/google-gauge.component';
 import { SSVCTreeComponent } from './components/ssvc-tree/ssvc-tree.component';
 import { SSVCCalloutsComponent } from './components/ssvc-tree/ssvc-callouts.component';
+import { LoginComponent } from './pages/login/login.component';
 import {
   NavbarModule,
   CollapseModule,
@@ -68,6 +68,7 @@ import {
   TabsModule,
   AlertModule
 } from '@coreui/angular';
+import { AuthInterceptor } from './services/Auth/app-http-interceptor.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
   declarations: [
@@ -77,7 +78,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     MainComponent,
     AboutComponent,
     ReviewComponent,
-    LoginPanelComponent,
     RecentComponent,
     CreateAccountComponent,
     DailyComponent,
@@ -88,6 +88,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
     NvipChartComponent,
     SearchDropdownComponent,
     GoogleChartComponent,
+    GoogleGaugeComponent,
+    LoginComponent
     GoogleGaugeComponent,
     SSVCTreeComponent,
     SSVCCalloutsComponent
@@ -120,7 +122,12 @@ import { NgxEchartsModule } from 'ngx-echarts';
       echarts: () => import('echarts')
     })
   ],
-  providers: [ApiService, AuthService, HttpClientModule],
+  providers: [
+    ApiService,
+    AuthService,
+    HttpClientModule,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

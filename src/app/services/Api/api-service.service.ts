@@ -80,9 +80,9 @@ export class ApiService {
 
   login(credentials: AuthCredentials) {
     //callback: ApiRequestObserver) {
-    const request = this.httpClient.get(
+    const request = this.httpClient.post(
       Routes.login,
-      this.injectGetParameters({ ...credentials })
+      { ...credentials }
     );
     // request.subscribe(callback)
     return request;
@@ -91,29 +91,24 @@ export class ApiService {
   createAccount(credentials: object, callback: ApiRequestObserver) {
     const body = JSON.stringify(credentials);
     this.httpClient
-      .post(Routes.login, body, {
+      .post(Routes.register, body, {
         headers: {
           'Content-Type': 'application/json',
-        },
-        params: {
-          createUser: true,
-        },
+        }
       })
       .subscribe(callback);
   }
 
   countGraphs(callback: ApiRequestObserver) {
     this.httpClient
-      .get(Routes.main, this.injectGetParameters({ countGraphs: 'all' }))
+      .get(Routes.main, this.injectGetParameters({ countGraphs: 'all' }, ""))
       .subscribe(callback);
   }
 
 
   cveSearch(searchRequest: any) {
-    console.log("SEARCH REQUEST")
-    console.log(searchRequest)
     return this.httpClient
-    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }))
+    .get(Routes.vulnerability, this.injectGetParameters({ ...searchRequest }, searchRequest.token))
   }
 
   reviewUpdate(id: string, updateRequest: ReviewUpdateCriteria, updateRequestData: ReviewDataCriteria, callback: ApiRequestObserver) {
@@ -132,6 +127,7 @@ export class ApiService {
         {
           headers: {
             'Content-Type': 'application/json',
+            'Authorization' : 'Bearer ' + updateRequest.token
           },
           params: params
         }
@@ -145,7 +141,7 @@ export class ApiService {
       this.injectGetParameters({
         token: token,
         username: username
-      })
+      }, token)
     );
   }
 
@@ -156,20 +152,35 @@ export class ApiService {
         searchInfo: true,
         token: token,
         username: username
-      })
+      }, token)
     );
   }
 
-  vulnServGetByDate(date: string) {
+  vulnServGetByDate(date: string, token: string) {
     return this.httpClient.get(
-      Routes.vulnerability + '/date/' + date
+      Routes.vulnerability + '/date/' + date,
+      this.injectGetParameters({}, token)
     );
   }
 
-  private injectGetParameters(params: HttpRequestParams) {
-    return { ...this.GET_OPTIONS, params: params };
+  private injectPostBody(body: object) {
+    return { ...this.POST_OPTIONS, body: body };
   }
-  private injectPostParameters(params: HttpRequestParams) {
-    return { ...this.POST_OPTIONS, params: params };
+
+  private injectGetParameters(params: HttpRequestParams, token: string) {
+    return { 
+      ...this.GET_OPTIONS, 
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      },
+      params: params };
+  }
+  private injectPostParameters(params: HttpRequestParams, token: string) {
+    return { 
+      ...this.POST_OPTIONS, 
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      },
+      params: params };
   }
 }

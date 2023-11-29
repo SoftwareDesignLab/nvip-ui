@@ -24,14 +24,15 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../Api/api-service.service';
 import { CookieService } from '../Cookie/cookie.service';
-import { FuncsService } from 'src/app/services/Funcs/funcs.service';
+import { Router } from '@angular/router';
+
 
 /* Related Interfaces */
 
 /** user credentials from login form */
 export interface AuthCredentials {
   userName: string;
-  passwordHash: string;
+  password: string;
 }
 
 /** User session - containing valuable information on who's logged in
@@ -42,6 +43,7 @@ export interface Session {
   userName: string;
   roleId: number;
   firstName: string;
+  lastName: string;
   token: string;
   expirationDate: object;
 }
@@ -51,20 +53,22 @@ export interface Session {
 })
 export class AuthService {
 
+  /** if we get error msg from logging in, store it here */
+  incorrectAuth = "";
+
   /**
    * Authentication service constructor
    * @param api access login endpoints
    * @param cookieService access browser cookie
    */
-  constructor(private api: ApiService, private cookieService: CookieService, private funcs: FuncsService) {}
+  constructor(private api: ApiService, private cookieService: CookieService, private router: Router) {}
 
   /** establish a session on a successful user login */
-  onLogin(credentials: AuthCredentials) {
-
+  onLogin(credentials: AuthCredentials, returnUrl: string) {
     this.api
       .login({
         userName: credentials.userName,
-        passwordHash: credentials.passwordHash,
+        password: credentials.password,
       })
       .subscribe({
         next: (res) => {
@@ -74,23 +78,20 @@ export class AuthService {
             userName: response.userName,
             roleId: response.roleId,
             firstName: response.firstName,
+            lastName: response.lastName,
             token: response.token,
             expirationDate: response.expirationDate
           }
           this.cookieService.put('nvip_user', session)
-          this.funcs.closeLogin();
+          this.router.navigate([returnUrl]);
+          this.incorrectAuth = "";
         },
         error: (e) => {
-          this.funcs.incorrectLogin();
-          console.log(e); return false
+          this.incorrectAuth = e.error.message;
+          return false;
         },
         complete: () => {return true},
       });
-  }
-
-  /** access login servlet endpoint to create user account */
-  createUser(credentials: object) {
-    this.api.createAccount(credentials, (res) => {alert("Your account is Created!")} );
   }
 
   /** check for login by accessing browser cookie */
@@ -98,6 +99,14 @@ export class AuthService {
     const cookie = this.cookieService.get('nvip_user');
     return  cookie !== undefined && cookie !== null && Object.keys(cookie).length > 0 ;
   }
+
+  canActivate() {
+    if (this.isAuthenticated()) {
+      return true;
+    }
+    this.router.navigate(['login']);
+    return false;
+}
 
   /** access browser cookie of logged in user */
   get() {

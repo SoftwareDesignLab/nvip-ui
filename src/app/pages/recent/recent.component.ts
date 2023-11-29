@@ -23,6 +23,8 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Session } from 'src/app/services/Auth/auth-service.service';
+import { CookieService } from 'src/app/services/Cookie/cookie.service';
 import { VulnService } from 'src/app/services/vuln/vuln.service';
 /** Recent Vulnerabilities page */
 
@@ -55,15 +57,17 @@ export class RecentComponent implements OnInit {
   currentSelected: number = -1;
   // show/hide loading spinner
   apiCallDone: boolean = false;
+  session = {} as Session;
 
   /**
    * constructor
    * @param vulnService to access vulnerabilityServlet endpoints
    */
-  constructor(private vulnService: VulnService) {}
+  constructor(private vulnService: VulnService, private cookieService: CookieService) { }
 
   /** call recent vulnerabilites on page init */
   ngOnInit() {
+    this.session = this.cookieService.get('nvip_user');
     const today = new Date();
     this.getVulnsByDate(today.toDateString());
   }
@@ -76,7 +80,7 @@ export class RecentComponent implements OnInit {
     this.apiCallDone = false;
     // convert DateStrng to YYYY-MM-DD
     date = this.unformatDate(date);
-    this.vulnService.getByDate(date).subscribe((res: any) => {
+    this.vulnService.getByDate(date, this.session.token).subscribe((res: any) => {
       this.dailyVulns.push({ date: date, cve_list: res });
       this.apiCallDone = true;
     })

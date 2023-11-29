@@ -29,7 +29,8 @@ import { ApiService } from '../Api/api-service.service';
 })
 export class VulnService {
   
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService) { 
+  }
 
   getByID(id: string, username: string, token: string) {
     return this.api.vulnServGetByID(id, username, token);
@@ -39,8 +40,8 @@ export class VulnService {
     return this.api.searchInfo(username, token);
   }
 
-  getByDate(date: string) {
-    return this.api.vulnServGetByDate(date);
+  getByDate(date: string, token: string) {
+    return this.api.vulnServGetByDate(date, token);
   }
 
 

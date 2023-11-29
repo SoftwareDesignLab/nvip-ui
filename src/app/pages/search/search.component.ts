@@ -200,11 +200,15 @@ export class SearchComponent implements OnInit {
               this.toggleLoading();
               this.searchResults = [];
               this.filteredSearchResults = [];
+              this.handleRes([]);
+              this.searchResService.setSearchResults([]);
 
-              if (e.response.status == 401) {
+              if (e.status == 401) {
                 alert(e.data);
                 window.location.assign(window.location.href + 'login');
               }
+              else
+                this.toggleSearchForm();
             },
             complete: () => {}
           })

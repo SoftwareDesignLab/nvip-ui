@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faKey, faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from 'src/app/services/Api/api-service.service';
 import { AuthService } from 'src/app/services/Auth/auth-service.service';
 
 /** Create account page */
@@ -48,16 +49,33 @@ export class CreateAccountComponent {
     email: ''
   }
 
+  /** error message if create account fails.. i.e. User Already Exists. */
+  invalidCreateAccount = "";
+
+  @Output() cancel = new EventEmitter<{ registerSelected: boolean }>;
+
   /**
    * create account constructor
    * @param authService access create account endpoint
    */
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private api: ApiService) { }
 
   /** give ngForm to api endpoint to create user based on input html form */
   createAccount(f: NgForm) {
     if(f.value.password === f.value.repeatPassword){
-      this.authService.createUser(f.value);
+      // make api call
+      this.api.createAccount(f.value, {
+        next: () => {
+          this.authService.onLogin({
+            userName: f.value.username,
+            password: f.value.password,
+          }, "/");
+          alert("Your account is Created!");
+        },
+        error: (e) => {
+          this.invalidCreateAccount = e.error.message;
+        },
+      });
     } else {
       this.passwordError();
     }
@@ -68,6 +86,11 @@ export class CreateAccountComponent {
     var formSpacing = document.getElementById('regForm') as HTMLDivElement;
     passwordError.style.display = 'block';
     formSpacing.style.marginTop = "6em";
+  }
+
+  /** handle close create account */
+  clearListener() {
+    this.cancel.emit({ registerSelected: false });
   }
 
 }
