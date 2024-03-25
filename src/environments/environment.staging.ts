@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: "https://api-staging.cve.live/"
+    ApiUrl: "https://api-staging.cve.live/"
 };
