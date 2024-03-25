@@ -1,0 +1,148 @@
+
+.drag-sidebar{
+    min-width: 292px;
+    max-width: 292px;
+
+    background: $layout-bg-color;
+    border-left: 2px solid lighten(black,60%);
+    color:$standard-fontcolor;
+    transition: all 0.5s cubic-bezier(0.945, 0.02, 0.27, 0.665);
+    transform-origin: bottom right;
+
+    .drag-list {
+        position: sticky !important;
+        top:0px;
+        min-height: 60px;
+        color: black;
+        border-radius: 1px;
+        overflow: hidden;
+        display: block;
+
+        .drag-item-box {
+            position: relative;
+            padding: 0px 20px;
+            border-bottom: 1px solid black;
+            color: $standard-fontcolor;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            box-sizing: border-box;
+            font-size: 17px;
+            span{
+                transition: all 0.2s ease;
+                cursor: default;
+            }
+            &:hover{
+                background: white;
+                span{
+                    margin-right: 10px;
+                }
+            }
+
+            .drag-handle {
+
+                cursor: move;
+                margin-top: 8px;
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+                margin-left: 20px;
+                color:$lighten-standard-fontcolor;
+                :hover{
+                    color:green;
+                }
+                
+            }
+            .checked-item{
+                position: absolute;
+                top:10px;
+                left:12px;
+                font-size: 23px !important;
+                color:seagreen;
+            
+    
+                border-radius: 0px !important;
+            }
+            button{
+                position: absolute;
+                top:0px;
+                font-size: 22px;
+                left:0px;
+                color:$lighten-standard-fontcolor;
+                :hover{
+                    color:green;
+                }
+            }
+            &.cdk-drag-disabled{
+                
+                cursor: default;
+                &:hover{
+                    span{
+                        color:rgb(8, 124, 8);
+                        cursor:pointer;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction:row-reverse;
+    align-items: center;
+    font-size: 19px;
+    font-weight: 400;
+    cursor: move;
+    span{
+        transition: all 0.2s ease;
+        padding-right: 20px;
+    }
+    .drag-handle {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    button,.checked-item{
+        display: none;
+    }
+}
+  
+.cdk-drag-placeholder {
+    opacity: 1;
+    display: flex;
+   
+    align-items: center;
+    font-size: 19px;
+    font-weight: 400;
+
+    span{
+        transition: all 0.2s ease;
+        padding-right: 20px;
+    }
+    .drag-handle {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    button,.checked-item{
+        display: none;
+    }
+
+}
+  
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media print{
+    .drag-sidebar{
+        display:none;
+    }
+}
+

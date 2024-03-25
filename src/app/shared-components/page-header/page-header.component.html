@@ -1,0 +1,24 @@
+<div class="page-header-info d-flex justify-content-between ">
+
+    
+    <button id="left-sidebar-collapse" class="btn left-sidebar-collapse d-none ">
+        <i class="fa fa-align-right text-dark "></i>
+    </button>
+
+    <div class="d-flex justify-content-between info-contents ">
+        <div class="py-0 px-2 ">
+            <h4 class="text-dark">
+                <i  [ngClass]="'fa d-print-none '+ icon +' fa-lg pr-3'"></i>{{leftTitle}}
+            </h4>
+        </div>
+        <div class="px-2 d-none d-md-inline-block ">
+            <h4 class="text-dark">{{rightTitle}}</h4>
+        </div>
+    </div>
+    <button id="right-sidebar-collapse" class="btn right-sidebar-collapse d-none">
+        <i class="fa fa-align-left text-secondary"></i>
+    </button>
+   
+
+
+</div>

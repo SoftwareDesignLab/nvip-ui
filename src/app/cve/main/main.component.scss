@@ -1,0 +1,23 @@
+.custom-pagination ::ng-deep .ngx-pagination .current  {
+    background: green;
+    border: 1px solid gray;
+}
+
+
+
+
+.custom-pagination ::ng-deep .ngx-pagination a,.ngx-pagination button{
+  
+    display: block;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 1px;
+    border: 1px solid gray;
+    margin-right: 1px !important;
+    &:hover{
+        background: #385777 !important;
+    }
+
+}
+
+
+

@@ -1,16 +1,19 @@
 # CI for NVIP
 
-name: Java CI
+name: Node CI
 
 on: [push]
 
 env:
   AWS_REGION: 'us-east-1'
-  ANGULAR_CLI_VERSION: '15.1.0'
+  ANGULAR_CLI_VERSION: '17.2.3'
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
     steps: 
       - name: Checkout
         uses: actions/checkout@v3

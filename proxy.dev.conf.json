@@ -1,6 +1,6 @@
 {
     "/nvip_ui-1.0/*": {
-      "target": "http://localhost:8080",
+      "target": "http://localhost:8000",
       "pathRewrite": { "^/nvip_ui-1.0": "" },
       "secure": false,
       "logLevel": "debug",

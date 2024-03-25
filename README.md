@@ -1,37 +1,10 @@
-# NVIP Angular UI Requirements
-    - Node 18.13.0
-    - Angular 15.1.0
-    - Tomcat web backend up and running
-# NVIP Angular UI Steps
-    - Ensure you have Node 18.13.0
-    - Ensure you have Angular CLI installed: npm install -g @angular/cli
-    - Ensure you are at the root of the nvip-ui directory
-    - npm install
-    - ng serve (or npm start)
-    - Visit localhost:4200
-    - Note: Proxy assumes you have a local Tomcat instance (localhost:8080) of the nvip war deployed to /nvip_ui-1.0
+# NvipFrontend
 
-# Generate and View UI documentation
-    The application uses Compodoc (https://compodoc.app/guides/getting-started.html) to generate static documentation of the frontend,
-    very similarly to javadocs.
-    View extensive angular frontend documenation and coverage by runnning 'npm run compodoc' and visiting `localhost:4201`.
-    View in depth graphs, charts, and coverage by navigating to Module, Routes, and Documentation coverage pages respectively
-
-# AngularUi
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.2.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.2.
 
 ## Development server
 
-Run the following command for local dev version. 
-    
-    ng serve
-
-
-## Run Server w/ Prod. setup
-
-To test against Production environment locally, run `ng serve --configuration=production` or `ng serve --proxy-config proxy.conf.json` and navigate to `localhost:4200`.
-Here, API calls will be forwarded to AWS S3 URL instead of local TomCat instance.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 

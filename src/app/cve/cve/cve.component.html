@@ -1,0 +1,97 @@
+<div class="wrapper">
+    <div class="sidebar left-sidebar border-end border-1 border-start-0">
+        <button class="btn close-sidebar-button">
+            <i class="fa fa-times hover-danger text-dark"></i>
+        </button>
+        <ul class="list-unstyled mb-0">
+            <ul class="list-unstyled mb-10">
+                <li
+                    *ngFor="let item of utilService.tabs; let i = index"
+                    [ngClass]="{ 'border-top-0': i == 0 }"
+                >
+                    <a
+                        (click)="selectedTab = item.title"
+                        [ngClass]="{ active: selectedTab == item.title }"
+                    >
+                        <i [ngClass]="item.icon + ' pr-2'"></i> {{ item.title }}
+                    </a>
+                </li>
+            </ul>
+        </ul>
+    </div>
+    <div class="contents">
+        <div class="container">
+            <app-page-header
+                [leftTitle]="cveId"
+                [rightTitle]="selectedTab"
+                [icon]="'fa fa-bug'"
+            >
+            </app-page-header>
+
+            <div>
+                <div
+                    class="content-container my-6 mx-md-4"
+                    [ngSwitch]="selectedTab"
+                >
+                    <app-cve-description
+                        *ngSwitchCase="utilService.tabs[0].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[0]"
+                    >
+                    </app-cve-description>
+                    <app-cve-sources
+                        *ngSwitchCase="utilService.tabs[1].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[1]"
+                    ></app-cve-sources>
+                    <app-cve-affected-products
+                        *ngSwitchCase="utilService.tabs[2].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[2]"
+                    ></app-cve-affected-products>
+                    <app-cve-vdo-labels
+                        *ngSwitchCase="utilService.tabs[3].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[3]"
+                    ></app-cve-vdo-labels>
+                    <app-cve-ssvc
+                        *ngSwitchCase="utilService.tabs[4].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[4]"
+                    >
+                    </app-cve-ssvc>
+                    <app-cve-patches
+                        *ngSwitchCase="utilService.tabs[5].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[5]"
+                    ></app-cve-patches>
+
+                    <app-cve-fixes
+                        *ngSwitchCase="utilService.tabs[6].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[6]"
+                    >
+                    </app-cve-fixes>
+
+                    <app-cve-exploits
+                        *ngSwitchCase="utilService.tabs[7].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[7]"
+                    >
+                    </app-cve-exploits>
+
+                    <app-cpe
+                        *ngSwitchCase="utilService.tabs[8].title"
+                        [cveId]="cveId"
+                        [tab]="utilService.tabs[8]"
+                    >
+                    </app-cpe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar right-sidebar border-start border-1 border-end-0">
+        <app-cve-details [cveId]="this.cveId"></app-cve-details>
+    </div>
+</div>

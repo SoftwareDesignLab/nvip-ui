@@ -1,0 +1,27 @@
+.mat-tree-node {
+    min-height: 35px !important;
+    line-height: 35px !important;
+    cursor: pointer !important;
+  
+
+    .middle{
+    
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}
+
+.mat-dialog-container {
+    padding: 0px !important;
+    font-family: cairo !important;
+}
+.mat-dialog-title{
+    padding: 0px !important;
+    font-family: cairo !important; 
+}
+
+.custom-tree-node {
+    min-height: 30px !important; /* Set the desired height */
+    line-height: 30px !important; /* Set the same value as height for vertical alignment */
+}

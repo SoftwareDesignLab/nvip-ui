@@ -1,0 +1,103 @@
+@import "./colors.scss";
+@import "./headers/header.scss";
+@import "./layout/layout.scss";
+@import "./layout/card.scss";
+@import "./layout/drag-drop.scss";
+@import "./layout/sidebar.scss";
+@import "./layout/topheader.scss";
+@import "./layout/official-documents.scss";
+@import "./layout/files.scss";
+@import "./layout/collapsing.scss";
+@import "./layout/mat.scss";
+@import "./layout/table.scss";
+@import "./layout/component.scss";
+@import "./layout/summary.scss";
+@import "./layout/tree.scss";
+
+@import "./spaces/spaces.scss";
+@import "./print.scss";
+
+
+
+textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="select"]:focus,
+[type="text"].form-control:focus,
+[type="password"].form-control:focus,
+[type="email"].form-control:focus,
+[type="tel"].form-control:focus,
+[contenteditable].form-control:focus {
+    box-shadow: inset 0 -1px 0 #ddd;
+}
+.form-select:focus,
+select:focus,
+.bootstrap-select:focus,
+.form-control {
+    box-shadow: none 0 -1px 0 #ddd;
+    outline: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: all ease 0.1s;
+    &:hover,
+    &:focus {
+        color: inherit;
+        text-decoration: none;
+        transition: all ease 0.1s;
+    }
+}
+* {
+    font-family: Cairo;
+}
+
+input:read-only {
+    background-color: white !important;
+}
+
+.bootstrap-select .dropdown-toggle:focus {
+    outline: 0 !important;
+    box-shadow: none;
+    background: transparent;
+}
+.form-control:focus {
+    box-shadow: none;
+    border: 1px solid green;
+}
+.form-control {
+    box-shadow: none;
+}
+input:disabled {
+    background-color: transparent !important;
+    color: inherit;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline.mat-focused {
+    border-color: $active-standard-fontcolor !important;
+}
+
+.dropdown,
+.dropdown-menu {
+    .dropdown-item {
+        min-height: 30px !important;
+        line-height: 30px;
+        font-size: 16px;
+        min-width: 250px;
+        &:hover {
+            cursor: pointer !important;
+        }
+    }
+}
+
+.hover-danger:hover {
+    color: $danger !important;
+}
+
+
+

@@ -1,0 +1,196 @@
+$header-height:40px;
+
+$font-family:"Source Sans Pro", Helvetica, Arial, sans-serif;
+.content-container{
+    .card {
+        border: 0px transparent;
+        max-width: 700px !important;
+        margin-bottom: 50px;
+        .card-header {
+            font-size: 18px;
+            height: $header-height !important;
+            line-height: 44px !important;
+            background: white;
+            padding: 0px !important;
+            border: 0px;
+            display: flex;
+            justify-content: space-between;
+            h4 {
+                font-size: 17px !important;
+                position: relative;
+                color: $secondary;;
+                height: $header-height !important;
+                line-height: $header-height !important;
+                background-color: $card-bg-color;
+                min-width: 200px;
+                border-top: 2px solid $card-border-color;
+                border-left: 2px solid $card-border-color;
+                padding-left: 10px;
+                padding-right: 20px;
+                border-radius: 3px 0px 0px 0px;
+                
+                .fa{
+                    color: $secondary;
+                    padding-right: 10px;
+                }
+                    
+                .fa-certificate{
+                    color:rgb(230,190,138) !important;
+                }
+                
+
+            }
+
+            .type{
+
+                font-size: 16px;
+                margin-top: 2px !important;
+
+                color:$secondary;
+                border: 2px solid $card-border-color;
+                height: 34px !important;
+                line-height: 34px;
+                padding: 0px 10px;
+                border-radius: 20px;
+            
+                //background-image: linear-gradient($card-bg-color, darken($light, 2%));
+
+            }
+            h4::after {
+                position: absolute;
+                content: '';
+                background-color: $card-bg-color;
+                right: -20px;
+                border-radius:0px 0px 0px -0px;
+                top: -2px;
+                height: $header-height+0.5px;
+                width: 40px;
+                border:0;
+                border-top: 2px solid $card-border-color;
+                border-right: 2px solid darken($card-border-color,1%);
+                z-index: 0;
+                transform: skew(42deg);
+            }
+            .btn-close{
+                margin-top: 7px;
+                padding-left: 2px;
+                i{
+                    color:$gray;
+                    font-size:25px;
+                    &:hover{
+                        color:$danger;
+                    }
+                }
+           
+            }
+
+            .btn-print{
+                margin-top: 0px !important;
+                padding-right: 10px;
+
+                i{
+                    color:$gray;
+                    font-size:20px;
+                    &:hover{
+                        color:seagreen;
+                    }
+                }
+            }
+
+            .icheck-greensea{
+                label{
+                    margin-top: 5px;
+                    font-size: 16px;
+                }
+            }
+          
+            
+        }
+        .card-body,.card-block {
+            padding: 20px 30px;
+            border: 2px solid $card-border-color;
+            background-image: linear-gradient($card-bg-color, darken($light, 2%));
+   
+            p{
+                font-family: $font-family;
+                text-align: justify;
+                font-size: 15px;
+                color: $secondary;
+            }
+        }
+
+        .card-footer{
+            
+            height: $header-height;
+            border:2px solid $card-border-color;
+            border-top: 0px;
+            background: transparent;
+          
+            .info-label{
+                font-size: 14px;
+                //font-family: $font-family;
+            }
+        }
+    
+        .btn-success {
+            background: seagreen;
+        }
+    }
+}
+
+.btn-success {
+    background: seagreen;
+}
+
+@media print{
+    .card-header{
+        background-color: white !important;
+        border-bottom: 2px solid $card-border-color !important;
+        height: 50px !important;
+        
+        .toolbar{
+            display: none !important;
+        }
+        h4{
+            border:0 !important;
+            //border-bottom: 4px solid $card-border-color !important;
+            background-color: white !important;
+        }
+        h4::after {
+            display: none !important;
+        }
+    }
+
+    .card-body,.card-block{
+        background-image: none !important;
+        border-top: 1px !important;
+        
+    }
+}
+
+@media (max-width: 778px) {
+    .card-header{
+        background-color: $card-bg-color !important;
+        border: 2px solid $card-border-color !important;
+        border-bottom: 0px !important;
+        height: 50px !important;
+        border-radius: 20px 20px 0px 0px !important;
+        h4{
+            border:0 !important;
+            background: transparent !important;
+            //border-bottom: 4px solid $card-border-color !important;
+        }
+        h4::after {
+            display: none !important;
+        }
+
+        .btn-print{
+            padding-left: 5px !important;
+        }
+    }
+
+    .card-body{
+        border-radius: 0px 0px 20px 20px !important;
+    }
+
+}

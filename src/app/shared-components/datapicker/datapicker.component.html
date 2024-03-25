@@ -1,0 +1,10 @@
+<label [for]="id" class="form-label">{{label}}</label>
+<div class="input-group">
+    <input type="text" [id]="id" #datepicker placeholder="Datepicker"  class="form-control py-1" bsDatepicker
+        (bsValueChange)="onDateChange($event)"  [bsValue]="input"
+        [bsConfig]="{ isAnimated: true, dateInputFormat: 'MM/DD/YYYY' ,adaptivePosition: true}">
+  
+        <span (click)="datepicker.click()" class="input-group-text"><i class="fa fa-calendar-alt" aria-hidden="true"></i></span>
+   
+</div>
+

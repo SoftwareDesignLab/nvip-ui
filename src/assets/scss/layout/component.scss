@@ -1,0 +1,183 @@
+$main-border-color:$gray-16;
+
+.component-info{
+    border-top:2px solid darken($card-border-color,5%);
+    font-size: 16px !important;
+    position: relative;
+    .title{
+        background-image: linear-gradient($card-bg-color, darken($light, 5%));
+        display: inline;
+        min-width: 200px;
+        position: absolute;
+        padding: 0px 20px;
+        height: 30px !important;
+        line-height: 30px !important;
+        top: -17px;
+        right:50px;
+        border:2px solid darken($card-border-color,5%);
+        border-radius: 20px;
+    }
+
+    .list-square {
+        list-style: none;
+
+    }
+
+    .list-icon-main{
+        
+        position: relative;
+        top:5px;
+        right: -10px !important;
+        font-size: 20px;
+        color:gold;
+    }
+
+    .list-icon-secondary{
+       
+        position: relative;
+        top:5px;
+        font-size: 17px;
+        color:$secondary;
+    }
+}
+.attribute{
+    height: 30px !important;
+    line-height: 30px !important;
+    font-size:13px !important;
+    color: $dark;
+    font-weight: 600;
+
+}
+
+
+
+.header-info{
+    border-top:2px solid darken($card-border-color,5%);
+    font-size: 16px !important;
+    position: relative;
+
+    .title{
+        background-image: linear-gradient($card-bg-color, darken($light, 5%));
+        display: inline;
+        min-width: 200px;
+        position: absolute;
+        padding: 0px 20px;
+        height: 30px !important;
+        line-height: 30px !important;
+        top: -17px;
+        right:80px;
+        border:2px solid darken($card-border-color,5%);
+        border-radius: 20px;
+        max-width: 70% !important;
+        overflow: hidden;
+    }
+
+    .circle{
+        background-image: linear-gradient($card-bg-color,darken($light, 5%));
+        width:30px;
+        height: 30px;
+        border-radius: 15px;
+        border:2px solid darken($card-border-color,5%);
+        position: absolute;
+        top:-17px;
+        right:20px;
+        padding: 5px 8px 5px 0px;
+        font-size: 14px;
+    }
+
+    .remove-button{
+        background: linear-gradient($card-bg-color, darken($light, 5%));
+
+        border-radius: 20px;
+        //border:2px solid darken($card-border-color,5%);
+        position: absolute;
+        top:-16px;
+        left:45px;
+        width: 30px;
+        height: 30px;
+        padding: 0px;
+        border:2px solid darken($card-border-color,5%);
+        color:$danger !important;
+        &:hover{
+            color:$danger !important;
+            border-color: $danger !important;
+        }
+    }
+
+    .collapse-button{
+        background-image: linear-gradient($card-bg-color, darken($light, 5%));
+        border-radius: 20px;
+        border:2px solid darken($card-border-color,5%);
+        position: absolute;
+        top:-16px;
+        left:100px;
+        width: 30px;
+        height: 30px;
+        padding: 0px;
+        padding: 5px 8px 5px 0px;
+    }
+
+}
+
+.bonuses-info{
+    height: 30px !important;
+    line-height: 30px !important;
+    //border-top:2px solid $secondary;
+    border-bottom:2px solid $main-border-color;
+    font-size: 16px !important;
+    position: relative;
+    
+    //background: linear-gradient(to right, lighten($info,10%), #eee, lighten($info,10%));
+
+    .title{
+       
+        display: inline;
+        min-width: 200px;
+        position: absolute;
+        padding: 0px 20px;
+        height: 35px !important;
+        line-height: 35px !important;
+        background-image: linear-gradient($card-bg-color, darken($light, 5%));
+        border-radius: 20px;
+        font-size: 18px !important;
+        border:2px solid $main-border-color;
+        color:$secondary;
+        bottom:-33px !important;
+    }
+    .add-button{
+        background-image: linear-gradient($card-bg-color, darken($light, 5%));
+        padding: 0px 20px !important;
+        margin: 0px;
+        position: absolute;
+        height: 36px !important;
+        line-height: 36px;
+        border:2px solid $main-border-color;
+        border-radius: 20px !important;
+        color: $secondary;
+        bottom:-17px !important;
+        left: 20px;
+        &:hover {
+            color: $active-standard-fontcolor;
+            border-color: $active-standard-fontcolor !important;
+        }
+    }
+}
+
+.dialog-confirmation{
+    padding-bottom: 20px !important;
+    button{
+        border-radius: 20px !important;
+    }
+}
+
+@media print{
+    .add-button,.collapse-button,.remove-button{
+        display: none;
+    }
+}
+
+
+
+
+
+

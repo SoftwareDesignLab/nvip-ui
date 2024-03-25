@@ -1,0 +1,92 @@
+<div style="height: 45px !important;"></div>
+<div class="steps bg-creamy border border-radius-top ">
+    <div class="row  header mb-0" >
+        <div class="col-md-12 py-1 px-2">
+            <h4 class=" w-100 ">
+                <a [href]="'#terms'" data-bs-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
+                    <i class="fa fa-search px-2"></i><span class="text-secondary">Search by CVE</span>
+                </a>
+            </h4>
+        </div>
+    </div>
+    <div class="collapse show" id="terms">
+        <hr class="mt-0 pt-0">
+        <div class="row my-2 px-3">
+            <div class="col-md-12">
+                <label for="cveid" class="form-label">CveId :</label>
+                <input type="text" id="cveid" 
+                    (change)="this.updateContent($event)" 
+                    name="cveId" 
+                    [(ngModel)]="this.utilService.searchObject.cveId"  
+                    class="form-control  p-1">
+            </div>
+        </div>
+
+        <div class="row mb-3 px-3">
+            <div class="col-md-12">
+                <label for="cpe" class="form-label mb-0">Cpe Product :</label>
+                <input type="text" id="cpe"  
+                    (change)="this.updateContent($event)" 
+                    name="cpe" 
+                    [(ngModel)]="this.utilService.searchObject.cpe"  
+                    class="form-control  p-1">
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-datse-filter 
+    [filterDates]="this.utilService.searchObject.publihedDate"
+    (datesChange)="this.updateContent($event)">
+</app-datse-filter>
+
+<div class="steps bg-creamy border ">
+    <div class="row  header mb-0" >
+        <div class="col-md-12 py-1 px-2">
+            <h4 class=" w-100 ">
+                <a [href]="'#cvss'" data-bs-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
+                    <i class="fa fa-signal px-2"></i><span class="text-secondary">Cvss</span>
+                </a>
+            </h4>
+        </div>
+    </div>
+    <div class="collapse show" id="cvss">
+        <hr class="mt-0 pt-0">
+        <div class="icheck-success ml-3 " *ngFor="let item of cvss; let i=index;">
+            <input class="box" type="checkbox" name="cvss_{{i}}" 
+                (change)="onCvssChange($event,item)"
+                value="item" id="cvss_{{i}}">
+            <label for="cvss_{{i}}" class="text-secondary"> {{item}}</label>
+        </div>
+
+    </div>
+</div>
+
+<div class="steps bg-creamy border border-radius-bottom ">
+    <div class="row  header mb-0" >
+        <div class="col-md-12 py-1 px-2">
+            <h4 class=" w-100 ">
+                <a [href]="'#vdo'" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fa fa-filter px-2"></i><span class="text-secondary">VDO</span>
+                </a>
+            </h4>
+        </div>
+    </div>
+    <div class="collapse" id="vdo">
+        <hr class="mt-0 pt-0">
+
+        <app-attributes-filter
+     
+            [SourceAttributes]="this.vdo" 
+            [TargetAttributes]="this.utilService.searchObject.vdo"
+            (contentUpdate)="updateContent($event)">
+        </app-attributes-filter>
+
+
+    </div>
+</div>
+
+<button 
+    class="btn btn-light border border-secondary w-100 mt-5 border-radius-25 btn-sticky-bottom text-secondary " 
+    (click)="onSerach.emit(true);"> <i class="fa fa-search mx-2"></i> Filter
+</button>

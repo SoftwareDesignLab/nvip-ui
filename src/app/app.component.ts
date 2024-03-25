@@ -1,33 +1,53 @@
-/**
- * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
- * government support under contract 70RCSA22C00000008 awarded by the United
- * States Department of Homeland Security for Cybersecurity and Infrastructure Security Agency.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-import { Component } from '@angular/core';
-/** App Component - main website root element */
+import { Component, OnInit } from '@angular/core';
+
+declare var $:any;
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  
+export class AppComponent implements OnInit {
+    title = 'nvip-frontend';
+    ngOnInit(): void {
+
+
+
+        var addClassOnScroll = function () {
+            var windowTop = $(window).scrollTop();
+            $('.weakness_element').each(function () {
+                var offsetTop = $(this).offset().top;
+                var outerHeight = $(this).outerHeight(true);
+                if( windowTop > (offsetTop-200) && windowTop < ( offsetTop + outerHeight)) {
+                    var elemId = $(this).attr('id');
+                    $("li").removeClass('active');
+                    $("#list_"+elemId).parent().addClass('active');
+                    return;
+                }
+            });
+        };
+
+        $(function () {
+            $(window).on('scroll', function () {
+                addClassOnScroll();
+            });
+        });
+
+        
+        $(document.body).on('click', '.show-hide' ,function(){
+            var id:string=$(this).attr('id')
+            $(this).toggleClass('text-danger');
+            $('#'+id +' i').toggleClass('fa-eye')
+            var targetBug=id.replace('show_hide_','');
+            $('#'+id +' i').toggleClass('fa-eye-slash');
+            $('#'+targetBug).toggleClass('d-none');
+            addClassOnScroll();
+        });
+
+        $(document.body).on('click', '.scrol-to-id' ,function(){
+            var id:string=$(this).attr('id').replace('list_','#');
+            $('html, body').animate({
+                scrollTop: $(id).offset().top
+            }, 250);
+        });
+    }
 }

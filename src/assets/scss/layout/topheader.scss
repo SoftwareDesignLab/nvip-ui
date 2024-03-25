@@ -1,0 +1,98 @@
+$light: #f8f9fa;
+$bg-header: darken($light, 2%);
+.bg-header {
+    background: $bg-header;
+
+    .user-name{
+        font-size: 19px !important;
+    }
+
+
+
+
+    .dropdown,
+    .dropdown-menu {
+        .dropdown-item {
+            min-height: 300px;
+            min-height: 30px !important;
+            line-height: 30px;
+            font-size: 16px;
+            &:hover {
+                cursor: pointer !important;
+            }
+        }
+    }
+}
+.logo-left {
+    height: 50px !important;
+    width: 160px !important;
+}
+.logo-right {
+    height: 130px;
+    width: 230px;
+    
+}
+
+.user-photo {
+    height: 35px;
+    width: 35px;
+}
+
+.document-image {
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
+}
+
+#sidebarCollapse {
+    width: 40px;
+    position: static;
+    :hover {
+        cursor: pointer;
+    }
+
+    i {
+        position: absolute;
+        right: 20px;
+        top: 12px;
+        transition: all 0.8s ease-in;
+        transition-delay: 0.1s;
+
+        &.hidden {
+            opacity: 0;
+        }
+    }
+}
+
+.page-header-info {
+    margin: 1px 20px !important;
+    padding: 0px 0px;
+    line-height: 40px !important;
+    min-height: 40px !important;
+    //background: linear-gradient($card-bg-color, darken($light, 6%));
+    background: $bg-header;
+    border: 1px darken($card-border-color, 5%) solid;
+    //border-radius: 2px 25px 2px 25px ;
+    border-radius:25px;
+    .info-contents{
+        width: 100% !important;
+        margin: 0px 10px;
+    }
+
+    h4 {
+        line-height: 40px !important;
+        min-height: 40px !important;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        margin: 0px;
+        font-weight:normal;
+        
+        font-size: 18px !important;
+    }
+    .btn i {
+        &:hover {
+            color: $active-standard-fontcolor !important;
+         
+            transition: linear 0.1s;
+        }
+    }
+}
