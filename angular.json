@@ -38,7 +38,7 @@
                               "src/favicon.ico",
                               "src/assets"
                           ],
-                          "styles": ["src/styles.sass"],
+                          "styles": ["src/styles.scss"],
                           "scripts": [
                               "src/assets/js/jquery-3.6.0.min.js",
                               "src/assets/js/popper.min.js",
