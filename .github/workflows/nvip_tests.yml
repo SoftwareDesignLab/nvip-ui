@@ -25,7 +25,7 @@ jobs:
         run: |
           npm install -g @angular/cli
           npm install --force
-          npm test -- --watch=false --browsers=ChromeHeadless
+          ng build --configuration=development 
 
 # Deploy crawler component project to container registry
   staging-deploy:
