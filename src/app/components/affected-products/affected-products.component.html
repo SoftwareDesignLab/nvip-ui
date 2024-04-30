@@ -1,0 +1,68 @@
+<div class="faq-page sec-mar my-0">
+    <div class="">
+        <div class="row gy-5 justify-content-lg-between justify-content-center p-0">
+            <div class="col-lg-3">
+                <div class="faq-items">
+                    <!-- Tab Nav Items -->
+                    <ul class="nav nav-vertical nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation"
+                            *ngFor="let item of groupedProducts | keyvalue; let i = index">
+                            <button class="nav-link vertical" id="product_item_{{i}}_tab'" data-bs-toggle="tab"
+                                attr.data-bs-target="#product_item_{{i}}" type="button" role="tab"
+                                attr.aria-controls="product_item_{{i}}" [attr.aria-selected]="i === 0 ? 'true' : 'false'"
+                                [class.active]="i === 0">
+                                {{ item.key }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9 ">
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade" *ngFor="let item of groupedProducts | keyvalue; let i = index;"
+                        id="product_item_{{i}}" role="tabpanel" attr.aria-labelledby="product_item_{{i}}_tab'" [class.active]="i === 0"
+                        [class.show]="i === 0">
+                        <div class="accordion" id="product_accordion_{{i}}">
+                            <div class="accordion-item" *ngFor="let product of item.value; let j=index;">
+                                <h6 class="accordion-header" id="product_header_{{i}}_{{j}}">
+                                    <button class="accordion-button " [ngClass]="{'collapsed':j!=0}" type="button" data-bs-toggle="collapse"
+                                        attr.data-bs-target="#product_{{i}}_{{j}}" aria-expanded="false"
+                                        attr.aria-controls="product_{{i}}_{{j}}">
+                                        {{j+1}} . {{item.key}} {{product.version}}
+                                    </button>
+                                </h6>
+                                <div id="product_{{i}}_{{j}}" class="accordion-collapse collapse" [ngClass]="{'show':j==0}"
+                                    attr.aria-labelledby="header_{{i}}_{{j}}" attr.data-bs-parent="#product_accordion_{{i}}">
+                                    <div class="accordion-body px-4 py-0">
+                                        <div class="row">
+                                            <div class="col-md-3 text-white">
+                                                Vendor
+                                            </div>
+                                            <div class="col-md-9">
+                                                : {{product.vendor }}
+                                            </div>
+                                            <div class="col-md-3 text-white">
+                                                Version
+                                            </div>
+                                            <div class="col-md-9">
+                                                : {{product.version}}
+                                            </div>
+                                            <div class="col-md-3 text-white">
+                                                CPE
+                                            </div>
+                                            <div class="col-md-9 text-info">
+                                                : {{product.cpe}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Additional content can be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

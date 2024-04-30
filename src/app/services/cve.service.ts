@@ -9,7 +9,7 @@ export class CveService {
     constructor(private http: HttpClient) {}
 
     getDetails(cveId:string):Observable<any>{
-        return this.http.get(Routes.cve+"/details/"+cveId)
+        return this.http.get(Routes.cve+"/details/"+cveId);
     }
 
     getCpe(cveId:string):Observable<any>{

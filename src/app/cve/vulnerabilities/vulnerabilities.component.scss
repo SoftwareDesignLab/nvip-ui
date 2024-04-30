@@ -1,0 +1,50 @@
+pre{
+  white-space: pre-wrap !important;
+}
+  
+$theme-color: #06D889;
+.custom-pagination ::ng-deep .ngx-pagination .current  {
+    background: $theme-color !important;
+    color: black !important;
+    border-radius: 5px;
+    margin-right: 10px !important;
+    padding: 3px 12px;
+    border: 1px solid darkslategray;
+}
+
+
+.custom-pagination ::ng-deep .ngx-pagination a,.ngx-pagination button{
+  color:$theme-color !important;
+  display: block;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid $theme-color;
+  margin-right: 10px !important;
+  background:transparent !important ;
+  &:hover{
+      background: $theme-color !important;
+      color: white !important;
+  }
+
+}
+
+a {
+  color: var(--white-color);
+  text-transform: capitalize;
+  padding: 32px 20px;
+  position: relative;
+  font-family: var(--font-saira);
+  font-weight: 500;
+  font-size: 16px;
+  transition: all .5s ease-out 0s;
+  position: relative;
+
+  &:hover {
+      color: var(--theme-color);
+      &::before {
+          -webkit-transform: scale(1);
+          transform: scale(1);
+      }
+  }
+
+}

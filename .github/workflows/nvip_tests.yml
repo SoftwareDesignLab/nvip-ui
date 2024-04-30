@@ -50,7 +50,7 @@ jobs:
       - name: Build
         run: |
           npm install -g @angular/cli
-          npm install
+          npm install --force
           ng build angular-ui --configuration=staging
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}
@@ -79,7 +79,7 @@ jobs:
       - name: Build
         run: |
           npm install -g @angular/cli
-          npm install
+          npm install --force
           ng build angular-ui --configuration=production
       - name: Deploy to S3
         if: ${{ success() && github.ref == 'refs/heads/master' }}

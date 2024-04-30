@@ -1,51 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { CveRoutingModule } from './cve-routing.module';
-import { MainComponent } from './main/main.component';
-import { SharedComponentsModule } from '../shared-components/shared-components.module';
-import { CveComponent } from './cve/cve.component';
-import {
-    CveAffectedProductsComponent,
-    CveDescriptionComponent,
-    CveDetailsComponent,
-    CveExploitsComponent,
-    CvePatchesComponent,
-    CveFixesComponent,
-    CveSourcesComponent,
-    CveSsvcScoresComponent,
-    CveVdoLabelsComponent,
-    CpeComponent,
-} from './cve-details/cve-details.component';
-import { SearchComponent } from './main/search.component';
+import { VulnerabilitiesComponent } from './vulnerabilities/vulnerabilities.component';
+import { CveDetailsComponent } from './cve-details/cve-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from '../app-routing.module';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { CveAttributesComponent } from './cve-attributes/cve-attributes.component';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
-    declarations: [
-        MainComponent,
-        CveComponent,
-        CveDetailsComponent,
-        CveDescriptionComponent,
-        CveSsvcScoresComponent,
-        CveSourcesComponent,
-        CveAffectedProductsComponent,
-        CveExploitsComponent,
-        CveVdoLabelsComponent,
-        CvePatchesComponent,
-        CveSsvcScoresComponent,
-        CveFixesComponent,
-        CpeComponent,
-        SearchComponent,
-
-
-    ],
+    declarations: [VulnerabilitiesComponent, CveDetailsComponent, CveAttributesComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CveRoutingModule,
-        SharedComponentsModule,
+        AppRoutingModule,
         NgxPaginationModule,
+        ComponentsModule
     ],
 })
 export class CveModule {}

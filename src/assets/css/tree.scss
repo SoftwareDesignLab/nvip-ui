@@ -1,0 +1,21 @@
+svg{
+    display: block;
+    margin: auto;
+}
+
+/*
+.node circle{
+
+    stroke: $card-border-color;
+    stroke-width: 3px;
+}
+*/
+
+
+.node text{ font: 12px sans-serif !important;  }
+
+.link{
+    fill: none;
+    stroke: white ;
+    stroke-width: 1.2px;
+}

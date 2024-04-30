@@ -1,0 +1,37 @@
+
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="vdo mb-1" *ngFor="let item of vdoLabels;"> 
+            <div class="label-group">
+                <label class="vdo-label">
+                    {{item.vdoLabel}}
+                    
+                </label>
+                <label class="vdo-group">
+                    {{item.vdoNounGroup}}
+                </label>
+            </div>
+            <span class="percent "> {{(item.vdoConfidence*100|number:'1.2-2' ) +'%' }}</span>
+        </div>
+    </div>
+    <div class="col-md-4 d-flex flex-md-column ">
+
+        <div class="cvss-card mb-3">
+            <div class="pricing-top">
+                <span>CVSS Score</span>
+                <h2 *ngIf="this.score!=null;">{{score|number:'1.1-1'}}
+                    <sub [ngClass]="this.getSeverityColor(score)">/ {{this.getSeverityScore(score)}}
+                    </sub>
+                </h2>
+                <h2 *ngIf="this.score==null;">NA<sub> / --</sub></h2>
+            </div>
+        </div>
+        <div *ngIf="this.score!=null;" class="d-flex align-items-center  justify-content-center flex-fill">
+            <app-cvss-gauge [score]="score"></app-cvss-gauge>
+        </div>
+    </div>
+</div>
+    
+                            
+

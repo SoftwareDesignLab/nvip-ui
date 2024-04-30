@@ -33,18 +33,29 @@
                         "polyfills": ["zone.js"],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
-                        "assets": ["src/favicon.ico", "src/assets"],
-                        "styles": [
-                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
-                            "node_modules/bootstrap/scss/bootstrap.scss",
-                            "src/assets/css/datepicker.css",
-                            "src/assets/css/icheck-bootstrap.css",
-                            "src/styles.scss"
-                        ],
-                        "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.bundle.js"
-                        ]
+                        "assets": [
+                            { "glob": "**/*", "input": "node_modules/monaco-editor", "output": "assets/monaco-editor" },
+                              "src/favicon.ico",
+                              "src/assets"
+                          ],
+                          "styles": ["src/styles.sass"],
+                          "scripts": [
+                              "src/assets/js/jquery-3.6.0.min.js",
+                              "src/assets/js/popper.min.js",
+                              "src/assets/js/bootstrap.min.js",
+                              "src/assets/js/swiper-bundle.min.js",
+                              "src/assets/js/waypoints.min.js",
+                              "src/assets/js/jquery.counterup.min.js",
+                              "src/assets/js/isotope.pkgd.min.js",
+                              "src/assets/js/jquery.fancybox.min.js",
+                              "src/assets/js/gsap.min.js",
+                              "src/assets/js/simpleParallax.min.js",
+                              "src/assets/js/TweenMax.min.js",
+                              "src/assets/js/jquery.marquee.min.js",
+                              "src/assets/js/wow.min.js",
+  
+                              "src/assets/js/custom.js"
+                          ]
                     },
                     "configurations": {
                         "production": {

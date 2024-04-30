@@ -1,23 +1,30 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TopheaderComponent } from './home/headers/topheader/topheader.component';
-import { FooterComponent } from './home/headers/footer/footer.component';
+import { PreloaderComponent } from './layout/preloader/preloader.component';
+import { TopHeaderComponent } from './layout/top-header/top-header.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HttpClientModule } from '@angular/common/http';
 import { CveModule } from './cve/cve.module';
-import { AppInterceptorService } from './services/shared/app-interceptor.service';
+import { AboutComponent } from './layout/about/about.component';
+import { FaqComponent } from './layout/faq/faq.component';
+
+
 
 @NgModule({
-    declarations: [AppComponent, TopheaderComponent, FooterComponent],
-    imports: [BrowserModule, AppRoutingModule, CveModule, HttpClientModule],
-    providers: [
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AppInterceptorService,
-            multi: true,
-        },
+    declarations: [
+        AppComponent,
+        PreloaderComponent,
+        TopHeaderComponent,
+        FooterComponent,
+        AboutComponent,
+        FaqComponent,
+   
     ],
+    imports: [BrowserModule, AppRoutingModule,HttpClientModule, CveModule],
+    providers: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
